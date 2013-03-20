@@ -9,5 +9,10 @@ public class PlayerTest {
 	public void testConstruct() {
 		assertNotNull(new Player());
 	}
+	
+	@Test
+	public void testSetCapital(){
+		//assertTrue();
+	}
 
 }
