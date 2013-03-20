@@ -6,7 +6,7 @@ public class Tile {
 		Mountain, Forest, Grassland, Desert, Water
 	};
 
-	private enum Resource {
+	public enum Resource {
 		Wheat, Silk, Incense, Iron, None
 	}
 
