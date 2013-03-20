@@ -1,9 +1,11 @@
+import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,27 +14,32 @@ import javax.swing.JPanel;
 public class MainWindow extends JFrame{
 	
 	/**
-	 * 
+	 * Not sure why this is needed, but it is.
 	 */
-	// Not sure why this is needed, but it is.
 	private static final long serialVersionUID = 1L;
 
 	private JPanel buttons = new JPanel();
 	
 	private JButton rules = new JButton("Rules");
+	private JButton player1Details = new JButton("Player 1 Details");
+	private JButton player2Details = new JButton("Player 2 Details");
+	private JButton marketDetails = new JButton("Market Details");
 	
 	public MainWindow(){
 		this.setTitle("Civilization");
+		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+		this.setIconImage(icon.getImage());
 		
-		
-		
-		this.rules.setAlignmentX(RIGHT_ALIGNMENT);
-		this.rules.setAlignmentY(BOTTOM_ALIGNMENT);
-		this.rules.setVisible(true);
+		this.buttons.add(this.player1Details);
+		this.buttons.add(this.player2Details);
+		this.buttons.add(this.marketDetails);
 		this.buttons.add(this.rules);
 		
+		this.add(this.buttons, BorderLayout.SOUTH);
+		
+		this.rules.setVisible(true);
 		this.buttons.setVisible(true);
-		this.add(this.buttons);
+		
 		
 		
 		
