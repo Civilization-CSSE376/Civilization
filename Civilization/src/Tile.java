@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Tile {
 
-	private enum Terrain {
+	public enum Terrain {
 		Mountain, Forest, Grassland, Desert, Water
 	};
 
@@ -18,7 +18,7 @@ public class Tile {
 	private int production = 0;
 	private int culture = 0;
 	private int coin = 0;
-	private Resource resource;
+	private Resource resource = Resource.None;
 
 	// private Marker marker this will hold the abstract object that represents
 	// cities, buildings, great people, etc.
@@ -29,10 +29,46 @@ public class Tile {
 
 	}
 
+	public Tile(String terrain, int trade, int production, String resource,
+			int culture, String inhabitant, int coin) {
+		this.trade = trade;
+		this.production = production;
+		this.culture = culture;
+		this.coin = coin;
+
+		if (terrain.equals("M"))
+			this.terrain = Terrain.Mountain;
+		else if (terrain.equals("F"))
+			this.terrain = Terrain.Forest;
+		else if (terrain.equals("G"))
+			this.terrain = Terrain.Grassland;
+		else if (terrain.equals("D"))
+			this.terrain = Terrain.Desert;
+		else if (terrain.equals("W"))
+			this.terrain = Terrain.Water;
+
+		if (resource.equals("W"))
+			this.resource = Resource.Wheat;
+		else if (resource.equals("S"))
+			this.resource = Resource.Silk;
+		else if (resource.equals("Ir"))
+			this.resource = Resource.Iron;
+		else if (resource.equals("In"))
+			this.resource = Resource.Incense;
+
+		if (inhabitant.equals("H"))
+			System.out.println("Hut");
+		else if (inhabitant.equals("V"))
+			System.out.println("Village");
+		else
+			System.out.println("No hut or village");
+
+	}
+
 	public Tile(int x, int y) {
 		this.xPos = x;
 		this.yPos = y;
-		
+
 		Random randomValue = new Random();
 		Terrain[] values = Terrain.values();
 		this.terrain = values[randomValue.nextInt(5)];
