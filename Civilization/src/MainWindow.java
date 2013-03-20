@@ -25,7 +25,13 @@ public class MainWindow extends JFrame{
 	private JButton player2Details = new JButton("Player 2 Details");
 	private JButton marketDetails = new JButton("Market Details");
 	
-	public MainWindow(){
+	private String language;
+	private String civilization;
+	
+	public MainWindow(String languageChosen, String civilizationChosen){
+		this.language = languageChosen;
+		this.civilization = civilizationChosen;
+		
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
@@ -39,10 +45,6 @@ public class MainWindow extends JFrame{
 		
 		this.rules.setVisible(true);
 		this.buttons.setVisible(true);
-		
-		
-		
-		
 		
 		this.rules.addActionListener(new ActionListener() {
 
@@ -64,5 +66,4 @@ public class MainWindow extends JFrame{
 		});
 		
 	}
-
 }
