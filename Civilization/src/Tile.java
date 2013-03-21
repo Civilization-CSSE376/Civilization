@@ -29,8 +29,10 @@ public class Tile {
 
 	}
 
-	public Tile(String terrain, int trade, int production, String resource,
+	public Tile(int x, int y, String terrain, int trade, int production, String resource,
 			int culture, String inhabitant, int coin) {
+		this.xPos = x;
+		this.yPos = y;
 		this.trade = trade;
 		this.production = production;
 		this.culture = culture;
