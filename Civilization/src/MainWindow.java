@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -69,6 +70,15 @@ public class MainWindow extends JFrame {
 //		this.add(this.content);
 		this.add(this.buttons, BorderLayout.SOUTH);
 //		this.add(new Board());
+		JPanel leftpad = new JPanel();
+		JPanel rightpad = new JPanel();
+		JPanel toppad = new JPanel();
+		JPanel test = new JPanel();
+		test.setBackground(Color.BLACK);
+		this.add(leftpad, BorderLayout.WEST);
+		this.add(rightpad, BorderLayout.EAST);
+		this.add(toppad, BorderLayout.NORTH);
+		this.add(test);
 
 		// this.add(this.board, BorderLayout.CENTER);
 
