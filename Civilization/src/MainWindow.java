@@ -43,7 +43,7 @@ public class MainWindow extends JFrame{
 		this.rules.setVisible(true);
 		this.buttons.setVisible(true);
 		
-		this.board.add(new Board());
+//		this.board.add(new Board());
 		
 		this.rules.addActionListener(new ActionListener() {
 
