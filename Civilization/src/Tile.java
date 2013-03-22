@@ -29,8 +29,8 @@ public class Tile {
 
 	}
 
-	public Tile(int x, int y, String terrain, int trade, int production, String resource,
-			int culture, String inhabitant, int coin) {
+	public Tile(int x, int y, String terrain, int trade, int production,
+			String resource, int culture, String inhabitant, int coin) {
 		this.xPos = x;
 		this.yPos = y;
 		this.trade = trade;
@@ -86,6 +86,26 @@ public class Tile {
 
 	public Terrain getTerrain() {
 		return this.terrain;
+	}
+
+	public Resource getResource() {
+		return this.resource;
+	}
+
+	public int getTrade() {
+		return this.trade;
+	}
+
+	public int getCulture() {
+		return this.culture;
+	}
+
+	public int getCoins() {
+		return this.coin;
+	}
+
+	public int getProduction() {
+		return this.production;
 	}
 
 }
