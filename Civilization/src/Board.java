@@ -14,7 +14,7 @@ public class Board extends JPanel {
 
 	private File file = new File("src/Panel1.txt");
 	
-	public ArrayList<Panel> map;
+	public static ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
@@ -95,6 +95,23 @@ public class Board extends JPanel {
 			break;
 		}
 
+		return null;
+	}
+	
+	static Panel findPanel(Tile location) { //move this somewhere else?
+		for (Panel panel : Board.map) {
+			for (int i = 0; i < panel.getTiles().length; i++) {
+				{
+					for (int j = 0; j < panel.getTiles()[0].length; j++) {
+						if (panel.getTiles()[i][j].equals(location)) {
+							return panel;
+						}
+					}
+				}
+
+			}
+		}
+		
 		return null;
 	}
 

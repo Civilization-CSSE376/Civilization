@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
@@ -14,6 +16,8 @@ public class Panel extends JPanel{
 
 	private Tile[][] tiles;
 	private boolean isExplored;
+	private Hashtable<String, Panel> neighbors;
+	
 
 	public Panel() {
 		this.tiles = new Tile[4][4];
@@ -25,10 +29,18 @@ public class Panel extends JPanel{
 		this.isExplored = false;
 	}
 	
+	public Hashtable<String, Panel> getNeighbors() {
+		return neighbors;
+	}
+
 	public void paintComponent(Graphics2D g2){
 		super.paintComponent(g2);
 		Rectangle2D.Double rect = new Rectangle2D.Double(100, 100, 100, 100);
 		g2.draw(rect);
+	}
+	
+	public void setNeighbors (Hashtable<String, Panel> neighbors){
+		this.neighbors = neighbors;
 	}
 
 	public Tile[][] getTiles() {

@@ -15,12 +15,13 @@ public class CityTest {
 
 	@Test
 	public void testConstruct() {
-		//assertNotNull(new City());
+		//assertNotNull(new City(new Tile (1, 1, "Mountain", 0, 1, "", 0, "", 0)));
 	}
 	
 	@Test
 	public void testCalcProduction(){
-	
+		//City city= new City(new Tile (2, 2, "Mountain", 0, 1, "", 0, "", 0));
+		
 	}
 	
 	@Test

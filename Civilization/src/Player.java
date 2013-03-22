@@ -16,7 +16,7 @@ public class Player {
 	//private ArrayList<WonderCard> wonderCards;
 	private int culture = 0;
 	private int gold = 0;
-	private int speed;
+	private int speed = 2;
 	private int handSize = 2;
 	private int stackSize = 2;
 	private int trade = 0;
