@@ -39,13 +39,5 @@ public class testPanel {
 		assertNotNull(tiles[3][3]);
 	}
 	
-	@Test
-	public void testLoadFromFile(){
-		File file = new File("src/Panel1.txt");
-		Panel target = new Panel();
-		target.readFromFile(file);
-		assertEquals(Tile.Terrain.Grassland, target.getTiles()[3][3].getTerrain());
-	}
-	
 
 }
