@@ -1,10 +1,16 @@
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Panel {
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class Panel extends JPanel{
 
 	private Tile[][] tiles;
 	private boolean isExplored;
@@ -17,6 +23,12 @@ public class Panel {
 			}
 		}
 		this.isExplored = false;
+	}
+	
+	public void paintComponent(Graphics2D g2){
+		super.paintComponent(g2);
+		Rectangle2D.Double rect = new Rectangle2D.Double(100, 100, 100, 100);
+		g2.draw(rect);
 	}
 
 	public Tile[][] getTiles() {

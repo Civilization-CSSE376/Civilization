@@ -1,12 +1,29 @@
+import java.awt.Component;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class Board {
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class Board extends JPanel{
 	
-	private ArrayList<Panel> map;
+	private JPanel map = new JPanel();
+	
+//	private ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	//private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
+	
+	public Board(){
+		
+		
+		Rectangle2D.Double rect = new Rectangle2D.Double(100, 100, 100, 100);
+		this.map.add(new Panel());
+	}
+	
+	
 	
 	public Board(ArrayList<String> civilizations){
 		for(String civ : civilizations){

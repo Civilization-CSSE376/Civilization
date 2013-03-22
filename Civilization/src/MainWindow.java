@@ -11,14 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame{
-	
-	/**
-	 * Not sure why this is needed, but it is.
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private JPanel buttons = new JPanel();
+	private JPanel board = new JPanel();
 	
 	private JButton rules = new JButton("Rules");
 	private JButton player1Details = new JButton("Player 1 Details");
@@ -45,6 +42,8 @@ public class MainWindow extends JFrame{
 		
 		this.rules.setVisible(true);
 		this.buttons.setVisible(true);
+		
+		this.board.add(new Board());
 		
 		this.rules.addActionListener(new ActionListener() {
 

@@ -9,11 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+@SuppressWarnings("serial")
 public class GameSetup extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 	private static final int WINDOW_WIDTH = 1800;
 	private static final int WINDOW_HEIGHT = 1000;
 	
