@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -10,44 +11,78 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Board extends JComponent{
+public class Board extends JPanel {
+
+	private File file = new File("src/Panel1.txt");
 	private int x;
 	private int y;
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		Rectangle2D.Double rect1 = new Rectangle2D.Double(200, 200, 200, 200);
-		Rectangle2D.Double rect2 = new Rectangle2D.Double(410, 200, 200, 200);
-		Rectangle2D.Double rect3 = new Rectangle2D.Double(200, 410, 200, 200);
-		Rectangle2D.Double rect4 = new Rectangle2D.Double(410, 410, 200, 200);
-		g2.setColor(Color.BLACK);
-		g2.fill(rect1);
-		g2.fill(rect2);
-		g2.fill(rect3);
-		g2.fill(rect4);
-		
-		Ellipse2D.Double playerpos = new Ellipse2D.Double(this.x, this.y, 50, 50);
-		g2.setColor(Color.BLUE);
-		g2.fill(playerpos);
-		
-	}
 	public ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
 
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		// Rectangle2D.Double rect1 = new Rectangle2D.Double(20, 20, 440, 440);
+		// Rectangle2D.Double rect2 = new Rectangle2D.Double(900, 20, 440, 440);
+		// Rectangle2D.Double rect3 = new Rectangle2D.Double(20, 460, 440, 440);
+		// Rectangle2D.Double rect4 = new Rectangle2D.Double(900, 460, 440,
+		// 440);
+		// g2.setColor(Color.BLACK);
+		// g2.fill(rect1);
+		// g2.fill(rect2);
+		// g2.fill(rect3);
+		// g2.fill(rect4);
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				for (int k = 0; k < 4; k++) {
+					Color rectColor = Color.RED;
+					switch (this.map.get(i).getTiles()[j][k].getTerrain()
+							.toString()) {
+					case "Desert":
+						rectColor = Color.YELLOW;
+						break;
+					case "Mountain":
+						rectColor = Color.DARK_GRAY;
+						break;
+					case "Forest":
+						rectColor = Color.WHITE;
+						break;
+					case "Grassland":
+						rectColor = Color.GREEN;
+						break;
+					case "Water":
+						rectColor = Color.BLUE;
+						break;
+					}
+
+					Rectangle2D.Double rect = new Rectangle2D.Double(
+							20 + (440 * i) + (110 * j), 20 + (110 * k), 110, 110);
+					g2.setColor(rectColor);
+					g2.fill(rect);
+				}
+			}
+		}
+
+	}
+
 	public Board() {
 		this.map = new ArrayList<Panel>();
+
 		this.x = 275;
 		this.y = 275;
+		readFromFile(this.file);
+		// System.out.println(this.map.get(0).getTiles()[0][0].getTerrain());
 	}
-	
-	public Board(int x, int y){
+
+	public Board(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}

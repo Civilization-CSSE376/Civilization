@@ -1,23 +1,16 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -55,31 +48,53 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
-		// this.add(this.buttons, BorderLayout.SOUTH);
-
 		this.board.add(new Board());
 
-		this.content.setSize(1760, 880);
+//		this.content.setSize(1760, 880);
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 
-		this.content
-				.setLayout(new BoxLayout(this.content, BoxLayout.PAGE_AXIS));
+//		this.content
+//				.setLayout(new BoxLayout(this.content, BoxLayout.PAGE_AXIS));
 		this.content.add(this.board);
 //		this.content.add(this.buttons);
 //		this.add(this.content);
-		this.add(this.buttons, BorderLayout.SOUTH);
+		this.buttons.setBackground(Color.BLACK);
+		this.buttons.setLocation(0, 935);
+		this.buttons.setSize(1800, 50);
+//		this.add(this.buttons, BorderLayout.SOUTH);
+		this.add(this.buttons);
 //		this.add(new Board());
+		
 		JPanel leftpad = new JPanel();
+		leftpad.setLocation(0, 20);
+		leftpad.setSize(20, 880);
+		leftpad.setBackground(Color.BLACK);
+		
 		JPanel rightpad = new JPanel();
+		rightpad.setLocation(1780, 20);
+		rightpad.setSize(20, 880);
+		rightpad.setBackground(Color.BLACK);
+		
 		JPanel toppad = new JPanel();
-		JPanel test = new JPanel();
-		test.setBackground(Color.BLACK);
-		this.add(leftpad, BorderLayout.WEST);
-		this.add(rightpad, BorderLayout.EAST);
-		this.add(toppad, BorderLayout.NORTH);
-		this.add(test);
+		toppad.setLocation(0, 0);
+		toppad.setSize(1800, 20);
+		toppad.setBackground(Color.BLACK);
 
+		JPanel map = new JPanel();
+		map.setLocation(20, 20);
+		map.setSize(1760, 880);
+		map.setBackground(Color.BLACK);
+//		map.add(new Board());
+		
+		this.add(leftpad);
+		this.add(rightpad);
+		this.add(toppad);
+//		this.add(map);
+//		map.add(this.board);
+		
+		this.add(new Board());
+		
 		// this.add(this.board, BorderLayout.CENTER);
 
 		this.rules.addActionListener(new ActionListener() {
@@ -118,7 +133,7 @@ public class MainWindow extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			System.out.printf("Mouse clicked at %d, %d", x, y);
+			System.out.printf("\nMouse clicked at %d, %d", x, y);
 			MainWindow.this.add(new Board(x, y));
 
 		}

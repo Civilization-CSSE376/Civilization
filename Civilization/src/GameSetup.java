@@ -161,7 +161,7 @@ public class GameSetup extends JFrame {
 
 	private void CreateMainWindow(String language, String p1Civilization, String p2Civilization) {
 		JFrame mainWindow = new MainWindow(language, p1Civilization, p2Civilization);
-		
+
 		mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setResizable(false);
 		
