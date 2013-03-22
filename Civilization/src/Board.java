@@ -1,25 +1,19 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
 
 	private File file = new File("src/Panel1.txt");
-	private int x;
-	private int y;
-
+	
 	public ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	// private Market market;
@@ -29,16 +23,6 @@ public class Board extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		// Rectangle2D.Double rect1 = new Rectangle2D.Double(20, 20, 440, 440);
-		// Rectangle2D.Double rect2 = new Rectangle2D.Double(900, 20, 440, 440);
-		// Rectangle2D.Double rect3 = new Rectangle2D.Double(20, 460, 440, 440);
-		// Rectangle2D.Double rect4 = new Rectangle2D.Double(900, 460, 440,
-		// 440);
-		// g2.setColor(Color.BLACK);
-		// g2.fill(rect1);
-		// g2.fill(rect2);
-		// g2.fill(rect3);
-		// g2.fill(rect4);
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -83,16 +67,7 @@ public class Board extends JPanel {
 
 	public Board() {
 		this.map = new ArrayList<Panel>();
-
-		this.x = 275;
-		this.y = 275;
 		readFromFile(this.file);
-		// System.out.println(this.map.get(0).getTiles()[0][0].getTerrain());
-	}
-
-	public Board(int x, int y) {
-		this.x = x;
-		this.y = y;
 	}
 
 	public Board(ArrayList<String> civilizations) {

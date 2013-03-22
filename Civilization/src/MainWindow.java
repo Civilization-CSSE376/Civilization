@@ -134,7 +134,6 @@ public class MainWindow extends JFrame {
 			int x = e.getX();
 			int y = e.getY();
 			System.out.printf("\nMouse clicked at %d, %d", x, y);
-			MainWindow.this.add(new Board(x, y));
 
 		}
 
