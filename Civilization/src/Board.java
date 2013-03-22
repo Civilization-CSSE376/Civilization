@@ -40,7 +40,7 @@ public class Board extends JPanel {
 		// g2.fill(rect3);
 		// g2.fill(rect4);
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
 					Color rectColor = Color.RED;
@@ -62,11 +62,19 @@ public class Board extends JPanel {
 						rectColor = Color.BLUE;
 						break;
 					}
-
-					Rectangle2D.Double rect = new Rectangle2D.Double(
-							20 + (440 * i) + (110 * j), 20 + (110 * k), 110, 110);
-					g2.setColor(rectColor);
-					g2.fill(rect);
+					if(i > 3){
+						Rectangle2D.Double rect = new Rectangle2D.Double(
+							20 + (440 * (i - 4)) + (110 * j), 20 + 440 + (110 * k), 110, 110);
+						g2.setColor(rectColor);
+						g2.fill(rect);
+					}
+					else{
+						Rectangle2D.Double rect = new Rectangle2D.Double(
+								20 + (440 * i) + (110 * j), 20 + (110 * k), 110, 110);
+						g2.setColor(rectColor);
+						g2.fill(rect);
+					}
+//					System.out.println("Tile[" + j + "][" + k + "] created at location " + (20 + (440 * i) + (110 * j)) + " " + (20 + nextRow + (110 * k)));
 				}
 			}
 		}
