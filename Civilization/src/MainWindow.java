@@ -24,6 +24,7 @@ public class MainWindow extends JFrame {
 	private JButton player1Details = new JButton("Player 1 Details");
 	private JButton player2Details = new JButton("Player 2 Details");
 	private JButton marketDetails = new JButton("Market Details");
+	private JButton endPhase = new JButton("EndPhase");
 	private JButton quit = new JButton("Quit");
 
 	private String language;
@@ -45,6 +46,7 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
+		this.buttons.add(this.endPhase);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
@@ -73,7 +75,7 @@ public class MainWindow extends JFrame {
 		toppad.setSize(1800, 20);
 //		toppad.setBackground(Color.BLACK);
 
-		JPanel map = new Board();
+		final JPanel map = new Board();
 		map.setLocation(20, 20);
 		map.setSize(1760, 880);
 		
@@ -81,7 +83,15 @@ public class MainWindow extends JFrame {
 		this.add(rightpad);
 		this.add(toppad);
 		this.add(map);
-
+		
+		this.endPhase.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				((Board) map).endPhase();
+			}
+		});
+			
 		this.rules.addActionListener(new ActionListener() {
 
 			@Override

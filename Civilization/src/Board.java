@@ -19,34 +19,60 @@ public class Board extends JPanel {
 	private Player player1;
 	private Player player2;
 
+	public Player getPlayer1() {
+		return player1;
+	}
+
+	public Player getPlayer2() {
+		return player2;
+	}
+
+	public Player getFirstPlayer() {
+		return firstPlayer;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public int getPhase() {
+		return phase;
+	}
+
 	public static ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
+	private int phase;
 
 	public Board() {
 		this.map = new ArrayList<Panel>();
 		readFromFile(this.file);
-		
+
 		this.player1 = new Player();
 		this.player2 = new Player();
-		
+		this.player2.setLocation(1, 1);
+
+		this.firstPlayer = player1;
+		this.currentPlayer = player1;
+		this.phase = 1;
+
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
-		
+
 	}
-	
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			System.out.printf("\nMouse clicked at %d, %d", x, y);
-			Board.this.player1.setLocation(x, y);
+			// System.out.printf("\nMouse clicked at %d, %d", x, y);
+			Board.this.currentPlayer.setLocation(x, y);
 			Board.this.repaint();
-			
+
 		}
 
 		@Override
@@ -73,10 +99,10 @@ public class Board extends JPanel {
 
 		}
 	}
-	
+
 	// Move to unit class.
-	public void setPlayerLocation(int x, int y){
-		
+	public void setPlayerLocation(int x, int y) {
+
 		this.player1.setLocation(x, y);
 	}
 
@@ -142,17 +168,13 @@ public class Board extends JPanel {
 					String[] stringTiles;
 					stringTiles = text.split("_");
 
-					tiles[(int) (Math.floor(index / 4))][(index % 4)] = new Tile(
-							(int) (Math.floor(index / 4)), (index % 4),
+					tiles[(index % 4)][(int) (Math.floor(index / 4))] = new Tile(
+							(index % 4), (int) (Math.floor(index / 4)),
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
 							Integer.parseInt(stringTiles[2]), stringTiles[3],
 							Integer.parseInt(stringTiles[4]), stringTiles[5],
 							Integer.parseInt(stringTiles[6]));
 
-					
-						//tiles[(int) (Math.floor(index / 4))][(index % 4)].addHutorVillage(stringTiles[5]);
-					
-					
 					index++;
 
 					if (index == 16) {
@@ -224,10 +246,42 @@ public class Board extends JPanel {
 				}
 			}
 		}
-		
-		Ellipse2D.Double player = new Ellipse2D.Double(this.player1.getLocation().x - 25, this.player1.getLocation().y - 25, 50, 50);
+
+		Ellipse2D.Double player1 = new Ellipse2D.Double(
+				this.player1.getLocation().x - 25,
+				this.player1.getLocation().y - 25, 50, 50);
 		g2.setColor(Color.RED);
-		g2.fill(player);
+		g2.fill(player1);
+
+		Ellipse2D.Double player2 = new Ellipse2D.Double(
+				this.player2.getLocation().x - 25,
+				this.player2.getLocation().y - 25, 50, 50);
+		g2.setColor(Color.ORANGE);
+		g2.fill(player2);
+
+	}
+
+	public void endPhase() {
+
+		if (this.currentPlayer != this.firstPlayer) {
+			if (this.phase < 5) {
+				if (this.currentPlayer.equals(this.player1)) {
+					this.currentPlayer = player2;
+				} else {
+					this.currentPlayer = player1;
+				}
+				phase++;
+			} else {
+				phase = 1;
+				this.firstPlayer = this.currentPlayer;
+			}
+		} else {
+			if (this.currentPlayer.equals(this.player1)) {
+				this.currentPlayer = player2;
+			} else {
+				this.currentPlayer = player1;
+			}
+		}
 
 	}
 }

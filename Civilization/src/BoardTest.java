@@ -32,10 +32,10 @@ public class BoardTest {
 	@Test
 	public void testLoadResources() {
 		Tile wheatTile = board.map.get(0).getTiles()[0][0];
-		Tile silkTile = board.map.get(0).getTiles()[0][1];
-		Tile ironTile = board.map.get(0).getTiles()[0][2];
-		Tile incenseTile = board.map.get(0).getTiles()[0][3];
-		Tile emptyTile = board.map.get(0).getTiles()[1][0];
+		Tile silkTile = board.map.get(0).getTiles()[1][0];
+		Tile ironTile = board.map.get(0).getTiles()[2][0];
+		Tile incenseTile = board.map.get(0).getTiles()[3][0];
+		Tile emptyTile = board.map.get(0).getTiles()[0][1];
 
 		assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
 		assertEquals(Tile.Resource.Silk, silkTile.getResource());
@@ -47,10 +47,10 @@ public class BoardTest {
 	@Test
 	public void testLoadTerrain() {
 		Tile mountainTile = board.map.get(0).getTiles()[0][0];
-		Tile waterTile = board.map.get(0).getTiles()[0][1];
-		Tile forestTile = board.map.get(0).getTiles()[0][2];
-		Tile desertTile = board.map.get(0).getTiles()[0][3];
-		Tile grasslandTile = board.map.get(0).getTiles()[1][0];
+		Tile waterTile = board.map.get(0).getTiles()[1][0];
+		Tile forestTile = board.map.get(0).getTiles()[2][0];
+		Tile desertTile = board.map.get(0).getTiles()[3][0];
+		Tile grasslandTile = board.map.get(0).getTiles()[0][1];
 
 		assertEquals(Tile.Terrain.Mountain, mountainTile.getTerrain());
 		assertEquals(Tile.Terrain.Water, waterTile.getTerrain());
@@ -62,8 +62,8 @@ public class BoardTest {
 	@Test
 	public void testLoadProduction() {
 		Tile noProductionTile = board.map.get(0).getTiles()[0][0];
-		Tile oneProductionTile = board.map.get(0).getTiles()[0][1];
-		Tile twoProductionTile = board.map.get(0).getTiles()[0][2];
+		Tile oneProductionTile = board.map.get(0).getTiles()[1][0];
+		Tile twoProductionTile = board.map.get(0).getTiles()[2][0];
 
 		assertEquals(0, noProductionTile.getProduction());
 		assertEquals(1, oneProductionTile.getProduction());
@@ -73,8 +73,8 @@ public class BoardTest {
 	@Test
 	public void testLoadTrade() {
 		Tile noTradeTile = board.map.get(0).getTiles()[0][0];
-		Tile oneTradeTile = board.map.get(0).getTiles()[0][1];
-		Tile twoTradeTile = board.map.get(0).getTiles()[0][2];
+		Tile oneTradeTile = board.map.get(0).getTiles()[1][0];
+		Tile twoTradeTile = board.map.get(0).getTiles()[2][0];
 
 		assertEquals(0, noTradeTile.getTrade());
 		assertEquals(1, oneTradeTile.getTrade());
@@ -84,8 +84,8 @@ public class BoardTest {
 	@Test
 	public void testLoadCulture() {
 		Tile noCultureTile = board.map.get(0).getTiles()[0][0];
-		Tile oneCultureTile = board.map.get(0).getTiles()[0][1];
-		Tile twoCultureTile = board.map.get(0).getTiles()[0][2];
+		Tile oneCultureTile = board.map.get(0).getTiles()[1][0];
+		Tile twoCultureTile = board.map.get(0).getTiles()[2][0];
 
 		assertEquals(0, noCultureTile.getCulture());
 		assertEquals(1, oneCultureTile.getCulture());
@@ -95,8 +95,8 @@ public class BoardTest {
 	@Test
 	public void testLoadCoins() {
 		Tile noCoinTile = board.map.get(0).getTiles()[0][0];
-		Tile oneCoinTile = board.map.get(0).getTiles()[0][1];
-		Tile twoCoinTile = board.map.get(0).getTiles()[0][2];
+		Tile oneCoinTile = board.map.get(0).getTiles()[1][0];
+		Tile twoCoinTile = board.map.get(0).getTiles()[2][0];
 
 		assertEquals(0, noCoinTile.getCoins());
 		assertEquals(1, oneCoinTile.getCoins());
@@ -106,13 +106,32 @@ public class BoardTest {
 	@Test
 	public void testLoadHutsandVillages() {
 		Tile hutTile = board.map.get(0).getTiles()[0][0];
-		Tile villageTile = board.map.get(0).getTiles()[0][1];
-		Tile blankTile = board.map.get(0).getTiles()[0][2];
+		Tile villageTile = board.map.get(0).getTiles()[1][0];
+		Tile blankTile = board.map.get(0).getTiles()[2][0];
 
 		assertEquals(Settler.class, hutTile.getFigures().get(0).getClass());
 		assertEquals(Army.class, villageTile.getFigures().get(0).getClass());
 		assertEquals(new ArrayList<Figure>(), blankTile.getFigures());
+	}
 
+	@Test
+	public void testPhaseChanges() {
+		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
+		board.endPhase();
+		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
+		assertEquals(1, board.getPhase());
+		board.endPhase();
+		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
+		assertEquals(2, board.getPhase());
+		for (int i = 0; i < 7; i++) {
+			board.endPhase();
+		}
+		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
+		assertEquals(5, board.getPhase());
+		board.endPhase();
+		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
+		assertEquals(1, board.getPhase());
+		
 	}
 
 }
