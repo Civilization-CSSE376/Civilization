@@ -15,22 +15,21 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
+	// Fields...
 	private JPanel buttons = new JPanel();
 	private JPanel board = new JPanel();
-
 	private JPanel content = new JPanel();
-
 	private JButton rules = new JButton("Rules");
 	private JButton player1Details = new JButton("Player 1 Details");
 	private JButton player2Details = new JButton("Player 2 Details");
 	private JButton marketDetails = new JButton("Market Details");
 	private JButton endPhase = new JButton("EndPhase");
 	private JButton quit = new JButton("Quit");
-
 	private String language;
 	private String p1Civilization;
 	private String p2Civilization;
 
+	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
 		System.out.println(languageChosen + " was chosen as the language.");
 		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.");
