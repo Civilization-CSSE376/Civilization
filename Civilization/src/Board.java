@@ -139,6 +139,10 @@ public class Board extends JPanel {
 							Integer.parseInt(stringTiles[4]), stringTiles[5],
 							Integer.parseInt(stringTiles[6]));
 
+					
+						//tiles[(int) (Math.floor(index / 4))][(index % 4)].addHutorVillage(stringTiles[5]);
+					
+					
 					index++;
 
 					if (index == 16) {

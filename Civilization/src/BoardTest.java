@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -100,6 +101,18 @@ public class BoardTest {
 		assertEquals(0, noCoinTile.getCoins());
 		assertEquals(1, oneCoinTile.getCoins());
 		assertEquals(2, twoCoinTile.getCoins());
+	}
+
+	@Test
+	public void testLoadHutsandVillages() {
+		Tile hutTile = board.map.get(0).getTiles()[0][0];
+		Tile villageTile = board.map.get(0).getTiles()[0][1];
+		Tile blankTile = board.map.get(0).getTiles()[0][2];
+
+		assertEquals(Settler.class, hutTile.getFigures().get(0).getClass());
+		assertEquals(Army.class, villageTile.getFigures().get(0).getClass());
+		assertEquals(new ArrayList<Figure>(), blankTile.getFigures());
+
 	}
 
 }
