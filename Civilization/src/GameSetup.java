@@ -26,7 +26,7 @@ public class GameSetup extends JFrame {
 	private JPanel player2CivilizationManager = new JPanel();
 
 	public GameSetup() {
-		
+		this.setLayout(null);
 		this.setTitle("Civilization Setup");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
@@ -40,7 +40,7 @@ public class GameSetup extends JFrame {
 		JLabel player2CivilizationSelection = new JLabel(
 				"Player 2, Choose your civilization.", JLabel.CENTER);
 
-		JButton done = new JButton("Ok");
+		JButton done = new JButton("Play!");
 
 		// Language Selection
 		JRadioButton chooseEnglish = new JRadioButton("English");
