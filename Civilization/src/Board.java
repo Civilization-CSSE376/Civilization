@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,61 +16,68 @@ import javax.swing.JPanel;
 public class Board extends JPanel {
 
 	private File file = new File("src/Panel1.txt");
-	
+	private Player player1;
+	private Player player2;
+
 	public static ArrayList<Panel> map;
 	private ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
 
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 4; j++) {
-				for (int k = 0; k < 4; k++) {
-					Color rectColor = Color.RED;
-					switch (this.map.get(i).getTiles()[j][k].getTerrain()
-							.toString()) {
-					case "Desert":
-						rectColor = Color.YELLOW;
-						break;
-					case "Mountain":
-						rectColor = Color.DARK_GRAY;
-						break;
-					case "Forest":
-						rectColor = Color.WHITE;
-						break;
-					case "Grassland":
-						rectColor = Color.GREEN;
-						break;
-					case "Water":
-						rectColor = Color.BLUE;
-						break;
-					}
-					if(i > 3){
-						Rectangle2D.Double rect = new Rectangle2D.Double(
-							20 + (440 * (i - 4)) + (110 * j), 20 + 440 + (110 * k), 110, 110);
-						g2.setColor(rectColor);
-						g2.fill(rect);
-					}
-					else{
-						Rectangle2D.Double rect = new Rectangle2D.Double(
-								20 + (440 * i) + (110 * j), 20 + (110 * k), 110, 110);
-						g2.setColor(rectColor);
-						g2.fill(rect);
-					}
-//					System.out.println("Tile[" + j + "][" + k + "] created at location " + (20 + (440 * i) + (110 * j)) + " " + (20 + nextRow + (110 * k)));
-				}
-			}
-		}
-
-	}
-
 	public Board() {
 		this.map = new ArrayList<Panel>();
 		readFromFile(this.file);
+		
+		this.player1 = new Player();
+		this.player2 = new Player();
+		
+		EnvironmentHandler mouseHandler = new EnvironmentHandler();
+		this.addMouseListener(mouseHandler);
+		
+	}
+	
+	public class EnvironmentHandler implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX();
+			int y = e.getY();
+			System.out.printf("\nMouse clicked at %d, %d", x, y);
+			Board.this.player1.setLocation(x, y);
+			Board.this.repaint();
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// Do nothing.
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// Do nothing.
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// Do nothing.
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// Do nothing.
+
+		}
+	}
+	
+	// Move to unit class.
+	public void setPlayerLocation(int x, int y){
+		
+		this.player1.setLocation(x, y);
 	}
 
 	public Board(ArrayList<String> civilizations) {
@@ -97,8 +107,8 @@ public class Board extends JPanel {
 
 		return null;
 	}
-	
-	static Panel findPanel(Tile location) { //move this somewhere else?
+
+	static Panel findPanel(Tile location) { // move this somewhere else?
 		for (Panel panel : Board.map) {
 			for (int i = 0; i < panel.getTiles().length; i++) {
 				{
@@ -111,7 +121,7 @@ public class Board extends JPanel {
 
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -167,5 +177,57 @@ public class Board extends JPanel {
 			}
 
 		}
+	}
+
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 4; j++) {
+				for (int k = 0; k < 4; k++) {
+					Color rectColor = Color.RED;
+					switch (this.map.get(i).getTiles()[j][k].getTerrain()
+							.toString()) {
+					case "Desert":
+						rectColor = Color.YELLOW;
+						break;
+					case "Mountain":
+						rectColor = Color.DARK_GRAY;
+						break;
+					case "Forest":
+						rectColor = Color.WHITE;
+						break;
+					case "Grassland":
+						rectColor = Color.GREEN;
+						break;
+					case "Water":
+						rectColor = Color.BLUE;
+						break;
+					}
+					if (i > 3) {
+						Rectangle2D.Double rect = new Rectangle2D.Double(20
+								+ (440 * (i - 4)) + (110 * j),
+								20 + 440 + (110 * k), 110, 110);
+						g2.setColor(rectColor);
+						g2.fill(rect);
+					} else {
+						Rectangle2D.Double rect = new Rectangle2D.Double(20
+								+ (440 * i) + (110 * j), 20 + (110 * k), 110,
+								110);
+						g2.setColor(rectColor);
+						g2.fill(rect);
+					}
+					// System.out.println("Tile[" + j + "][" + k +
+					// "] created at location " + (20 + (440 * i) + (110 * j)) +
+					// " " + (20 + nextRow + (110 * k)));
+				}
+			}
+		}
+		
+		Ellipse2D.Double player = new Ellipse2D.Double(this.player1.getLocation().x - 25, this.player1.getLocation().y - 25, 50, 50);
+		g2.setColor(Color.RED);
+		g2.fill(player);
+
 	}
 }

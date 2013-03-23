@@ -50,52 +50,37 @@ public class MainWindow extends JFrame {
 
 		this.board.add(new Board());
 
-//		this.content.setSize(1760, 880);
-		EnvironmentHandler mouseHandler = new EnvironmentHandler();
-		this.addMouseListener(mouseHandler);
-
-//		this.content
-//				.setLayout(new BoxLayout(this.content, BoxLayout.PAGE_AXIS));
 		this.content.add(this.board);
-//		this.content.add(this.buttons);
-//		this.add(this.content);
-		this.buttons.setBackground(Color.BLACK);
+		
+//		this.buttons.setBackground(Color.BLACK);
 		this.buttons.setLocation(0, 935);
 		this.buttons.setSize(1800, 50);
-//		this.add(this.buttons, BorderLayout.SOUTH);
+
 		this.add(this.buttons);
-//		this.add(new Board());
 		
 		JPanel leftpad = new JPanel();
 		leftpad.setLocation(0, 20);
 		leftpad.setSize(20, 880);
-		leftpad.setBackground(Color.BLACK);
+//		leftpad.setBackground(Color.BLACK);
 		
 		JPanel rightpad = new JPanel();
 		rightpad.setLocation(1780, 20);
 		rightpad.setSize(20, 880);
-		rightpad.setBackground(Color.BLACK);
+//		rightpad.setBackground(Color.BLACK);
 		
 		JPanel toppad = new JPanel();
 		toppad.setLocation(0, 0);
 		toppad.setSize(1800, 20);
-		toppad.setBackground(Color.BLACK);
+//		toppad.setBackground(Color.BLACK);
 
-		JPanel map = new JPanel();
+		JPanel map = new Board();
 		map.setLocation(20, 20);
 		map.setSize(1760, 880);
-		map.setBackground(Color.BLACK);
-//		map.add(new Board());
 		
 		this.add(leftpad);
 		this.add(rightpad);
 		this.add(toppad);
-//		this.add(map);
-//		map.add(this.board);
-		
-		this.add(new Board());
-		
-		// this.add(this.board, BorderLayout.CENTER);
+		this.add(map);
 
 		this.rules.addActionListener(new ActionListener() {
 
@@ -125,40 +110,5 @@ public class MainWindow extends JFrame {
 
 		});
 
-	}
-
-	public class EnvironmentHandler implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			System.out.printf("\nMouse clicked at %d, %d", x, y);
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
 	}
 }
