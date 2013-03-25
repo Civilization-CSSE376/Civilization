@@ -18,7 +18,6 @@ public class Board extends JPanel {
 	private File file = new File("src/Panel1.txt");
 	private Player player1;
 	private Player player2;
-	private boolean firstBoardDraw = true;
 
 
 	public static ArrayList<Panel> map;
@@ -35,6 +34,7 @@ public class Board extends JPanel {
 		this.player1 = new Player();
 		this.player2 = new Player();
 		this.player2.setLocation(1, 1);
+		
 
 		this.firstPlayer = player1;
 		this.currentPlayer = player1;
@@ -42,35 +42,15 @@ public class Board extends JPanel {
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
-
-	}
-	public Player getPlayer1() {
-		return player1;
 	}
 	
-	public Player getPlayer2() {
-		return player2;
-	}
-	
-	public Player getFirstPlayer() {
-		return firstPlayer;
-	}
-	
-	public Player getCurrentPlayer() {
-		return currentPlayer;
-	}
-	
-	public int getPhase() {
-		return phase;
-	}
-
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			// System.out.printf("\nMouse clicked at %d, %d", x, y);
+			 System.out.printf("\nMouse clicked at %d, %d", x, y);
 			Board.this.currentPlayer.setLocation(x, y);
 			Board.this.repaint();
 
@@ -100,17 +80,35 @@ public class Board extends JPanel {
 
 		}
 	}
-
-	// Move to unit class.
-	public void setPlayerLocation(int x, int y) {
-
-		this.player1.setLocation(x, y);
+	public Player getPlayer1() {
+		return player1;
+	}
+	
+	public Player getPlayer2() {
+		return player2;
+	}
+	
+	public Player getFirstPlayer() {
+		return firstPlayer;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	public int getPhase() {
+		return phase;
 	}
 
 	public Board(ArrayList<String> civilizations) {
 		for (String civ : civilizations) {
 			players.add(playerConfig(civ));
 		}
+	}
+	// Move to unit class.
+	public void setPlayerLocation(int x, int y) {
+
+		this.player1.setLocation(x, y);
 	}
 
 	private Player playerConfig(String civ) {
@@ -205,8 +203,7 @@ public class Board extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-//		if(this.firstBoardDraw)
-//			drawInitialBoard(g2);
+
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
@@ -230,16 +227,14 @@ public class Board extends JPanel {
 						break;
 					}
 					if (i > 3) {
-						Rectangle2D.Double rect = new Rectangle2D.Double(20
-								+ (440 * (i - 4)) + (110 * j),
-								20 + 440 + (110 * k), 110, 110);
+						Rectangle2D.Double rect = new Rectangle2D.Double((440 * (i - 4)) + (110 * j),
+								440 + (110 * k), 110, 110);
 						g2.setColor(rectColor);
 						g2.fill(rect);
 						g2.setColor(Color.WHITE);
 						g2.draw(rect);
 					} else {
-						Rectangle2D.Double rect = new Rectangle2D.Double(20
-								+ (440 * i) + (110 * j), 20 + (110 * k), 110,
+						Rectangle2D.Double rect = new Rectangle2D.Double((440 * i) + (110 * j), (110 * k), 110,
 								110);
 						g2.setColor(rectColor);
 						g2.fill(rect);
@@ -252,25 +247,22 @@ public class Board extends JPanel {
 				}
 			}
 		}
-
-
+		
+		
 		Ellipse2D.Double player1 = new Ellipse2D.Double(
 				this.player1.getLocation().x - 25,
 				this.player1.getLocation().y - 25, 50, 50);
 		g2.setColor(Color.RED);
 		g2.fill(player1);
-
+		
 		Ellipse2D.Double player2 = new Ellipse2D.Double(
 				this.player2.getLocation().x - 25,
 				this.player2.getLocation().y - 25, 50, 50);
 		g2.setColor(Color.ORANGE);
 		g2.fill(player2);
 
-	}
-	
-	private void drawInitialBoard(Graphics2D g2){
+//		System.out.println("Player drawn at " + (this.location.x - 25) + ", " + (this.location.y - 25));
 
-		this.firstBoardDraw = false;
 	}
 
 	public void endPhase() {

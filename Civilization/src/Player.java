@@ -1,9 +1,19 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Player{
+
+@SuppressWarnings("serial")
+public class Player {
 
 	private Point2D.Double location;
 
@@ -28,7 +38,9 @@ public class Player{
 
 	public Player() {
 		this.location = new Point2D.Double(75, 75);
+		
 	}
+	
 
 	private void setCapital(City capital) {
 
@@ -48,13 +60,13 @@ public class Player{
 	public void setLocation(int x, int y) {
 		int newX = 0;
 		int newY = 0;
-		int checkLocation1 = 130;
-		int checkLocation2 = 240;
+		int checkLocation1 = 110;
+		int checkLocation2 = 220;
 
-		if (x >= 20 && x <= 1760 && y >= 20 && y <= 880) {
+		if (x >= 0 && x <= 1760 && y >= 0 && y <= 880) {
 
-			if (x >= 20 && x <= 130)
-				newX = 75;
+			if (x >= 0 && x <= 110)
+				newX = 55;
 
 			while (newX == 0) {
 				if (x > checkLocation1 && x <= checkLocation2)
@@ -65,11 +77,11 @@ public class Player{
 				}
 			}
 
-			if (y >= 20 && y <= 130)
-				newY = 75;
+			if (y >= 0 && y <= 110)
+				newY = 55;
 
-			checkLocation1 = 130;
-			checkLocation2 = 240;
+			checkLocation1 = 110;
+			checkLocation2 = 220;
 			while (newY == 0) {
 				if (y > checkLocation1 && y <= checkLocation2)
 					newY = checkLocation1 + 55;
