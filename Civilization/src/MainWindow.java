@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +33,7 @@ public class MainWindow extends JFrame {
 
 	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
+		this.setLayout(null);
 		System.out.println(languageChosen + " was chosen as the language.");
 		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.");
 		
@@ -41,7 +44,7 @@ public class MainWindow extends JFrame {
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
-
+		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
@@ -54,7 +57,7 @@ public class MainWindow extends JFrame {
 		this.content.add(this.board);
 		
 //		this.buttons.setBackground(Color.BLACK);
-		this.buttons.setLocation(0, 935);
+		this.buttons.setLocation(0, 925);
 		this.buttons.setSize(1800, 50);
 
 		this.add(this.buttons);

@@ -18,26 +18,8 @@ public class Board extends JPanel {
 	private File file = new File("src/Panel1.txt");
 	private Player player1;
 	private Player player2;
+	private boolean firstBoardDraw = true;
 
-	public Player getPlayer1() {
-		return player1;
-	}
-
-	public Player getPlayer2() {
-		return player2;
-	}
-
-	public Player getFirstPlayer() {
-		return firstPlayer;
-	}
-
-	public Player getCurrentPlayer() {
-		return currentPlayer;
-	}
-
-	public int getPhase() {
-		return phase;
-	}
 
 	public static ArrayList<Panel> map;
 	private ArrayList<Player> players;
@@ -61,6 +43,25 @@ public class Board extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 
+	}
+	public Player getPlayer1() {
+		return player1;
+	}
+	
+	public Player getPlayer2() {
+		return player2;
+	}
+	
+	public Player getFirstPlayer() {
+		return firstPlayer;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	public int getPhase() {
+		return phase;
 	}
 
 	public class EnvironmentHandler implements MouseListener {
@@ -204,7 +205,8 @@ public class Board extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-
+//		if(this.firstBoardDraw)
+//			drawInitialBoard(g2);
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
@@ -233,12 +235,16 @@ public class Board extends JPanel {
 								20 + 440 + (110 * k), 110, 110);
 						g2.setColor(rectColor);
 						g2.fill(rect);
+						g2.setColor(Color.WHITE);
+						g2.draw(rect);
 					} else {
 						Rectangle2D.Double rect = new Rectangle2D.Double(20
 								+ (440 * i) + (110 * j), 20 + (110 * k), 110,
 								110);
 						g2.setColor(rectColor);
 						g2.fill(rect);
+						g2.setColor(Color.WHITE);
+						g2.draw(rect);
 					}
 					// System.out.println("Tile[" + j + "][" + k +
 					// "] created at location " + (20 + (440 * i) + (110 * j)) +
@@ -246,6 +252,7 @@ public class Board extends JPanel {
 				}
 			}
 		}
+
 
 		Ellipse2D.Double player1 = new Ellipse2D.Double(
 				this.player1.getLocation().x - 25,
@@ -259,6 +266,11 @@ public class Board extends JPanel {
 		g2.setColor(Color.ORANGE);
 		g2.fill(player2);
 
+	}
+	
+	private void drawInitialBoard(Graphics2D g2){
+
+		this.firstBoardDraw = false;
 	}
 
 	public void endPhase() {

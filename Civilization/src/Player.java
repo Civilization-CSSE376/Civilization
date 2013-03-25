@@ -1,7 +1,9 @@
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class Player {
+import javax.swing.JPanel;
+
+public class Player{
 
 	private Point2D.Double location;
 
