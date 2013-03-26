@@ -28,7 +28,7 @@ public class Board extends JPanel {
 	private int phase;
 
 	public Board() {
-		this.map = new ArrayList<Panel>();
+		map = new ArrayList<Panel>();
 		readFromFile(this.file);
 
 		this.player1 = new Player();
@@ -44,6 +44,30 @@ public class Board extends JPanel {
 		this.addMouseListener(mouseHandler);
 	}
 	
+	private void checkUnexploredPanel(int x, int y){
+
+		if(x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+			if(!map.get(1).getIsExplored()) map.get(1).changeIsExplored();
+		}
+		else if(x >= 880 && x < 1320 && y >= 0 && y < 440){ // Panel 3
+			if(!map.get(2).getIsExplored()) map.get(2).changeIsExplored();
+		}
+		else if(x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4 (top right)
+			if(!map.get(3).getIsExplored()) map.get(3).changeIsExplored();
+		}
+		else if(x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5 (bottom left)
+			if(!map.get(4).getIsExplored()) map.get(4).changeIsExplored();
+		}
+		else if(x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+			if(!map.get(5).getIsExplored()) map.get(5).changeIsExplored();
+		}
+		else if(x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+			if(!map.get(6).getIsExplored()) map.get(6).changeIsExplored();
+		}
+		else
+			System.out.println("Error.");			
+	}
+	
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
@@ -52,6 +76,7 @@ public class Board extends JPanel {
 			int y = e.getY();
 			 System.out.printf("\nMouse clicked at %d, %d", x, y);
 			Board.this.currentPlayer.setLocation(x, y);
+			checkUnexploredPanel(x, y);
 			Board.this.repaint();
 
 		}
@@ -172,7 +197,7 @@ public class Board extends JPanel {
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
 							Integer.parseInt(stringTiles[2]), stringTiles[3],
 							Integer.parseInt(stringTiles[4]), stringTiles[5],
-							Integer.parseInt(stringTiles[6]));
+							Integer.parseInt(stringTiles[6]), map.size());
 
 					index++;
 
@@ -198,6 +223,9 @@ public class Board extends JPanel {
 			}
 
 		}
+		
+		map.get(0).changeIsExplored(); // Player 1's initial location
+		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -208,7 +236,8 @@ public class Board extends JPanel {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
 					Color rectColor = Color.RED;
-					switch (this.map.get(i).getTiles()[j][k].getTerrain()
+					if(map.get(i).getIsExplored()){
+					switch (map.get(i).getTiles()[j][k].getTerrain()
 							.toString()) {
 					case "Desert":
 						rectColor = Color.YELLOW;
@@ -244,6 +273,24 @@ public class Board extends JPanel {
 					// System.out.println("Tile[" + j + "][" + k +
 					// "] created at location " + (20 + (440 * i) + (110 * j)) +
 					// " " + (20 + nextRow + (110 * k)));
+					}
+					else{
+						if (i > 3) {
+							Rectangle2D.Double rect = new Rectangle2D.Double((440 * (i - 4)) + (110 * j),
+									440 + (110 * k), 110, 110);
+							g2.setColor(Color.BLACK);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						} else {
+							Rectangle2D.Double rect = new Rectangle2D.Double((440 * i) + (110 * j), (110 * k), 110,
+									110);
+							g2.setColor(Color.BLACK);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						}
+					}
 				}
 			}
 		}

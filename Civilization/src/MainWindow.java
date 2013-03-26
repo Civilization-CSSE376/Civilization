@@ -127,6 +127,48 @@ public class MainWindow extends JFrame {
 			}
 
 		});
+		
+		this.player1Details.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame player1Window = new JFrame("Player 1 Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				player1Window.setIconImage(icon.getImage());
+				player1Window.setSize(700, 800);
+				player1Window.setVisible(true);
+			}
+			
+		});
+		
+		this.player2Details.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame player2Window = new JFrame("Player 2 Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				player2Window.setIconImage(icon.getImage());
+				player2Window.setSize(700, 800);
+				player2Window.setVisible(true);
+				
+			}
+			
+		});
+		
+		this.marketDetails.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame marketWindow = new JFrame("Market Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				marketWindow.setIconImage(icon.getImage());
+				marketWindow.setSize(700, 800);
+				marketWindow.setVisible(true);
+				
+			}
+			
+		
+		});
 
 	}
 }
