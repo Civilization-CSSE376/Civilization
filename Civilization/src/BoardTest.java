@@ -119,19 +119,73 @@ public class BoardTest {
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
 		board.endPhase();
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals(1, board.getPhase());
+		assertEquals("Start of Turn", board.getPhase());
 		board.endPhase();
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
-		assertEquals(2, board.getPhase());
+		assertEquals("Trade", board.getPhase());
 		for (int i = 0; i < 7; i++) {
 			board.endPhase();
 		}
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals(5, board.getPhase());
+		assertEquals("Research", board.getPhase());
 		board.endPhase();
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals(1, board.getPhase());
-		
+		assertEquals("Start of Turn", board.getPhase());
+	}
+
+	@Test
+	public void findFirstPanel() {
+		Panel first = board.findPanel(0, 235);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(1, 235);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(235, 235);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(438, 235);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(439, 235);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(235, 0);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(235, 1);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(235, 438);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(235, 439);
+		assertEquals(0, Board.map.indexOf(first));
+		first = board.findPanel(439, 439);
+		assertEquals(0, Board.map.indexOf(first));
+	}
+
+	@Test
+	public void findAllPanels() {
+		Panel first = board.findPanel(235, 235);
+		Panel second = board.findPanel(650, 235);
+		Panel third = board.findPanel(1000, 235);
+		Panel fourth = board.findPanel(1500, 235);
+		Panel fifth = board.findPanel(235, 650);
+		Panel sixth = board.findPanel(650, 650);
+		Panel seventh = board.findPanel(1000, 650);
+		Panel eigth = board.findPanel(1500, 650);
+		Panel nowhere = board.findPanel(-1, -1);
+
+		assertEquals(0, Board.map.indexOf(first));
+		assertEquals(1, Board.map.indexOf(second));
+		assertEquals(2, Board.map.indexOf(third));
+		assertEquals(3, Board.map.indexOf(fourth));
+		assertEquals(4, Board.map.indexOf(fifth));
+		assertEquals(5, Board.map.indexOf(sixth));
+		assertEquals(6, Board.map.indexOf(seventh));
+		assertEquals(7, Board.map.indexOf(eigth));
+		assertEquals(7, Board.map.indexOf(nowhere));
+	}
+
+	@Test
+	public void findTileFromClick() {
+		Tile tile1 = board.findTile(Board.map.get(0), 235, 235);
+		assertEquals(tile1, Board.map.get(0).getTiles()[2][2]);
+		Tile tile2 = board.findTile(Board.map.get(4), 235,675);
+		assertEquals(tile2, Board.map.get(4).getTiles()[2][2]);
 	}
 
 }

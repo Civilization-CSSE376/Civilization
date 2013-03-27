@@ -32,7 +32,6 @@ public class Board extends JPanel {
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
-	private int phase;
 
 	public Board() {
 		map = new ArrayList<Panel>();
@@ -45,7 +44,6 @@ public class Board extends JPanel {
 
 		this.firstPlayer = player1;
 		this.currentPlayer = player1;
-		this.phase = 1;
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
@@ -78,6 +76,12 @@ public class Board extends JPanel {
 			System.out.println("Error.");
 	}
 
+	public void checkUnexploredPanelNew(int x, int y) {
+		Panel panel = findPanel(x, y);
+		if (!panel.getIsExplored())
+			panel.changeIsExplored();
+	}
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
@@ -85,7 +89,12 @@ public class Board extends JPanel {
 			int x = e.getX();
 			int y = e.getY();
 			System.out.printf("\nMouse clicked at %d, %d", x, y);
-			if(Board.this.currentPhase.equals(MOVEMENT)){
+			
+			Panel panel = findPanel(x, y);
+			Tile tile = findTile(panel, x, y);
+			tile.getFigures();
+			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d",map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			if (Board.this.currentPhase.equals(MOVEMENT)) {
 				Board.this.currentPlayer.setLocation(x, y);
 				checkUnexploredPanel(x, y);
 				Board.this.repaint();
@@ -134,8 +143,8 @@ public class Board extends JPanel {
 		return currentPlayer;
 	}
 
-	public int getPhase() {
-		return phase;
+	public String getPhase() {
+		return this.currentPhase;
 	}
 
 	public Board(ArrayList<String> civilizations) {
@@ -187,6 +196,60 @@ public class Board extends JPanel {
 		}
 
 		return null;
+	}
+
+	static Panel findPanel(int x, int y) {
+		int index;
+		if (x >= 0 && x < 440 & y >= 0 && y < 440) {
+			 index = 0;
+		} else if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+			index =  1;
+		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+			index = 2;
+		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+																	// (top
+																	// right)
+			index =  3;
+		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+																// (bottom left)
+
+			index =  4;
+		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+			index = 5;
+		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+			index =  6;
+		} else {
+			index = 7; // Panel 8
+		}
+		
+		return map.get(index);
+	}
+
+	public Tile findTile(Panel p, int x, int y) {
+		int mapIndex = map.indexOf(p);
+		int relativeX = x - ((mapIndex % 4) * 440);
+		int relativeY = y - ((int) (Math.floor(mapIndex / 4)) * 440);
+		int tileX = 0;
+		int tileY = 0;
+		if (relativeX < 110)
+			tileX = 0;
+		else if (relativeX < 220)
+			tileX = 1;
+		else if (relativeX < 330)
+			tileX = 2;
+		else
+			tileX = 3;
+
+		if (relativeY < 110)
+			tileY = 0;
+		else if (relativeY < 220)
+			tileY = 1;
+		else if (relativeY < 330)
+			tileY = 2;
+		else
+			tileY = 3;
+
+		return p.getTiles()[tileX][tileY];
 	}
 
 	public void readFromFile(File file) {
