@@ -1,7 +1,8 @@
 public class Army extends Figure {
 
-	public Army(Tile tile) {
-		this.location = tile;
+	public Army(Player player, Tile tile) {
+		super(player, tile);
+		//this.location = tile;
 	}
 
 	@Override

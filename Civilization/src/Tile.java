@@ -67,9 +67,9 @@ public class Tile {
 			System.out.println("Error in Tile: wrong resource.");
 
 		if (inhabitant.equals("H"))
-			this.figures.add(new Settler(this));
+			this.figures.add(new Settler(null, this));
 		else if (inhabitant.equals("V"))
-			this.figures.add(new Army(this));
+			this.figures.add(new Army(null, this));
 		else
 			System.out.println("Error in Tile: wrong inhabitant.");
 
