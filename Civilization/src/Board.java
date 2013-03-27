@@ -7,15 +7,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
 
 	private File file = new File("src/Panel1.txt");
-	
+
 	public static ArrayList<Panel> map;
-	private ArrayList<Player> players;
+	public static ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
@@ -68,6 +71,15 @@ public class Board extends JPanel {
 	public Board() {
 		this.map = new ArrayList<Panel>();
 		readFromFile(this.file);
+	}
+	
+	//for testing purposes
+	public Board(Hashtable<String, Panel> map){
+		this.map = new ArrayList<Panel>();
+		this.map.add(map.get("topLeft"));
+		this.map.add(map.get("topRight"));
+		this.map.add(map.get("bottomLeft"));
+		this.map.add(map.get("bottomRight"));
 	}
 
 	public Board(ArrayList<String> civilizations) {

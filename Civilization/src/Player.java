@@ -30,7 +30,7 @@ public class Player {
 		
 		boolean alreadyHave = false;
 		for(City city : this.cities){
-			if(city.getisCapital()){
+			if(city.getIsCapital()){
 				
 			}
 		}

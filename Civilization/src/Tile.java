@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Tile {
@@ -19,6 +20,8 @@ public class Tile {
 	private int culture = 0;
 	private int coin = 0;
 	private Resource resource = Resource.None;
+	
+	private ArrayList<Figure> figures = new ArrayList<Figure>();
 
 	// private Marker marker this will hold the abstract object that represents
 	// cities, buildings, great people, etc.
@@ -106,6 +109,10 @@ public class Tile {
 
 	public int getProduction() {
 		return this.production;
+	}
+	
+	public ArrayList<Figure> getFigure(){
+		return this.figures;
 	}
 
 }
