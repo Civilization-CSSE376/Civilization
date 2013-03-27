@@ -75,27 +75,27 @@ public class Board extends JPanel {
 		this.addMouseListener(mouseHandler);
 	}
 
-	private void checkUnexploredPanel(int x, int y) {
+	public void checkUnexploredPanel(int x, int y) {
 
-		if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+		if (x < 880 && y < 440) { // Panel 2
 			if (!map.get(1).getIsExplored())
 				map.get(1).changeIsExplored();
-		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+		} else if (x < 1320 && y < 440) { // Panel 3
 			if (!map.get(2).getIsExplored())
 				map.get(2).changeIsExplored();
-		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+		} else if (x < 1761 && y < 440) { // Panel 4
 																	// (top
 																	// right)
 			if (!map.get(3).getIsExplored())
 				map.get(3).changeIsExplored();
-		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+		} else if (x < 440) { // Panel 5
 																// (bottom left)
 			if (!map.get(4).getIsExplored())
 				map.get(4).changeIsExplored();
-		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+		} else if (x < 880) { // Panel 6
 			if (!map.get(5).getIsExplored())
 				map.get(5).changeIsExplored();
-		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+		} else if (x < 1320) { // Panel 7
 			if (!map.get(6).getIsExplored())
 				map.get(6).changeIsExplored();
 		} else
@@ -294,23 +294,23 @@ public class Board extends JPanel {
 
 	static Panel findPanel(int x, int y) {
 		int index;
-		if (x >= 0 && x < 440 & y >= 0 && y < 440) {
+		if (x < 440 && y < 440) {
 			index = 0;
-		} else if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+		} else if (x < 880 && y < 440) { // Panel 2
 			index = 1;
-		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+		} else if (x < 1320 && y < 440) { // Panel 3
 			index = 2;
-		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+		} else if (y < 440) { // Panel 4
 																	// (top
 																	// right)
 			index = 3;
-		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+		} else if (x < 440) { // Panel 5
 																// (bottom left)
 
 			index = 4;
-		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+		} else if (x < 880) { // Panel 6
 			index = 5;
-		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+		} else if (x < 1320) { // Panel 7
 			index = 6;
 		} else {
 			index = 7; // Panel 8
