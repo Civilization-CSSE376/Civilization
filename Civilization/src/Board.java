@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
@@ -11,6 +14,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -26,6 +33,7 @@ public class Board extends JPanel {
 	private File file = new File("src/Panel1.txt");
 	private Player player1;
 	private Player player2;
+	private Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
 	private ArrayList<Player> players;
@@ -82,19 +90,66 @@ public class Board extends JPanel {
 			panel.changeIsExplored();
 	}
 
+	public void makeMovementWindow(final ArrayList<Figure> figures) {
+		final JInternalFrame frame = new JInternalFrame("Movement");
+		frame.setLayout(new GridLayout(1, 2));
+
+		frame.setSize(600, 600);
+
+		JButton move = new JButton("Move this figure");
+		JButton cancel = new JButton("Cancel");
+
+		frame.add(move);
+		frame.add(cancel);
+		frame.setVisible(true);
+
+		move.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentMovementFigure = figures.get(0);
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+
+		cancel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentMovementFigure = null;
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+
+	}
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			System.out.printf("\nMouse clicked at %d, %d", x, y);
-			
-			Panel panel = findPanel(x, y);
-			Tile tile = findTile(panel, x, y);
-			tile.getFigures();
-			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d",map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
+
 			if (Board.this.currentPhase.equals(MOVEMENT)) {
+				Panel panel = findPanel(x, y);
+				Tile tile = findTile(panel, x, y);
+				if (currentMovementFigure == null
+						|| currentMovementFigure.location.equals(tile)) {
+					ArrayList<Figure> figures = tile.getFigures();
+					if (!figures.isEmpty()) {
+						Figure figure = figures.get(0);
+						// if(figure.getOwner().equals(Board.this.currentPlayer)){
+
+						// }
+						makeMovementWindow(figures);
+					}
+				}
+				System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+						map.indexOf(panel), tile.getxPos(), tile.getyPos());
+
 				Board.this.currentPlayer.setLocation(x, y);
 				checkUnexploredPanel(x, y);
 				Board.this.repaint();
@@ -201,27 +256,27 @@ public class Board extends JPanel {
 	static Panel findPanel(int x, int y) {
 		int index;
 		if (x >= 0 && x < 440 & y >= 0 && y < 440) {
-			 index = 0;
+			index = 0;
 		} else if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
-			index =  1;
+			index = 1;
 		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
 			index = 2;
 		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
 																	// (top
 																	// right)
-			index =  3;
+			index = 3;
 		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
 																// (bottom left)
 
-			index =  4;
+			index = 4;
 		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
 			index = 5;
 		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
-			index =  6;
+			index = 6;
 		} else {
 			index = 7; // Panel 8
 		}
-		
+
 		return map.get(index);
 	}
 
