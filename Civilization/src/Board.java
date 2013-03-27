@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
@@ -11,6 +14,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+
+import java.util.Hashtable;
+
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -23,15 +33,19 @@ public class Board extends JPanel {
 	private String currentPhase;
 
 	private File file = new File("src/Panel1.txt");
+
 	private Player player1;
 	private Player player2;
+	private Figure currentMovementFigure = null;
+
 
 	public static ArrayList<Panel> map;
-	private ArrayList<Player> players;
+	public static ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
-//	private int phase;
+
+	private int phase;
 
 	public Board() {
 		map = new ArrayList<Panel>();
@@ -44,7 +58,7 @@ public class Board extends JPanel {
 
 		this.firstPlayer = player1;
 		this.currentPlayer = player1;
-//		this.phase = 1;
+		this.phase = 1;
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
@@ -77,14 +91,72 @@ public class Board extends JPanel {
 			System.out.println("Error.");
 	}
 
+	public void checkUnexploredPanelNew(int x, int y) {
+		Panel panel = findPanel(x, y);
+		if (!panel.getIsExplored())
+			panel.changeIsExplored();
+	}
+
+	public void makeMovementWindow(final ArrayList<Figure> figures) {
+		final JInternalFrame frame = new JInternalFrame("Movement");
+		frame.setLayout(new GridLayout(1, 2));
+
+		frame.setSize(600, 600);
+
+		JButton move = new JButton("Move this figure");
+		JButton cancel = new JButton("Cancel");
+
+		frame.add(move);
+		frame.add(cancel);
+		frame.setVisible(true);
+
+		move.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentMovementFigure = figures.get(0);
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+
+		cancel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentMovementFigure = null;
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+
+	}
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			System.out.printf("\nMouse clicked at %d, %d", x, y);
-			if(Board.this.currentPhase.equals(MOVEMENT)){
+			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
+
+			if (Board.this.currentPhase.equals(MOVEMENT)) {
+				Panel panel = findPanel(x, y);
+				Tile tile = findTile(panel, x, y);
+				if (currentMovementFigure == null
+						|| currentMovementFigure.location.equals(tile)) {
+					ArrayList<Figure> figures = tile.getFigures();
+					if (!figures.isEmpty()) {
+						Figure figure = figures.get(0);
+						// if(figure.getOwner().equals(Board.this.currentPlayer)){
+
+						// }
+						makeMovementWindow(figures);
+					}
+				}
+				System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+						map.indexOf(panel), tile.getxPos(), tile.getyPos());
+
 				Board.this.currentPlayer.setLocation(x, y);
 				checkUnexploredPanel(x, y);
 				Board.this.repaint();
@@ -132,10 +204,24 @@ public class Board extends JPanel {
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
-//
-//	public int getPhase() {
-//		return this.phase;
-//	}
+
+	public int getPhase() {
+		return this.phase;
+	}
+
+
+	public String getCurrentPhase() {
+		return this.currentPhase;
+	}
+	
+	//for testing purposes
+	public Board(Hashtable<String, Panel> map){
+		this.map = new ArrayList<Panel>();
+		this.map.add(map.get("topLeft"));
+		this.map.add(map.get("topRight"));
+		this.map.add(map.get("bottomLeft"));
+		this.map.add(map.get("bottomRight"));
+	}
 
 	public Board(ArrayList<String> civilizations) {
 		for (String civ : civilizations) {
@@ -188,6 +274,60 @@ public class Board extends JPanel {
 		return null;
 	}
 
+	static Panel findPanel(int x, int y) {
+		int index;
+		if (x >= 0 && x < 440 & y >= 0 && y < 440) {
+			index = 0;
+		} else if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+			index = 1;
+		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+			index = 2;
+		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+																	// (top
+																	// right)
+			index = 3;
+		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+																// (bottom left)
+
+			index = 4;
+		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+			index = 5;
+		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+			index = 6;
+		} else {
+			index = 7; // Panel 8
+		}
+
+		return map.get(index);
+	}
+
+	public Tile findTile(Panel p, int x, int y) {
+		int mapIndex = map.indexOf(p);
+		int relativeX = x - ((mapIndex % 4) * 440);
+		int relativeY = y - ((int) (Math.floor(mapIndex / 4)) * 440);
+		int tileX = 0;
+		int tileY = 0;
+		if (relativeX < 110)
+			tileX = 0;
+		else if (relativeX < 220)
+			tileX = 1;
+		else if (relativeX < 330)
+			tileX = 2;
+		else
+			tileX = 3;
+
+		if (relativeY < 110)
+			tileY = 0;
+		else if (relativeY < 220)
+			tileY = 1;
+		else if (relativeY < 330)
+			tileY = 2;
+		else
+			tileY = 3;
+
+		return p.getTiles()[tileX][tileY];
+	}
+
 	public void readFromFile(File file) {
 		BufferedReader reader = null;
 
@@ -210,7 +350,7 @@ public class Board extends JPanel {
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
 							Integer.parseInt(stringTiles[2]), stringTiles[3],
 							Integer.parseInt(stringTiles[4]), stringTiles[5],
-							Integer.parseInt(stringTiles[6]), map.size());
+							Integer.parseInt(stringTiles[6]));
 
 					index++;
 

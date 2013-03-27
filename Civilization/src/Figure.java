@@ -1,6 +1,7 @@
 
 public abstract class Figure {
 	protected Tile location;
+	private Player owner;
 
 	public abstract void move();
 
@@ -9,4 +10,8 @@ public abstract class Figure {
 	}
 
 	public abstract void takeHut();
+	
+	public Player getOwner(){
+		return this.owner;
+	}
 }

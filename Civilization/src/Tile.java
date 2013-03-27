@@ -20,9 +20,10 @@ public class Tile {
 	private int culture = 0;
 	private int coin = 0;
 	private Resource resource = Resource.None;
-	private int panelNumber;
+
 	// This will hold the abstract objects of figures such as scouts and armies.
 	// It also contains the huts and villages
+
 	private ArrayList<Figure> figures = new ArrayList<Figure>();
 
 	// private Marker marker this will hold the abstract object that represents
@@ -33,14 +34,13 @@ public class Tile {
 	}
 
 	public Tile(int x, int y, String terrain, int trade, int production,
-			String resource, int culture, String inhabitant, int coin, int panelNumber) {
+			String resource, int culture, String inhabitant, int coin) {
 		this.xPos = x;
 		this.yPos = y;
 		this.trade = trade;
 		this.production = production;
 		this.culture = culture;
 		this.coin = coin;
-		this.panelNumber = panelNumber;
 
 		if (terrain.equals("M"))
 			this.terrain = Terrain.Mountain;
@@ -114,6 +114,10 @@ public class Tile {
 
 	public int getProduction() {
 		return this.production;
+	}
+	
+	public ArrayList<Figure> getFigure(){
+		return this.figures;
 	}
 
 	public ArrayList<Figure> getFigures() {

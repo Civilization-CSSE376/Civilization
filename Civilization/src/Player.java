@@ -30,16 +30,18 @@ public class Player {
 	}
 	
 
-//	private void setCapital(City capital) {
-//
-//		boolean alreadyHave = false;
-//		for (City city : this.cities) {
-//			if (city.getisCapital()) {
-//
-//			}
-//		}
-//	}
+	private void setCapital(City capital) {
 
+		boolean alreadyHave = false;
+
+		for(City city : this.cities){
+			if(city.getIsCapital()){
+				
+			}
+		}
+				
+	}
+	
 	// Move this to the separate unit classes.
 	public Point2D.Double getLocation() {
 		return this.location;

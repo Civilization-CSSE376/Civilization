@@ -20,13 +20,13 @@ public class TileTest {
 	
 	@Test
 	public void testWrongTerrainAndResourceInputs(){
-		Tile target = new Tile(3, 3, "X", 1, 1, "X", 1, "X", 1, 1);
+		Tile target = new Tile(3, 3, "X", 1, 1, "X", 1, "X", 1);
 		assertNotNull(target);
 	}
 	
 	@Test
 	public void testGetMethods(){
-		Tile target = new Tile(3, 3, "M", 1, 1, "W", 1, "H", 1, 1);
+		Tile target = new Tile(3, 3, "M", 1, 1, "W", 1, "H", 1);
 		
 		assertEquals(3, target.getxPos());
 		assertEquals(3, target.getyPos());
