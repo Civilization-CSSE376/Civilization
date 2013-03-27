@@ -109,9 +109,9 @@ public class BoardTest {
 		Tile villageTile = board.map.get(0).getTiles()[1][0];
 		Tile blankTile = board.map.get(0).getTiles()[2][0];
 
-		assertEquals(Settler.class, hutTile.getFigures().get(0).getClass());
-		assertEquals(Army.class, villageTile.getFigures().get(0).getClass());
-		assertEquals(new ArrayList<Figure>(), blankTile.getFigures());
+		assertEquals(Settler.class, hutTile.getFigure().get(0).getClass());
+		assertEquals(Army.class, villageTile.getFigure().get(0).getClass());
+		assertEquals(new ArrayList<Figure>(), blankTile.getFigure());
 	}
 
 	@Test

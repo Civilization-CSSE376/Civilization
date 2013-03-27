@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+
+import java.util.Hashtable;
+
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -31,12 +34,14 @@ public class Board extends JPanel {
 	private String currentPhase;
 
 	private File file = new File("src/Panel1.txt");
+
 	private Player player1;
 	private Player player2;
 	private Figure currentMovementFigure = null;
 
+
 	public static ArrayList<Panel> map;
-	private ArrayList<Player> players;
+	public static ArrayList<Player> players;
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
@@ -201,6 +206,15 @@ public class Board extends JPanel {
 	public String getPhase() {
 		return this.currentPhase;
 	}
+	
+	//for testing purposes
+	public Board(Hashtable<String, Panel> map){
+		this.map = new ArrayList<Panel>();
+		this.map.add(map.get("topLeft"));
+		this.map.add(map.get("topRight"));
+		this.map.add(map.get("bottomLeft"));
+		this.map.add(map.get("bottomRight"));
+	}
 
 	public Board(ArrayList<String> civilizations) {
 		for (String civ : civilizations) {
@@ -329,7 +343,7 @@ public class Board extends JPanel {
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
 							Integer.parseInt(stringTiles[2]), stringTiles[3],
 							Integer.parseInt(stringTiles[4]), stringTiles[5],
-							Integer.parseInt(stringTiles[6]), map.size());
+							Integer.parseInt(stringTiles[6]));
 
 					index++;
 

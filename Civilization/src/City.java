@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -14,49 +15,75 @@ public class City {
 	private int trade = 0;
 
 	
-	public City(Tile location, ArrayList<Tile> outskirts){
+	public City(Tile location){
 		this.location = location;
-		this.outskirts = outskirts;
 	}
 	
 	public void setCapital(){
 		this.isCapital = true;
 	}
 	
-	public boolean getisCapital(){
+	public boolean getIsCapital(){
 		return this.isCapital;
+	}
+	
+	public void setHasAction(boolean b){
+		this.hasAction = b;
 	}
 	
 	
 	/**
 	 * Calculates the production of this city
-	 * @return production
+	 * @return totalProduction
 	 */
 	private int calcProduction(){
+		int totalProduction = 0;
 		
-		return 0;
+		for(Tile t : this.outskirts){
+			totalProduction += t.getProduction();
+		}
+		
+		return totalProduction;
 	}
 	
 	/**
 	 * Calculates the culture of this city
-	 * @return culture
+	 * @return totalCulture
 	 */
 	private int calcCulture(){
-		return 0;
+		int totalCulture = 0;
+		
+		for(Tile t : this.outskirts){
+			totalCulture += t.getCulture();
+		}
+		
+		return totalCulture;
 	}
 	
 	/**
 	 * Calculates the trade of this city.
-	 * @return trade
+	 * @return totalTrade
 	 */
 	private int calcTrade(){
-		return 0;
+		int totalTrade = 0;
+		
+		for(Tile t : this.outskirts){
+			totalTrade += t.getTrade();
+		}
+		
+		return totalTrade;
 	}
 	
+	/**
+	 * Collects the 8 surrounding tiles that makeup a city's outskirts
+	 * @param startTile -the location of the city
+	 * @return the 8 tiles of the outskirts in a hashset structure. returns null
+	 * 			if the outskirts contain a null tile
+	 */
 	private HashSet<Tile> getOutskirts(Tile startTile){
 		Panel startPanel = Board.findPanel(startTile);
 		
-		Hashtable<String, Panel> neighbors = startPanel.getNeighbors();
+		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		HashSet<Tile> outskirts = new HashSet<Tile>();
 		
 		Panel westPanel = neighbors.get("West");
@@ -77,6 +104,10 @@ public class City {
 				return null;
 			}
 			
+			if(!southPanel.getIsExplored() || !westPanel.getIsExplored() || !southWestPanel.getIsExplored()){
+				return null;
+			}
+			
 			//west panel
 			outskirts.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY]);
 			outskirts.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY + 1]);
@@ -87,7 +118,7 @@ public class City {
 			
 			//southWest panel
 			outskirts.add(southWestPanel.getTiles()
-					[southWestPanel.getTiles().length][southWestPanel.getTiles().length]);
+					[southWestPanel.getTiles().length - 1][southWestPanel.getTiles().length - 1]);
 			
 			//start panel
 			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
@@ -104,6 +135,10 @@ public class City {
 				return null;
 			}
 			
+			if(!southPanel.getIsExplored() || !eastPanel.getIsExplored() || !southEastPanel.getIsExplored()){
+				return null;
+			}
+			
 			//east panel
 			outskirts.add(eastPanel.getTiles()[0][startY]);
 			outskirts.add(eastPanel.getTiles()[0][startY + 1]);
@@ -113,7 +148,7 @@ public class City {
 			outskirts.add(southPanel.getTiles()[startX][southPanel.getTiles()[0].length - 1]);
 			
 			//southEast panel
-			outskirts.add(southEastPanel.getTiles()[0][southEastPanel.getTiles().length]);
+			outskirts.add(southEastPanel.getTiles()[0][southEastPanel.getTiles().length - 1]);
 			
 			//start panel
 			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
@@ -128,6 +163,10 @@ public class City {
 				return null;
 			}
 			
+			if(!northPanel.getIsExplored() || !westPanel.getIsExplored() || !northWestPanel.getIsExplored()){
+				return null;
+			}
+			
 			//west panel
 			outskirts.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY - 1]);
 			outskirts.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY]);
@@ -137,7 +176,7 @@ public class City {
 			outskirts.add(northPanel.getTiles()[startX + 1][0]);
 			
 			//northWest panel
-			outskirts.add(northWestPanel.getTiles()[northWestPanel.getTiles().length][0]);
+			outskirts.add(northWestPanel.getTiles()[northWestPanel.getTiles().length - 1][0]);
 			
 			//start panel
 			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
@@ -149,6 +188,10 @@ public class City {
 			Panel northEastPanel = neighbors.get("North").getNeighbors().get("East");
 			
 			if(northPanel == null || eastPanel == null || northEastPanel == null){
+				return null;
+			}
+			
+			if(!northPanel.getIsExplored() || !eastPanel.getIsExplored() || !northEastPanel.getIsExplored()){
 				return null;
 			}
 			
@@ -170,7 +213,7 @@ public class City {
 		}else if(startX - 1 < 0){
 			//west edge
 			
-			if(westPanel == null){
+			if(westPanel == null || !westPanel.getIsExplored()){
 				return null;
 			}
 			
@@ -189,7 +232,7 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length){
 			//east edge
 			
-			if(eastPanel == null){
+			if(eastPanel == null || !eastPanel.getIsExplored()){
 				return null;
 			}
 			
@@ -208,7 +251,7 @@ public class City {
 		}else if(startY - 1 < 0){
 			//south edge
 			
-			if(southPanel == null){
+			if(southPanel == null || !southPanel.getIsExplored()){
 				return null;
 			}
 			
@@ -227,7 +270,7 @@ public class City {
 		}else if(startY + 2 > startPanel.getTiles()[0].length){
 			//north edge
 			
-			if(northPanel == null){
+			if(northPanel == null || !northPanel.getIsExplored()){
 				return null;
 			}
 			
@@ -245,6 +288,11 @@ public class City {
 			
 		}else{
 			//start panel
+			
+			if(!startPanel.getIsExplored()){
+				return null;
+			}
+			
 			outskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
 			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
 			outskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
@@ -258,9 +306,72 @@ public class City {
 		return outskirts;
 	}
 	
-	private boolean validOutskirts(HashSet<Tile> outskirts){
+	/**
+	 * Determines whether a city and its outskirts are in a valid location
+	 * @param buildingPlayer -the player wanting to build the city
+	 * @param startTile -the location tile of the city
+	 * @param outskirts -the 8 surrounding tiles of the city
+	 * @return true if the startTile and all the tiles in the outskirts pass all restrictions else false
+	 */
+	private boolean validOutskirts(Player buildingPlayer, Tile startTile, HashSet<Tile> outskirts){
 		
-		return false;
+		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
+		ArrayList<Player> enemyPlayers = new ArrayList<Player>();
+		ArrayList<City> enemyCities = new ArrayList<City>();
+		ArrayList<Tile> enemyOutskirts = new ArrayList<Tile>();
+		HashSet<Tile> cityTiles = new HashSet<Tile>(outskirts);
+		cityTiles.add(startTile);
+		
+		for(Player p : Board.players){
+			if(!p.equals(buildingPlayer)){
+				enemyFigures.addAll(p.figures);
+				enemyPlayers.add(p);
+			}
+		}
+		
+		for(Figure f: enemyFigures){
+			if(cityTiles.contains(f.location)){
+				return false;
+			}
+		}
+		
+		for(Player p : enemyPlayers){
+			enemyCities.addAll(p.cities);
+		}
+		
+		for(City c : enemyCities){
+			enemyOutskirts.addAll(c.getOutskirts(c.location));
+		}
+		
+		//water test
+		if(startTile.getTerrain().equals(Tile.Terrain.Water)){
+			return false;
+		}
+		
+		
+		for(Tile t : cityTiles){
+			
+			//village test
+//			if(t.getFigure().contains(Village)){
+//				return false;
+//			}
+			
+			//hut test
+//			if(t.getFigure().contains(Hut)){
+//				return false;
+//			}
+			
+			//outskirts test
+			if(enemyOutskirts.contains(t)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	public void setOutskirts(ArrayList<Tile> outskirts) {
+		this.outskirts = outskirts;
 	}
 	
 }

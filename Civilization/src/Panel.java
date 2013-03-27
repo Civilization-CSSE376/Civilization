@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -16,7 +17,7 @@ public class Panel extends JPanel{
 
 	private Tile[][] tiles;
 	private boolean isExplored;
-	private Hashtable<String, Panel> neighbors;
+	private HashMap<String, Panel> neighbors;
 	
 
 	public Panel() {
@@ -29,7 +30,7 @@ public class Panel extends JPanel{
 		this.isExplored = false;
 	}
 	
-	public Hashtable<String, Panel> getNeighbors() {
+	public HashMap<String, Panel> getNeighbors() {
 		return neighbors;
 	}
 
@@ -39,7 +40,7 @@ public class Panel extends JPanel{
 		g2.draw(rect);
 	}
 	
-	public void setNeighbors (Hashtable<String, Panel> neighbors){
+	public void setNeighbors (HashMap<String, Panel> neighbors){
 		this.neighbors = neighbors;
 	}
 
