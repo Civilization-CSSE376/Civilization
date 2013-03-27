@@ -113,7 +113,7 @@ public class BoardTest {
 		assertEquals(Army.class, villageTile.getFigure().get(0).getClass());
 		assertEquals(new ArrayList<Figure>(), blankTile.getFigure());
 	}
-
+	
 	@Test
 	public void testPhaseChanges() {
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
