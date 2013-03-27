@@ -20,7 +20,6 @@ public class Board extends JPanel {
 	final String CITY_MANAGEMENT = "City Management";
 	final String MOVEMENT = "Movement";
 	final String RESEARCH = "Research";
-
 	private String currentPhase;
 
 	private File file = new File("src/Panel1.txt");
@@ -32,7 +31,7 @@ public class Board extends JPanel {
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
-	private int phase;
+//	private int phase;
 
 	public Board() {
 		map = new ArrayList<Panel>();
@@ -45,7 +44,7 @@ public class Board extends JPanel {
 
 		this.firstPlayer = player1;
 		this.currentPlayer = player1;
-		this.phase = 1;
+//		this.phase = 1;
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
@@ -133,10 +132,10 @@ public class Board extends JPanel {
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
-
-	public int getPhase() {
-		return phase;
-	}
+//
+//	public int getPhase() {
+//		return this.phase;
+//	}
 
 	public Board(ArrayList<String> civilizations) {
 		for (String civ : civilizations) {

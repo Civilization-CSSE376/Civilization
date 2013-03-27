@@ -12,7 +12,7 @@ import java.util.Hashtable;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Panel extends JPanel{
+public class Panel {
 
 	private Tile[][] tiles;
 	private boolean isExplored;
@@ -31,12 +31,6 @@ public class Panel extends JPanel{
 	
 	public Hashtable<String, Panel> getNeighbors() {
 		return neighbors;
-	}
-
-	public void paintComponent(Graphics2D g2){
-		super.paintComponent(g2);
-		Rectangle2D.Double rect = new Rectangle2D.Double(100, 100, 100, 100);
-		g2.draw(rect);
 	}
 	
 	public void setNeighbors (Hashtable<String, Panel> neighbors){

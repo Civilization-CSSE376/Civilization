@@ -52,6 +52,8 @@ public class Tile {
 			this.terrain = Terrain.Desert;
 		else if (terrain.equals("W"))
 			this.terrain = Terrain.Water;
+		else
+			System.out.println("Error in Tile: wrong terrain.");
 
 		if (resource.equals("W"))
 			this.resource = Resource.Wheat;
@@ -61,11 +63,15 @@ public class Tile {
 			this.resource = Resource.Iron;
 		else if (resource.equals("In"))
 			this.resource = Resource.Incense;
+		else
+			System.out.println("Error in Tile: wrong resource.");
 
 		if (inhabitant.equals("H"))
 			this.figures.add(new Settler(this));
 		else if (inhabitant.equals("V"))
 			this.figures.add(new Army(this));
+		else
+			System.out.println("Error in Tile: wrong inhabitant.");
 
 	}
 
