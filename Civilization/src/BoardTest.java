@@ -113,24 +113,24 @@ public class BoardTest {
 		assertEquals(Army.class, villageTile.getFigure().get(0).getClass());
 		assertEquals(new ArrayList<Figure>(), blankTile.getFigure());
 	}
-
+	
 	@Test
 	public void testPhaseChanges() {
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
 		board.endPhase();
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals("Start of Turn", board.getPhase());
+		assertEquals("Start of Turn", board.getCurrentPhase());
 		board.endPhase();
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
-		assertEquals("Trade", board.getPhase());
+		assertEquals("Trade", board.getCurrentPhase());
 		for (int i = 0; i < 7; i++) {
 			board.endPhase();
 		}
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals("Research", board.getPhase());
+		assertEquals("Research", board.getCurrentPhase());
 		board.endPhase();
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
-		assertEquals("Start of Turn", board.getPhase());
+		assertEquals("Start of Turn", board.getCurrentPhase());
 	}
 
 	@Test

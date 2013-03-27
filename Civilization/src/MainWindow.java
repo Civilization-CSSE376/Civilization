@@ -76,11 +76,6 @@ public class MainWindow extends JFrame {
 		toppad.setLocation(0, 0);
 		toppad.setSize(1800, 20);
 		toppad.setBackground(Color.BLACK);
-		
-//		JPanel topOfButtomPad = new JPanel();
-//		topOfButtomPad.setLocation(0, 901);
-//		topOfButtomPad.setSize(1800, 34);
-//		topOfButtomPad.setBackground(Color.BLACK);
 
 		final JPanel map = new Board();
 		map.setLocation(20, 20);
@@ -89,7 +84,6 @@ public class MainWindow extends JFrame {
 		this.add(leftpad);
 		this.add(rightpad);
 		this.add(toppad);
-//		this.add(topOfButtomPad);
 		this.add(map);
 		
 		this.endPhase.addActionListener(new ActionListener(){
