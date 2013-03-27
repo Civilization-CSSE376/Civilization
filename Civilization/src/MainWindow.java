@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,22 +17,23 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
+	// Fields...
 	private JPanel buttons = new JPanel();
 	private JPanel board = new JPanel();
-
 	private JPanel content = new JPanel();
-
 	private JButton rules = new JButton("Rules");
 	private JButton player1Details = new JButton("Player 1 Details");
 	private JButton player2Details = new JButton("Player 2 Details");
 	private JButton marketDetails = new JButton("Market Details");
+	private JButton endPhase = new JButton("EndPhase");
 	private JButton quit = new JButton("Quit");
-
 	private String language;
 	private String p1Civilization;
 	private String p2Civilization;
 
+	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
+		this.setLayout(null);
 		System.out.println(languageChosen + " was chosen as the language.");
 		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.");
 		
@@ -41,62 +44,62 @@ public class MainWindow extends JFrame {
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
-
+		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
+		this.buttons.add(this.endPhase);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
 		this.board.add(new Board());
 
-//		this.content.setSize(1760, 880);
-		EnvironmentHandler mouseHandler = new EnvironmentHandler();
-		this.addMouseListener(mouseHandler);
-
-//		this.content
-//				.setLayout(new BoxLayout(this.content, BoxLayout.PAGE_AXIS));
 		this.content.add(this.board);
-//		this.content.add(this.buttons);
-//		this.add(this.content);
+		
 		this.buttons.setBackground(Color.BLACK);
-		this.buttons.setLocation(0, 935);
+		this.buttons.setLocation(0, 925);
 		this.buttons.setSize(1800, 50);
-//		this.add(this.buttons, BorderLayout.SOUTH);
+
 		this.add(this.buttons);
-//		this.add(new Board());
 		
 		JPanel leftpad = new JPanel();
 		leftpad.setLocation(0, 20);
-		leftpad.setSize(20, 880);
+		leftpad.setSize(20, 905);
 		leftpad.setBackground(Color.BLACK);
 		
 		JPanel rightpad = new JPanel();
-		rightpad.setLocation(1780, 20);
-		rightpad.setSize(20, 880);
+		rightpad.setLocation(1781, 20);
+		rightpad.setSize(20, 905);
 		rightpad.setBackground(Color.BLACK);
 		
 		JPanel toppad = new JPanel();
 		toppad.setLocation(0, 0);
 		toppad.setSize(1800, 20);
 		toppad.setBackground(Color.BLACK);
+		
+//		JPanel topOfButtomPad = new JPanel();
+//		topOfButtomPad.setLocation(0, 901);
+//		topOfButtomPad.setSize(1800, 34);
+//		topOfButtomPad.setBackground(Color.BLACK);
 
-		JPanel map = new JPanel();
+		final JPanel map = new Board();
 		map.setLocation(20, 20);
-		map.setSize(1760, 880);
-		map.setBackground(Color.BLACK);
-//		map.add(new Board());
+		map.setSize(1761, 905);
 		
 		this.add(leftpad);
 		this.add(rightpad);
 		this.add(toppad);
-//		this.add(map);
-//		map.add(this.board);
+//		this.add(topOfButtomPad);
+		this.add(map);
 		
-		this.add(new Board());
-		
-		// this.add(this.board, BorderLayout.CENTER);
-
+		this.endPhase.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				((Board) map).endPhase();
+			}
+		});
+			
 		this.rules.addActionListener(new ActionListener() {
 
 			@Override
@@ -124,41 +127,48 @@ public class MainWindow extends JFrame {
 			}
 
 		});
+		
+		this.player1Details.addActionListener(new ActionListener(){
 
-	}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame player1Window = new JFrame("Player 1 Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				player1Window.setIconImage(icon.getImage());
+				player1Window.setSize(700, 800);
+				player1Window.setVisible(true);
+			}
+			
+		});
+		
+		this.player2Details.addActionListener(new ActionListener(){
 
-	public class EnvironmentHandler implements MouseListener {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame player2Window = new JFrame("Player 2 Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				player2Window.setIconImage(icon.getImage());
+				player2Window.setSize(700, 800);
+				player2Window.setVisible(true);
+				
+			}
+			
+		});
+		
+		this.marketDetails.addActionListener(new ActionListener() {
 
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			System.out.printf("\nMouse clicked at %d, %d", x, y);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame marketWindow = new JFrame("Market Details");
+				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+				marketWindow.setIconImage(icon.getImage());
+				marketWindow.setSize(700, 800);
+				marketWindow.setVisible(true);
+				
+			}
+			
+		
+		});
 
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
 	}
 }

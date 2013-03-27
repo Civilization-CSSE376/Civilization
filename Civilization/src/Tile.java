@@ -20,13 +20,14 @@ public class Tile {
 	private int culture = 0;
 	private int coin = 0;
 	private Resource resource = Resource.None;
-	
+
+	// This will hold the abstract objects of figures such as scouts and armies.
+	// It also contains the huts and villages
+
 	private ArrayList<Figure> figures = new ArrayList<Figure>();
 
 	// private Marker marker this will hold the abstract object that represents
 	// cities, buildings, great people, etc.
-	// private ArrayList<Figures> figures This will hold the abstract objects of
-	// figures such as scouts and armies
 
 	public Tile() {
 
@@ -62,11 +63,9 @@ public class Tile {
 			this.resource = Resource.Incense;
 
 		if (inhabitant.equals("H"))
-			System.out.println("Hut");
+			this.figures.add(new Settler(this));
 		else if (inhabitant.equals("V"))
-			System.out.println("Village");
-		else
-			System.out.println("No hut or village");
+			this.figures.add(new Army(this));
 
 	}
 
@@ -112,6 +111,10 @@ public class Tile {
 	}
 	
 	public ArrayList<Figure> getFigure(){
+		return this.figures;
+	}
+
+	public ArrayList<Figure> getFigures() {
 		return this.figures;
 	}
 
