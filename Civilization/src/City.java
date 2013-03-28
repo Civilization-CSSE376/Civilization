@@ -80,16 +80,16 @@ public class City {
 	 * @return the 8 tiles of the outskirts in a hashset structure. returns null
 	 * 			if the outskirts contain a null tile
 	 */
-	private HashSet<Tile> getOutskirts(Tile startTile){
-		Panel startPanel = Board.findPanel(startTile);
+	private HashSet<Tile> getOutskirts(Tile startTile){//written assuming typical plot (x,y) rather than array (row, column) 
+		Panel startPanel = Board.findPanel(startTile);//so every direction has to be replaced with the clockwise direction
 		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		HashSet<Tile> outskirts = new HashSet<Tile>();
 		
-		Panel westPanel = neighbors.get("West");
-		Panel eastPanel = neighbors.get("East");
-		Panel southPanel = neighbors.get("South");
-		Panel northPanel = neighbors.get("North");
+		Panel westPanel = neighbors.get("North");
+		Panel eastPanel = neighbors.get("South");
+		Panel southPanel = neighbors.get("West");
+		Panel northPanel = neighbors.get("East");
 
 		int startX = startTile.getxPos();
 		int startY = startTile.getyPos();
@@ -98,7 +98,7 @@ public class City {
 		if(startX - 1 < 0 && startY - 1 < 0){
 			//bottom left corner
 			
-			Panel southWestPanel = neighbors.get("South").getNeighbors().get("West");
+			Panel southWestPanel = neighbors.get("West").getNeighbors().get("North");
 			
 			if(southPanel == null || westPanel == null || southWestPanel == null){
 				return null;
@@ -129,7 +129,7 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY - 1 < 0){
 			//bottom right corner
 			
-			Panel southEastPanel = neighbors.get("South").getNeighbors().get("East");
+			Panel southEastPanel = neighbors.get("West").getNeighbors().get("South");
 			
 			if(southPanel == null || eastPanel == null || southEastPanel == null){
 				return null;
@@ -157,7 +157,7 @@ public class City {
 		}else if(startX - 1 < 0 && startY + 2 > startPanel.getTiles()[0].length){
 			//top left corner
 			
-			Panel northWestPanel = neighbors.get("North").getNeighbors().get("West");
+			Panel northWestPanel = neighbors.get("East").getNeighbors().get("North");
 			
 			if(northPanel == null || westPanel == null || northWestPanel == null){
 				return null;
@@ -185,7 +185,7 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY + 2 > startPanel.getTiles()[0].length){
 			//top right corner
 			
-			Panel northEastPanel = neighbors.get("North").getNeighbors().get("East");
+			Panel northEastPanel = neighbors.get("East").getNeighbors().get("South");
 			
 			if(northPanel == null || eastPanel == null || northEastPanel == null){
 				return null;
@@ -323,9 +323,10 @@ public class City {
 		cityTiles.add(startTile);
 		
 		for(Player p : Board.players){
+			
+			enemyPlayers.add(p);
 			if(!p.equals(buildingPlayer)){
 				enemyFigures.addAll(p.figures);
-				enemyPlayers.add(p);
 			}
 		}
 		
@@ -342,6 +343,7 @@ public class City {
 		for(City c : enemyCities){
 			enemyOutskirts.addAll(c.getOutskirts(c.location));
 		}
+		
 		
 		//water test
 		if(startTile.getTerrain().equals(Tile.Terrain.Water)){

@@ -38,7 +38,6 @@ public class Board extends JPanel {
 	private Player player2;
 	private Figure currentMovementFigure = null;
 
-
 	public static ArrayList<Panel> map;
 	public static ArrayList<Player> players;
 	// private Market market;
@@ -143,6 +142,8 @@ public class Board extends JPanel {
 			if (Board.this.currentPhase.equals(MOVEMENT)) {
 				Panel panel = findPanel(x, y);
 				Tile tile = findTile(panel, x, y);
+				System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+						map.indexOf(panel), tile.getxPos(), tile.getyPos());
 				if (currentMovementFigure == null
 						|| currentMovementFigure.location.equals(tile)) {
 					ArrayList<Figure> figures = tile.getFigures();
@@ -153,13 +154,11 @@ public class Board extends JPanel {
 						// }
 						makeMovementWindow(figures);
 					}
+				} else {
+					Board.this.currentPlayer.setLocation(x, y);
+					checkUnexploredPanel(x, y);
+					Board.this.repaint();
 				}
-				System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
-						map.indexOf(panel), tile.getxPos(), tile.getyPos());
-
-				Board.this.currentPlayer.setLocation(x, y);
-				checkUnexploredPanel(x, y);
-				Board.this.repaint();
 			}
 
 		}
@@ -213,9 +212,9 @@ public class Board extends JPanel {
 	public String getCurrentPhase() {
 		return this.currentPhase;
 	}
-	
-	//for testing purposes
-	public Board(Hashtable<String, Panel> map){
+
+	// for testing purposes
+	public Board(Hashtable<String, Panel> map) {
 		this.map = new ArrayList<Panel>();
 		this.map.add(map.get("topLeft"));
 		this.map.add(map.get("topRight"));
