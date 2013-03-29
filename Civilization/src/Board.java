@@ -176,7 +176,8 @@ public class Board extends JPanel {
 					currentMovementFigure.setTileLocal(tile);
 					tile.getFigures().add(currentMovementFigure);
 					currentMovementFigure = null;
-					checkUnexploredPanel(x, y);
+//					checkUnexploredPanel(x, y);
+					checkUnexploredPanelNew(x, y);
 					Board.this.repaint();
 				}
 			}
