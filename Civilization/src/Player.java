@@ -9,9 +9,9 @@ public class Player {
 //		// fill me in
 //	}
 
-	public ArrayList<Tile.Resource> resources;
-	public ArrayList<Figure> figures;
-	public ArrayList<City> cities;
+	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
+	public ArrayList<Figure> figures = new ArrayList<Figure>();
+	public ArrayList<City> cities = new ArrayList<City>();
 	// private ArrayList<Unit> units;
 	// private ArrayList<CultureCard> cultureCards;
 	// private ArrayList<TechCard> techCards;

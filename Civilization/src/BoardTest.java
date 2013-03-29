@@ -177,15 +177,109 @@ public class BoardTest {
 		assertEquals(5, Board.map.indexOf(sixth));
 		assertEquals(6, Board.map.indexOf(seventh));
 		assertEquals(7, Board.map.indexOf(eigth));
-		assertEquals(7, Board.map.indexOf(nowhere));
+		assertEquals(0, Board.map.indexOf(nowhere));
 	}
 
 	@Test
 	public void findTileFromClick() {
 		Tile tile1 = board.findTile(Board.map.get(0), 235, 235);
 		assertEquals(tile1, Board.map.get(0).getTiles()[2][2]);
+		
 		Tile tile2 = board.findTile(Board.map.get(4), 235,675);
 		assertEquals(tile2, Board.map.get(4).getTiles()[2][2]);
+		
+		Tile target = board.findTile(Board.map.get(0), 55, 55);
+		assertEquals(target, Board.map.get(0).getTiles()[0][0]);
+		
+		target = board.findTile(Board.map.get(0), 120, 55);
+		assertEquals(target, Board.map.get(0).getTiles()[1][0]);
+		
+		target = board.findTile(Board.map.get(0), 240, 55);
+		assertEquals(target, Board.map.get(0).getTiles()[2][0]);
+		
+		target = board.findTile(Board.map.get(0), 340, 55);
+		assertEquals(target, Board.map.get(0).getTiles()[3][0]);
+		
+		target = board.findTile(Board.map.get(0), 55, 120);
+		assertEquals(target, Board.map.get(0).getTiles()[0][1]);
+	
+		target = board.findTile(Board.map.get(0), 55, 240);
+		assertEquals(target, Board.map.get(0).getTiles()[0][2]);
+		
+		target = board.findTile(Board.map.get(0), 55, 340);
+		assertEquals(target, Board.map.get(0).getTiles()[0][3]);
 	}
+	
+	@Test
+	public void testGetFirstPlayer(){
+		Board target = new Board();
+		assertNotNull(target.getFirstPlayer());
+	}
+	
+	@Test
+	public void testGetPhase(){
+		Board target = new Board();
+		assertEquals(1, target.getPhase());
+	}
+	
+	@Test
+	public void testCheckUnexploredPanel(){
+		Board target = new Board();
+		
+		assertTrue(Board.map.get(0).getIsExplored());
+		assertFalse(Board.map.get(1).getIsExplored());
+		assertFalse(Board.map.get(2).getIsExplored());
+		assertFalse(Board.map.get(3).getIsExplored());
+		assertFalse(Board.map.get(4).getIsExplored());
+		assertFalse(Board.map.get(5).getIsExplored());
+		assertFalse(Board.map.get(6).getIsExplored());
+		assertTrue(Board.map.get(7).getIsExplored());
+		
+		target.checkUnexploredPanel(500, 300);
+		assertTrue(Board.map.get(1).getIsExplored());
+		assertFalse(Board.map.get(2).getIsExplored());
+		
+		target.checkUnexploredPanel(500, 300);
+		assertTrue(Board.map.get(1).getIsExplored());
+		
+		target.checkUnexploredPanel(1000, 300);
+		assertTrue(Board.map.get(2).getIsExplored());
+		
+		target.checkUnexploredPanel(1000, 300);
+		assertTrue(Board.map.get(2).getIsExplored());
+		
+		target.checkUnexploredPanel(1700, 300);
+		assertTrue(Board.map.get(3).getIsExplored());
+		
+		target.checkUnexploredPanel(1700, 300);
+		assertTrue(Board.map.get(3).getIsExplored());
+		
+		target.checkUnexploredPanel(1800, 300);
+		
+		target.checkUnexploredPanel(300, 500);
+		assertTrue(Board.map.get(4).getIsExplored());
+		
+		target.checkUnexploredPanel(300, 500);
+		assertTrue(Board.map.get(4).getIsExplored());
+		
+		target.checkUnexploredPanel(500, 500);
+		assertTrue(Board.map.get(5).getIsExplored());
+		
+		target.checkUnexploredPanel(500, 500);
+		assertTrue(Board.map.get(5).getIsExplored());
+		
+		target.checkUnexploredPanel(1000, 500);
+		assertTrue(Board.map.get(6).getIsExplored());
+		
+		target.checkUnexploredPanel(1000, 500);
+		assertTrue(Board.map.get(6).getIsExplored());
+		
+		target.checkUnexploredPanel(1400, 880);
+		assertTrue(Board.map.get(6).getIsExplored());
+		
+		target.checkUnexploredPanel(1400, 881);
+		
+	}
+	
 
 }

@@ -32,7 +32,7 @@ public class Board extends JPanel {
 	final String RESEARCH = "Research";
 	private String currentPhase;
 
-	private File file = new File("src/Panel1.txt");
+	private File file = new File("src/1stEight.txt");
 
 	private Player player1;
 	private Player player2;
@@ -52,7 +52,19 @@ public class Board extends JPanel {
 
 		this.player1 = new Player();
 		this.player2 = new Player();
-		this.player2.setLocation(1, 1);
+
+		Settler settler1 = new Settler(player1,
+				map.get(0).getTiles()[0][0]);
+		Settler settler2 = new Settler(player2,
+				map.get(7).getTiles()[3][3]);
+		
+		this.player1.figures.add(settler1);
+		this.player2.figures.add(settler2);
+		
+		map.get(0).getTiles()[0][0].getFigures().add(settler1);
+		map.get(7).getTiles()[3][3].getFigures().add(settler2);
+		
+
 		this.currentPhase = START_OF_TURN;
 
 		this.firstPlayer = player1;
@@ -63,27 +75,27 @@ public class Board extends JPanel {
 		this.addMouseListener(mouseHandler);
 	}
 
-	private void checkUnexploredPanel(int x, int y) {
+	public void checkUnexploredPanel(int x, int y) {
 
-		if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+		if (x < 880 && y < 440) { // Panel 2
 			if (!map.get(1).getIsExplored())
 				map.get(1).changeIsExplored();
-		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+		} else if (x < 1320 && y < 440) { // Panel 3
 			if (!map.get(2).getIsExplored())
 				map.get(2).changeIsExplored();
-		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+		} else if (x < 1761 && y < 440) { // Panel 4
 																	// (top
 																	// right)
 			if (!map.get(3).getIsExplored())
 				map.get(3).changeIsExplored();
-		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+		} else if (x < 440) { // Panel 5
 																// (bottom left)
 			if (!map.get(4).getIsExplored())
 				map.get(4).changeIsExplored();
-		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+		} else if (x < 880) { // Panel 6
 			if (!map.get(5).getIsExplored())
 				map.get(5).changeIsExplored();
-		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+		} else if (x < 1320) { // Panel 7
 			if (!map.get(6).getIsExplored())
 				map.get(6).changeIsExplored();
 		} else
@@ -97,7 +109,7 @@ public class Board extends JPanel {
 	}
 
 	public void makeMovementWindow(final ArrayList<Figure> figures) {
-		final JInternalFrame frame = new JInternalFrame("Movement");
+		final JFrame frame = new JFrame("Movement");
 		frame.setLayout(new GridLayout(1, 2));
 
 		frame.setSize(600, 600);
@@ -149,13 +161,21 @@ public class Board extends JPanel {
 					ArrayList<Figure> figures = tile.getFigures();
 					if (!figures.isEmpty()) {
 						Figure figure = figures.get(0);
-						// if(figure.getOwner().equals(Board.this.currentPlayer)){
+						if (figure.getOwner() != null) {
+							if (figure.getOwner().equals(
+									Board.this.currentPlayer)) {
+								makeMovementWindow(figures);
+							}
+						}
 
-						// }
-						makeMovementWindow(figures);
 					}
 				} else {
-					Board.this.currentPlayer.setLocation(x, y);
+					Tile oldTile = currentMovementFigure.location;
+					oldTile.getFigures().remove(currentMovementFigure);
+					Board.this.currentMovementFigure.setLocation(x, y);
+					currentMovementFigure.setTileLocal(tile);
+					tile.getFigures().add(currentMovementFigure);
+					currentMovementFigure = null;
 					checkUnexploredPanel(x, y);
 					Board.this.repaint();
 				}
@@ -207,7 +227,6 @@ public class Board extends JPanel {
 	public int getPhase() {
 		return this.phase;
 	}
-
 
 	public String getCurrentPhase() {
 		return this.currentPhase;
@@ -275,23 +294,23 @@ public class Board extends JPanel {
 
 	static Panel findPanel(int x, int y) {
 		int index;
-		if (x >= 0 && x < 440 & y >= 0 && y < 440) {
+		if (x < 440 && y < 440) {
 			index = 0;
-		} else if (x >= 440 && x < 880 && y >= 0 && y < 440) { // Panel 2
+		} else if (x < 880 && y < 440) { // Panel 2
 			index = 1;
-		} else if (x >= 880 && x < 1320 && y >= 0 && y < 440) { // Panel 3
+		} else if (x < 1320 && y < 440) { // Panel 3
 			index = 2;
-		} else if (x >= 1320 && x <= 1760 && y >= 0 && y < 440) { // Panel 4
+		} else if (y < 440) { // Panel 4
 																	// (top
 																	// right)
 			index = 3;
-		} else if (x >= 0 && x < 440 && y >= 440 && y <= 880) { // Panel 5
+		} else if (x < 440) { // Panel 5
 																// (bottom left)
 
 			index = 4;
-		} else if (x >= 440 && x < 880 && y >= 440 && y <= 880) { // Panel 6
+		} else if (x < 880) { // Panel 6
 			index = 5;
-		} else if (x >= 880 && x < 1320 && y >= 440 && y <= 880) { // Panel 7
+		} else if (x < 1320) { // Panel 7
 			index = 6;
 		} else {
 			index = 7; // Panel 8
@@ -462,18 +481,21 @@ public class Board extends JPanel {
 		else
 			g2.drawString("Player 2's turn.", 500, 900);
 
-		Ellipse2D.Double player1 = new Ellipse2D.Double(
-				this.player1.getLocation().x - 25,
-				this.player1.getLocation().y - 25, 50, 50);
-		g2.setColor(Color.RED);
-		g2.fill(player1);
+		for (Figure figure : player1.figures) {
+			Ellipse2D.Double player1 = new Ellipse2D.Double(
+					figure.getLocation().x - 25, figure.getLocation().y - 25,
+					50, 50);
+			g2.setColor(Color.RED);
+			g2.fill(player1);
+		}
 
-		Ellipse2D.Double player2 = new Ellipse2D.Double(
-				this.player2.getLocation().x - 25,
-				this.player2.getLocation().y - 25, 50, 50);
-		g2.setColor(Color.ORANGE);
-		g2.fill(player2);
-
+		for (Figure figure : player2.figures) {
+			Ellipse2D.Double player2 = new Ellipse2D.Double(
+					figure.getLocation().x - 25, figure.getLocation().y - 25,
+					50, 50);
+			g2.setColor(Color.ORANGE);
+			g2.fill(player2);
+		}
 		// System.out.println("Player drawn at " + (this.location.x - 25) + ", "
 		// + (this.location.y - 25));
 

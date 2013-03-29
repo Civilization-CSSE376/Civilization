@@ -1,7 +1,11 @@
 public class Settler extends Figure {
 
-	public Settler(Tile tile) {
+	/*public Settler(Tile tile) {
 		this.location = tile;
+	}*/
+	
+	public Settler(Player player, Tile local){
+		super(player, local);
 	}
 
 	@Override

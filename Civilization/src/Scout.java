@@ -1,7 +1,8 @@
 public class Scout extends Figure {
 
-	public Scout(Tile tile) {
-		this.location = tile;
+	public Scout(Player player, Tile tile) {
+		super(player, tile);
+		//this.location = tile;
 	}
 
 	@Override
