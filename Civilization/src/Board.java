@@ -53,17 +53,17 @@ public class Board extends JPanel {
 		this.player1 = new Player();
 		this.player2 = new Player();
 
-		Settler settler1 = new Settler(player1,
-				map.get(0).getTiles()[0][0]);
-		Settler settler2 = new Settler(player2,
-				map.get(7).getTiles()[3][3]);
-		
+		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
+		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
+
+		settler1.setLocation(10, 10);
+		settler2.setLocation((440 * 4) - 5, 830);
+
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
-		
+
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		
 
 		this.currentPhase = START_OF_TURN;
 
@@ -84,12 +84,12 @@ public class Board extends JPanel {
 			if (!map.get(2).getIsExplored())
 				map.get(2).changeIsExplored();
 		} else if (x < 1761 && y < 440) { // Panel 4
-																	// (top
-																	// right)
+											// (top
+											// right)
 			if (!map.get(3).getIsExplored())
 				map.get(3).changeIsExplored();
 		} else if (x < 440) { // Panel 5
-																// (bottom left)
+								// (bottom left)
 			if (!map.get(4).getIsExplored())
 				map.get(4).changeIsExplored();
 		} else if (x < 880) { // Panel 6
@@ -163,21 +163,26 @@ public class Board extends JPanel {
 						Figure figure = figures.get(0);
 						if (figure.getOwner() != null) {
 							if (figure.getOwner().equals(
-									Board.this.currentPlayer)) {
+									Board.this.currentPlayer)
+									&& !figure.getUsedThisTurn()) {
 								makeMovementWindow(figures);
 							}
 						}
 
 					}
 				} else {
-					Tile oldTile = currentMovementFigure.location;
-					oldTile.getFigures().remove(currentMovementFigure);
-					Board.this.currentMovementFigure.setLocation(x, y);
-					currentMovementFigure.setTileLocal(tile);
-					tile.getFigures().add(currentMovementFigure);
-					currentMovementFigure = null;
-					checkUnexploredPanel(x, y);
-					Board.this.repaint();
+
+					if (tile.getTerrain() != Tile.Terrain.Water) {
+						Tile oldTile = currentMovementFigure.location;
+						oldTile.getFigures().remove(currentMovementFigure);
+						Board.this.currentMovementFigure.setLocation(x, y);
+						currentMovementFigure.setTileLocal(tile);
+						tile.getFigures().add(currentMovementFigure);
+						currentMovementFigure.setUsedThisTurn(true);
+						currentMovementFigure = null;
+						checkUnexploredPanelNew(x, y);
+						Board.this.repaint();
+					}
 				}
 			}
 
@@ -301,11 +306,11 @@ public class Board extends JPanel {
 		} else if (x < 1320 && y < 440) { // Panel 3
 			index = 2;
 		} else if (y < 440) { // Panel 4
-																	// (top
-																	// right)
+								// (top
+								// right)
 			index = 3;
 		} else if (x < 440) { // Panel 5
-																// (bottom left)
+								// (bottom left)
 
 			index = 4;
 		} else if (x < 880) { // Panel 6
@@ -532,6 +537,9 @@ public class Board extends JPanel {
 				this.currentPhase = MOVEMENT;
 			}
 		} else if (this.currentPhase.equals(MOVEMENT)) {
+			for (Figure f : currentPlayer.figures) {
+				f.setUsedThisTurn(false);
+			}
 			if (this.currentPlayer == this.firstPlayer)
 				this.changePlayerTurn();
 			else {

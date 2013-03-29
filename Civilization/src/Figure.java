@@ -4,14 +4,33 @@ public abstract class Figure {
 	protected Tile location;
 	private Player owner;
 	private Point2D.Double screenLocation;
+	private boolean usedThisTurn = false;
 
 	public Figure(Player player, Tile local) {
 		this.owner = player;
 		this.location = local;
-		this.screenLocation = new Point2D.Double(local.getxPos() * 440,
-				local.getyPos() * 440);
+//		this.screenLocation = new Point2D.Double(local.getxPos() * 440,
+//				local.getyPos() * 440);
+		this.screenLocation = new Point2D.Double(local.getxPos() * 550 + 55,
+				local.getyPos() * 256 + 55);
+		System.out.println(local.getxPos());
+		System.out.println(local.getyPos());
 	}
 
+	public boolean getUsedThisTurn(){
+		return this.usedThisTurn;
+	}
+	
+	public boolean tryToMove(int Panel1, Tile oldTile, int Panel2, Tile newTile){
+		
+		
+		return false;
+	}
+	
+	public void setUsedThisTurn(Boolean used){
+		this.usedThisTurn = used;
+	}
+	
 	public Point2D.Double getLocation() {
 		return this.screenLocation;
 	}

@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
 		this.setLayout(null);
 		System.out.println(languageChosen + " was chosen as the language.");
-		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.");
+		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.\n");
 		
 		this.language = languageChosen;
 		this.p1Civilization = player1CivilizationChosen;
