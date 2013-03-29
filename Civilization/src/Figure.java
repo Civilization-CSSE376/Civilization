@@ -9,8 +9,12 @@ public abstract class Figure {
 	public Figure(Player player, Tile local) {
 		this.owner = player;
 		this.location = local;
-		this.screenLocation = new Point2D.Double(local.getxPos() * 440,
-				local.getyPos() * 440);
+//		this.screenLocation = new Point2D.Double(local.getxPos() * 440,
+//				local.getyPos() * 440);
+		this.screenLocation = new Point2D.Double(local.getxPos() * 550 + 55,
+				local.getyPos() * 256 + 55);
+		System.out.println(local.getxPos());
+		System.out.println(local.getyPos());
 	}
 
 	public boolean getUsedThisTurn(){

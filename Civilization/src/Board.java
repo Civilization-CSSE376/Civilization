@@ -55,9 +55,9 @@ public class Board extends JPanel {
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
-		
+
 		settler1.setLocation(10, 10);
-		settler2.setLocation((440*4)-5, 830);
+		settler2.setLocation((440 * 4) - 5, 830);
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
@@ -171,6 +171,7 @@ public class Board extends JPanel {
 
 					}
 				} else {
+
 					if (tile.getTerrain() != Tile.Terrain.Water) {
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);

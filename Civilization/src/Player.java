@@ -25,7 +25,7 @@ public class Player {
 	private int combatAdvantage = 0;
 
 	public Player() {
-		this.location = new Point2D.Double(75, 75);
+		this.location = new Point2D.Double(55, 55);
 		
 	}
 	
