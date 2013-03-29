@@ -1,3 +1,5 @@
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +15,7 @@ public class City {
 	private int production = 0;
 	private int culture = 0;
 	private int trade = 0;
+	private Double screenLocation;
 
 	
 	public City(Tile location){
@@ -29,6 +32,10 @@ public class City {
 	
 	public void setHasAction(boolean b){
 		this.hasAction = b;
+	}
+	
+	public Point2D.Double getLocation(){
+		return new Point2D.Double(this.location.getxPos(), this.location.getyPos());
 	}
 	
 	
@@ -372,6 +379,38 @@ public class City {
 
 	public void setOutskirts(ArrayList<Tile> outskirts) {
 		this.outskirts = outskirts;
+	}
+
+	public void setLocation(int x, int y) {
+		int newX = 0;
+		int newY = 0;
+		int checkLocation2 = 220;
+
+		if (x >= 0 && x <= 1760 && y >= 0 && y <= 880) {
+
+			if (x <= 110)
+				newX = 55;
+
+			while (newX == 0) {
+				if (x <= checkLocation2)
+					newX = checkLocation2 - 55;
+				else
+					checkLocation2 += 110;
+			}
+
+			if (y <= 110)
+				newY = 55;
+
+			checkLocation2 = 220;
+			while (newY == 0) {
+				if (y <= checkLocation2)
+					newY = checkLocation2 - 55;
+				else
+					checkLocation2 += 110;
+			}
+			this.screenLocation = new Point2D.Double(newX, newY);
+		} else
+			System.out.println("\nInvalid location -- cannot move player.");
 	}
 	
 }

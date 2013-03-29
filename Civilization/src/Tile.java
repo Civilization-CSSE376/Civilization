@@ -26,7 +26,7 @@ public class Tile {
 
 	private ArrayList<Figure> figures = new ArrayList<Figure>();
 
-	// private Marker marker this will hold the abstract object that represents
+	 //private Marker marker this will hold the abstract object that represents
 	// cities, buildings, great people, etc.
 
 	public Tile() {

@@ -64,6 +64,18 @@ public class Board extends JPanel {
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
+		
+		//City city1 = new City(map.get(0).getTiles()[1][1]);
+		//City city2 = new City(map.get(7).getTiles()[2][2]);		
+		
+		//city1.setLocation(130, 130);
+		//city2.setLocation((440 * 4) - 115, 750);
+		
+		//this.player1.cities.add(city1);
+		//this.player2.cities.add(city2);
+		
+		//map.get(0).getTiles()[1][1].add(settler1);
+		//map.get(7).getTiles()[2][2].getFigures().add(settler2);
 
 		this.currentPhase = START_OF_TURN;
 
@@ -74,6 +86,7 @@ public class Board extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 	}
+	
 
 	public void checkUnexploredPanel(int x, int y) {
 
@@ -142,7 +155,8 @@ public class Board extends JPanel {
 		});
 
 	}
-
+	
+	
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
@@ -151,11 +165,22 @@ public class Board extends JPanel {
 			int y = e.getY();
 			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
-			if (Board.this.currentPhase.equals(MOVEMENT)) {
-				Panel panel = findPanel(x, y);
-				Tile tile = findTile(panel, x, y);
-				System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
-						map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			Panel panel = findPanel(x, y);
+			Tile tile = findTile(panel, x, y);
+			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+					map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			
+			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
+				if(tile.getTerrain() != Tile.Terrain.Water){
+					ArrayList<Figure> figures = tile.getFigures();
+					Figure settler = new Settler(currentPlayer, tile);
+					settler.setLocation(x, y);
+					figures.add(settler);
+					currentPlayer.figures.add(settler);
+					repaint();
+				}
+			}
+			else if (Board.this.currentPhase.equals(MOVEMENT)) {
 				if (currentMovementFigure == null
 						|| currentMovementFigure.location.equals(tile)) {
 					ArrayList<Figure> figures = tile.getFigures();
@@ -485,6 +510,22 @@ public class Board extends JPanel {
 			g2.drawString("Player 1's turn.", 500, 900);
 		else
 			g2.drawString("Player 2's turn.", 500, 900);
+		
+		for(City cities : player1.cities){
+			Rectangle2D.Double p1City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+					50, 50);
+			g2.setColor(Color.RED);
+			g2.fill(p1City);
+			
+		}
+		
+		for(City cities : player2.cities){
+			Rectangle2D.Double p2City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+					50, 50);
+			g2.setColor(Color.ORANGE);
+			g2.fill(p2City);
+		}
+		
 
 		for (Figure figure : player1.figures) {
 			Ellipse2D.Double player1 = new Ellipse2D.Double(
