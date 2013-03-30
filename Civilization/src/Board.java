@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 
 import java.util.Hashtable;
 
@@ -169,6 +170,7 @@ public class Board extends JPanel {
 			Tile tile = findTile(panel, x, y);
 			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 					map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			displayTileInfoWindow(tile);
 			
 			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
 				if(tile.getTerrain() != Tile.Terrain.Water){
@@ -211,6 +213,26 @@ public class Board extends JPanel {
 				}
 			}
 
+		}
+
+		private void displayTileInfoWindow(Tile tile) {
+			JFrame frame = new JFrame("Tile info");
+			frame.setLayout(new GridLayout(6, 1));
+			JLabel terrain = new JLabel("Terrain is " + tile.getTerrain().toString());
+			JLabel trade = new JLabel("Trade is " + tile.getTrade());
+			JLabel production = new JLabel("Production is " + tile.getProduction());
+			JLabel resource = new JLabel("Resource is " + tile.getResource().toString());
+			JLabel culture = new JLabel("Culture is " + tile.getCulture());
+			JLabel coin = new JLabel("Coin is " + tile.getCoins());
+			frame.add(terrain);
+			frame.add(trade);
+			frame.add(production);
+			frame.add(resource);
+			frame.add(culture);
+			frame.add(coin);
+			frame.pack();
+			frame.setVisible(true);
+			
 		}
 
 		@Override
