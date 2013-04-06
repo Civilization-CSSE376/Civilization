@@ -9,15 +9,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 
 import java.util.Hashtable;
@@ -46,10 +47,16 @@ public class Board extends JPanel {
 	private Player currentPlayer;
 
 	private int phase;
+	
+	private String player1Civilization;
+	private String player2Civilization;
 
-	public Board() {
+	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
+		
+		this.player1Civilization = p1Civ;
+		this.player2Civilization = p2Civ;
 
 		this.player1 = new Player();
 		this.player2 = new Player();
@@ -450,16 +457,8 @@ public class Board extends JPanel {
 		map.get(0).changeIsExplored(); // Player 1's initial location
 		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
-
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-
-		Rectangle2D.Double bottomSpace = new Rectangle2D.Double(0, 881, 1761,
-				24);
-		g2.setColor(Color.BLACK);
-		g2.fill(bottomSpace);
-
+	
+	public void drawTerrain(Graphics2D g2){
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
@@ -524,14 +523,33 @@ public class Board extends JPanel {
 				}
 			}
 		}
-		g2.setColor(Color.RED);
+	}
+
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+
+		Rectangle2D.Double bottomSpace = new Rectangle2D.Double(0, 881, 1761,
+				24);
+		g2.setColor(Color.BLACK);
+		g2.fill(bottomSpace);
+		
+		drawPlayer1Panel(g2);
+		drawPanels(g2);
+		drawPlayer2Panel(g2);		
+		
+		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
 		g2.drawString("Current Phase: " + this.currentPhase, 50, 900);
 
-		if (this.currentPlayer == this.player1)
+		if (this.currentPlayer == this.player1){
+			g2.setColor(Color.RED);
 			g2.drawString("Player 1's turn.", 500, 900);
-		else
+		}
+		else{
+			g2.setColor(Color.ORANGE);
 			g2.drawString("Player 2's turn.", 500, 900);
+		}
 		
 		for(City cities : player1.cities){
 			Rectangle2D.Double p1City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
@@ -568,6 +586,101 @@ public class Board extends JPanel {
 		// + (this.location.y - 25));
 
 	}
+
+	private void drawPanels(Graphics2D g2) {
+		
+		for(int i = 1; i < 7; i++){
+		if(map.get(i).getIsExplored()){
+		String filename = "src/panels/panel" + i + ".png";
+		
+		try {
+			BufferedImage image = ImageIO.read(new File(filename));
+			switch (i){
+			case 1:
+				g2.drawImage(image, 440, 0, null);
+				break;
+			case 2:
+				g2.drawImage(image, 880, 0, null);
+				break;
+			case 3:
+				g2.drawImage(image, 1320, 0, null);
+				break;
+			case 4:
+				g2.drawImage(image,  0, 440, null);
+				break;
+			case 5:
+				g2.drawImage(image, 440, 440, null);
+				break;
+			case 6:
+				g2.drawImage(image,  880, 440, null);
+				break;
+			}
+		} catch (IOException e) {
+			System.out.println("did not load image correctly");
+			e.printStackTrace();
+		}
+		}
+		else{
+			String filename = "src/panels/UnexploredPanel.png";
+
+			try {
+				BufferedImage image = ImageIO.read(new File(filename));
+				switch (i){
+				case 1:
+					g2.drawImage(image, 440, 0, null);
+					break;
+				case 2:
+					g2.drawImage(image, 880, 0, null);
+					break;
+				case 3:
+					g2.drawImage(image, 1320, 0, null);
+					break;
+				case 4:
+					g2.drawImage(image,  0, 440, null);
+					break;
+				case 5:
+					g2.drawImage(image, 440, 440, null);
+					break;
+				case 6:
+					g2.drawImage(image,  880, 440, null);
+					break;
+				}
+			} catch (IOException e) {
+				System.out.println("did not load image correctly");
+				e.printStackTrace();
+			}
+		}
+		}
+		
+	}
+
+
+	private void drawPlayer1Panel(Graphics2D g2) {
+		String filename = "src/panels/" + this.player2Civilization + ".png";
+		
+		try {
+			BufferedImage image = ImageIO.read(new File(filename));
+			g2.drawImage(image, 0, 0, null);
+		} catch (IOException e) {
+			System.out.println("did not load image correctly");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void drawPlayer2Panel(Graphics2D g2) {
+		String filename = "src/panels/" + this.player1Civilization + ".png";
+		
+		try {
+			BufferedImage image = ImageIO.read(new File(filename));
+			g2.drawImage(image, 1320, 440, null);
+		} catch (IOException e) {
+			System.out.println("did not load image correctly");
+			e.printStackTrace();
+		}
+		
+	}
+
 
 	private void changePlayerTurn() {
 		if (this.currentPlayer == this.player1)

@@ -13,13 +13,13 @@ public class BoardTest {
 	@BeforeClass
 	public static void setupLoadedTiles() {
 		File file = new File("src/Panel1.txt");
-		board = new Board();
+		board = new Board("America", "China");
 		board.readFromFile(file);
 	}
 
 	@Test
 	public void testBoardInitializes() {
-		Board target = new Board();
+		Board target = new Board("America", "China");
 		assertNotNull(target);
 	}
 
@@ -212,19 +212,19 @@ public class BoardTest {
 	
 	@Test
 	public void testGetFirstPlayer(){
-		Board target = new Board();
+		Board target = new Board("America", "China");
 		assertNotNull(target.getFirstPlayer());
 	}
 	
 	@Test
 	public void testGetPhase(){
-		Board target = new Board();
+		Board target = new Board("America", "China");
 		assertEquals(1, target.getPhase());
 	}
 	
 	@Test
 	public void testCheckUnexploredPanel(){
-		Board target = new Board();
+		Board target = new Board("America", "China");
 		
 		assertTrue(Board.map.get(0).getIsExplored());
 		assertFalse(Board.map.get(1).getIsExplored());

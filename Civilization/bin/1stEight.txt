@@ -1,5 +1,5 @@
 ;
-;first panel - Lincoln
+;first panel - America
 ;
 M_0_1_Ir_0_N_0
 M_0_1_N_0_N_0
@@ -18,7 +18,7 @@ D_1_0_N_0_N_0
 W_1_0_N_0_N_0
 F_0_2_N_0_N_0
 ;
-;second panel
+;second panel - Panel1
 ;
 D_1_0_N_0_N_0
 G_0_0_N_0_N_0
@@ -37,7 +37,7 @@ M_0_1_N_0_N_0
 G_0_0_N_0_N_0
 G_0_0_N_0_H_0
 ;
-;third panel
+;third panel - Panel2
 ;
 F_0_2_W_0_N_0
 D_1_0_N_0_N_0
@@ -56,7 +56,7 @@ F_0_2_N_0_N_0
 M_0_1_N_0_N_0
 F_0_2_N_0_N_0
 ;
-;fourth panel
+;fourth panel - Panel3
 ;
 M_0_1_S_0_N_0
 F_0_2_N_0_H_0
@@ -75,7 +75,7 @@ D_1_0_N_0_N_0
 M_0_1_N_0_N_0
 M_0_1_N_0_N_0
 ;
-;fifth panel
+;fifth panel - Panel4
 ;
 D_1_0_N_0_N_0
 D_1_0_N_0_N_0
@@ -94,7 +94,7 @@ G_0_0_N_0_H_0
 M_0_1_N_0_N_0
 M_0_1_N_0_N_0
 ;
-;sixth panel
+;sixth panel - Panel5
 ;
 M_0_1_N_0_N_0
 D_1_0_N_0_N_0
@@ -113,7 +113,7 @@ D_1_0_N_0_H_0
 D_1_0_N_0_N_0
 D_1_0_N_0_N_0
 ;
-;seventh panel
+;seventh panel - Panel6
 ;
 G_0_0_N_0_V_0
 G_0_0_N_0_N_0
