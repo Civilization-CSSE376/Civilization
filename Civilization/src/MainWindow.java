@@ -52,7 +52,7 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
-		this.board.add(new Board());
+//		this.board.add(new Board());
 
 		this.content.add(this.board);
 		
@@ -77,7 +77,7 @@ public class MainWindow extends JFrame {
 		toppad.setSize(1800, 20);
 		toppad.setBackground(Color.BLACK);
 
-		final JPanel map = new Board();
+		final JPanel map = new Board(this.p1Civilization, this.p2Civilization);
 		map.setLocation(20, 20);
 		map.setSize(1761, 905);
 		
