@@ -74,18 +74,18 @@ public class Board extends JPanel {
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-
-		// City city1 = new City(map.get(0).getTiles()[1][1]);
-		// City city2 = new City(map.get(7).getTiles()[2][2]);
-
-		// city1.setLocation(130, 130);
-		// city2.setLocation((440 * 4) - 115, 750);
-
-		// this.player1.cities.add(city1);
-		// this.player2.cities.add(city2);
-
-		// map.get(0).getTiles()[1][1].add(settler1);
-		// map.get(7).getTiles()[2][2].getFigures().add(settler2);
+		
+		City city1 = new City(map.get(0).getTiles()[1][1]);
+		City city2 = new City(map.get(7).getTiles()[2][2]);		
+		
+		city1.setLocation(130, 130);
+		city2.setLocation((440 * 4) - 115, 750);
+		
+		this.player1.cities.add(city1);
+		this.player2.cities.add(city2);
+		
+		map.get(0).getTiles()[1][1].setCity(city1);
+		map.get(7).getTiles()[2][2].setCity(city2);
 
 		this.currentPhase = START_OF_TURN;
 

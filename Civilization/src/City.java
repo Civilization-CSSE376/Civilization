@@ -35,7 +35,7 @@ public class City {
 	}
 	
 	public Point2D.Double getLocation(){
-		return new Point2D.Double(this.location.getxPos(), this.location.getyPos());
+		return this.screenLocation;//new Point2D.Double(this.location.getxPos(), this.location.getyPos());
 	}
 	
 	
