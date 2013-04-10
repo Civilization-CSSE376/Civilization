@@ -47,14 +47,16 @@ public class Board extends JPanel {
 	private Player currentPlayer;
 
 	private int phase;
-	
+
 	private String player1Civilization;
 	private String player2Civilization;
+
+	private ArrayList<Tile> validTiles = new ArrayList<Tile>();
 
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
-		
+
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
 
@@ -72,18 +74,18 @@ public class Board extends JPanel {
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		
-		//City city1 = new City(map.get(0).getTiles()[1][1]);
-		//City city2 = new City(map.get(7).getTiles()[2][2]);		
-		
-		//city1.setLocation(130, 130);
-		//city2.setLocation((440 * 4) - 115, 750);
-		
-		//this.player1.cities.add(city1);
-		//this.player2.cities.add(city2);
-		
-		//map.get(0).getTiles()[1][1].add(settler1);
-		//map.get(7).getTiles()[2][2].getFigures().add(settler2);
+
+		// City city1 = new City(map.get(0).getTiles()[1][1]);
+		// City city2 = new City(map.get(7).getTiles()[2][2]);
+
+		// city1.setLocation(130, 130);
+		// city2.setLocation((440 * 4) - 115, 750);
+
+		// this.player1.cities.add(city1);
+		// this.player2.cities.add(city2);
+
+		// map.get(0).getTiles()[1][1].add(settler1);
+		// map.get(7).getTiles()[2][2].getFigures().add(settler2);
 
 		this.currentPhase = START_OF_TURN;
 
@@ -94,7 +96,6 @@ public class Board extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 	}
-	
 
 	public void checkUnexploredPanel(int x, int y) {
 
@@ -163,8 +164,7 @@ public class Board extends JPanel {
 		});
 
 	}
-	
-	
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
@@ -177,10 +177,10 @@ public class Board extends JPanel {
 			Tile tile = findTile(panel, x, y);
 			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 					map.indexOf(panel), tile.getxPos(), tile.getyPos());
-			displayTileInfoWindow(tile);
-			
-			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
-				if(tile.getTerrain() != Tile.Terrain.Water){
+//			displayTileInfoWindow(tile);
+
+			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
+				if (tile.getTerrain() != Tile.Terrain.Water) {
 					ArrayList<Figure> figures = tile.getFigures();
 					Figure settler = new Settler(currentPlayer, tile);
 					settler.setLocation(x, y);
@@ -188,47 +188,190 @@ public class Board extends JPanel {
 					currentPlayer.figures.add(settler);
 					repaint();
 				}
-			}
-			else if (Board.this.currentPhase.equals(MOVEMENT)) {
-				if (currentMovementFigure == null
-						|| currentMovementFigure.location.equals(tile)) {
-					ArrayList<Figure> figures = tile.getFigures();
-					if (!figures.isEmpty()) {
-						Figure figure = figures.get(0);
-						if (figure.getOwner() != null) {
-							if (figure.getOwner().equals(
-									Board.this.currentPlayer)
-									&& !figure.getUsedThisTurn()) {
-								makeMovementWindow(figures);
+			} else if (Board.this.currentPhase.equals(MOVEMENT)) {
+				System.out.printf("Player has %d moves.\n", Board.this.currentPlayer.getNumberOfMoves());
+				if (Board.this.currentPlayer.getNumberOfMoves() > 0) {
+					if (currentMovementFigure == null
+							|| currentMovementFigure.location.equals(tile)) {
+						ArrayList<Figure> figures = tile.getFigures();
+						if (!figures.isEmpty()) {
+							Figure figure = figures.get(0);
+							if (figure.getOwner() != null) {
+								if (figure.getOwner().equals(
+										Board.this.currentPlayer)
+										&& !figure.getUsedThisTurn()) {
+									makeMovementWindow(figures);
+									getValidTiles(panel, tile);
+								}
 							}
+
 						}
+					} else {
 
-					}
-				} else {
-
-					if (tile.getTerrain() != Tile.Terrain.Water) {
-						Tile oldTile = currentMovementFigure.location;
-						oldTile.getFigures().remove(currentMovementFigure);
-						Board.this.currentMovementFigure.setLocation(x, y);
-						currentMovementFigure.setTileLocal(tile);
-						tile.getFigures().add(currentMovementFigure);
-						currentMovementFigure.setUsedThisTurn(true);
-						currentMovementFigure = null;
-						checkUnexploredPanelNew(x, y);
-						Board.this.repaint();
+						if (Board.this.validTiles.contains(tile)) {
+							System.out.println("Tile valid! Moving figure.");
+							Tile oldTile = currentMovementFigure.location;
+							oldTile.getFigures().remove(currentMovementFigure);
+							Board.this.currentMovementFigure.setLocation(x, y);
+							currentMovementFigure.setTileLocal(tile);
+							tile.getFigures().add(currentMovementFigure);
+//							currentMovementFigure.setUsedThisTurn(true);
+							currentMovementFigure = null;
+							checkUnexploredPanelNew(x, y);
+							Board.this.validTiles.clear();
+							Board.this.currentPlayer.decreaseMoves();
+							Board.this.repaint();
+						}
 					}
 				}
 			}
 
 		}
 
+		private void getValidTiles(Panel panel, Tile tile) {
+			int panelNumber = map.indexOf(panel);
+			int x = tile.getxPos();
+			int y = tile.getyPos();
+			Tile tileToCheck;
+			if (Board.this.currentPlayer.getNumberOfMoves() == 1) { // Can't end
+																	// on water!
+				for (int i = x - 1; i <= x + 1; i++) {
+					for (int j = y - 1; j <= y + 1; j++) {
+
+						if (!(i == x && j == y)) {
+
+							if (i != -1 && i != 4 && j != -1 && j != 4) {
+								tileToCheck = map.get(panelNumber).getTiles()[i][j];
+								if (!tileToCheck.getTerrain().toString().equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							} else if (i == -1 && j == -1) {
+								if (panelNumber > 4) {
+									tileToCheck = map.get(panelNumber - 5)
+											.getTiles()[3][3];
+									if (!tileToCheck.getTerrain().toString().equals(
+											"Water"))
+										Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (i == -1 && j == 4) {
+								if (panelNumber > 0 && panelNumber < 4) {
+									tileToCheck = map.get(panelNumber + 3)
+											.getTiles()[0][3];
+									if (!tileToCheck.getTerrain().toString().equals(
+											"Water"))
+										Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (i == 4 && j == -1) {
+								if (panelNumber > 3 && panelNumber < 7) {
+									tileToCheck = map.get(panelNumber - 3)
+											.getTiles()[3][0];
+									if (!tileToCheck.getTerrain().toString().equals(
+											"Water"))
+										Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (i == 4 && j == 4) {
+								if (panelNumber < 3) {
+									tileToCheck = map.get(panelNumber + 5)
+											.getTiles()[0][0];
+									if (!tileToCheck.getTerrain().toString().equals(
+											"Water"))
+										Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (i == -1) {
+								if (panelNumber > 0 && panelNumber != 4) {
+									tileToCheck = map.get(panelNumber - 1)
+											.getTiles()[3][j];
+									if (!tileToCheck.getTerrain().toString().equals(
+											"Water"))
+										Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (i == 4) {
+								if (panelNumber < 7 && panelNumber != 3) {
+									tileToCheck = map.get(panelNumber + 1).getTiles()[0][j];
+									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
+								}
+							} else if (j == -1) {
+								if(panelNumber > 3){
+									tileToCheck = map.get(panelNumber - 4).getTiles()[i][3];
+									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
+								}
+							} else {
+								if(panelNumber < 4){
+									tileToCheck = map.get(panelNumber + 4).getTiles()[i][0];
+									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
+								}
+							}
+
+						}
+					}
+
+				}
+			} else {
+				for (int i = x - 1; i <= x + 1; i++) {
+					for (int j = y - 1; j <= y + 1; j++) {
+
+						if (!(i == x && j == y)) {
+							System.out.println("Adding tile... i = " + i + " and j = " + j);
+							if (i != -1 && i != 4 && j != -1 && j != 4) {
+								Board.this.validTiles.add(map.get(panelNumber).getTiles()[i][j]);
+							} else if (i == -1 && j == -1) {
+								if (panelNumber > 4) {
+										Board.this.validTiles.add(map.get(panelNumber - 5)
+												.getTiles()[3][3]);
+								}
+							} else if (i == -1 && j == 4) {
+								if (panelNumber > 0 && panelNumber < 4) {
+										Board.this.validTiles.add(map.get(panelNumber + 3)
+												.getTiles()[0][3]);
+								}
+							} else if (i == 4 && j == -1) {
+								if (panelNumber > 3 && panelNumber < 7) {
+										Board.this.validTiles.add(map.get(panelNumber - 3)
+												.getTiles()[3][0]);
+								}
+							} else if (i == 4 && j == 4) {
+								if (panelNumber < 3) {
+										Board.this.validTiles.add(map.get(panelNumber + 5)
+												.getTiles()[0][0]);
+								}
+							} else if (i == -1) {
+								if (panelNumber > 0 && panelNumber != 4) {
+										Board.this.validTiles.add(map.get(panelNumber - 1)
+												.getTiles()[3][j]);
+								}
+							} else if (i == 4) {
+								if (panelNumber < 7 && panelNumber != 3) {
+									Board.this.validTiles.add(map.get(panelNumber + 1).getTiles()[0][j]);
+								}
+							} else if (j == -1) {
+								if(panelNumber > 3){
+									Board.this.validTiles.add(map.get(panelNumber - 4).getTiles()[i][3]);
+								}
+							} else {
+								if(panelNumber < 4){
+									Board.this.validTiles.add(map.get(panelNumber + 4).getTiles()[i][0]);
+								}
+							}
+
+						}
+					}
+
+				}
+			}
+			
+			System.out.println("Array size: " + Board.this.validTiles.size());
+
+		}
+
 		private void displayTileInfoWindow(Tile tile) {
 			JFrame frame = new JFrame("Tile info");
 			frame.setLayout(new GridLayout(6, 1));
-			JLabel terrain = new JLabel("Terrain is " + tile.getTerrain().toString());
+			JLabel terrain = new JLabel("Terrain is "
+					+ tile.getTerrain().toString());
 			JLabel trade = new JLabel("Trade is " + tile.getTrade());
-			JLabel production = new JLabel("Production is " + tile.getProduction());
-			JLabel resource = new JLabel("Resource is " + tile.getResource().toString());
+			JLabel production = new JLabel("Production is "
+					+ tile.getProduction());
+			JLabel resource = new JLabel("Resource is "
+					+ tile.getResource().toString());
 			JLabel culture = new JLabel("Culture is " + tile.getCulture());
 			JLabel coin = new JLabel("Coin is " + tile.getCoins());
 			frame.add(terrain);
@@ -239,7 +382,7 @@ public class Board extends JPanel {
 			frame.add(coin);
 			frame.pack();
 			frame.setVisible(true);
-			
+
 		}
 
 		@Override
@@ -457,73 +600,73 @@ public class Board extends JPanel {
 		map.get(0).changeIsExplored(); // Player 1's initial location
 		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
-	
-	public void drawTerrain(Graphics2D g2){
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 4; j++) {
-				for (int k = 0; k < 4; k++) {
-					Color rectColor = Color.RED;
-					if (map.get(i).getIsExplored()) {
-						switch (map.get(i).getTiles()[j][k].getTerrain()
-								.toString()) {
-						case "Desert":
-							rectColor = Color.YELLOW;
-							break;
-						case "Mountain":
-							rectColor = Color.DARK_GRAY;
-							break;
-						case "Forest":
-							rectColor = Color.WHITE;
-							break;
-						case "Grassland":
-							rectColor = Color.GREEN;
-							break;
-						case "Water":
-							rectColor = Color.BLUE;
-							break;
-						}
-						if (i > 3) {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * (i - 4)) + (110 * j),
-									440 + (110 * k), 110, 110);
-							g2.setColor(rectColor);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						} else {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * i) + (110 * j), (110 * k), 110, 110);
-							g2.setColor(rectColor);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						}
-						// System.out.println("Tile[" + j + "][" + k +
-						// "] created at location " + (20 + (440 * i) + (110 *
-						// j)) +
-						// " " + (20 + nextRow + (110 * k)));
-					} else {
-						if (i > 3) {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * (i - 4)) + (110 * j),
-									440 + (110 * k), 110, 110);
-							g2.setColor(Color.BLACK);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						} else {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * i) + (110 * j), (110 * k), 110, 110);
-							g2.setColor(Color.BLACK);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						}
-					}
-				}
-			}
-		}
-	}
+
+	// public void drawTerrain(Graphics2D g2) {
+	// for (int i = 0; i < 8; i++) {
+	// for (int j = 0; j < 4; j++) {
+	// for (int k = 0; k < 4; k++) {
+	// Color rectColor = Color.RED;
+	// if (map.get(i).getIsExplored()) {
+	// switch (map.get(i).getTiles()[j][k].getTerrain()
+	// .toString()) {
+	// case "Desert":
+	// rectColor = Color.YELLOW;
+	// break;
+	// case "Mountain":
+	// rectColor = Color.DARK_GRAY;
+	// break;
+	// case "Forest":
+	// rectColor = Color.WHITE;
+	// break;
+	// case "Grassland":
+	// rectColor = Color.GREEN;
+	// break;
+	// case "Water":
+	// rectColor = Color.BLUE;
+	// break;
+	// }
+	// if (i > 3) {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * (i - 4)) + (110 * j),
+	// 440 + (110 * k), 110, 110);
+	// g2.setColor(rectColor);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// } else {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * i) + (110 * j), (110 * k), 110, 110);
+	// g2.setColor(rectColor);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// }
+	// // System.out.println("Tile[" + j + "][" + k +
+	// // "] created at location " + (20 + (440 * i) + (110 *
+	// // j)) +
+	// // " " + (20 + nextRow + (110 * k)));
+	// } else {
+	// if (i > 3) {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * (i - 4)) + (110 * j),
+	// 440 + (110 * k), 110, 110);
+	// g2.setColor(Color.BLACK);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// } else {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * i) + (110 * j), (110 * k), 110, 110);
+	// g2.setColor(Color.BLACK);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -533,39 +676,39 @@ public class Board extends JPanel {
 				24);
 		g2.setColor(Color.BLACK);
 		g2.fill(bottomSpace);
-		
+
 		drawPlayer1Panel(g2);
 		drawPanels(g2);
-		drawPlayer2Panel(g2);		
-		
+		drawPlayer2Panel(g2);
+
 		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
 		g2.drawString("Current Phase: " + this.currentPhase, 50, 900);
 
-		if (this.currentPlayer == this.player1){
+		if (this.currentPlayer == this.player1) {
 			g2.setColor(Color.RED);
 			g2.drawString("Player 1's turn.", 500, 900);
-		}
-		else{
+		} else {
 			g2.setColor(Color.ORANGE);
 			g2.drawString("Player 2's turn.", 500, 900);
 		}
-		
-		for(City cities : player1.cities){
-			Rectangle2D.Double p1City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+
+		for (City cities : player1.cities) {
+			Rectangle2D.Double p1City = new Rectangle2D.Double(
+					cities.getLocation().x - 25, cities.getLocation().y - 25,
 					50, 50);
 			g2.setColor(Color.RED);
 			g2.fill(p1City);
-			
+
 		}
-		
-		for(City cities : player2.cities){
-			Rectangle2D.Double p2City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+
+		for (City cities : player2.cities) {
+			Rectangle2D.Double p2City = new Rectangle2D.Double(
+					cities.getLocation().x - 25, cities.getLocation().y - 25,
 					50, 50);
 			g2.setColor(Color.ORANGE);
 			g2.fill(p2City);
 		}
-		
 
 		for (Figure figure : player1.figures) {
 			Ellipse2D.Double player1 = new Ellipse2D.Double(
@@ -588,76 +731,74 @@ public class Board extends JPanel {
 	}
 
 	private void drawPanels(Graphics2D g2) {
-		
-		for(int i = 1; i < 7; i++){
-		if(map.get(i).getIsExplored()){
-		String filename = "src/panels/panel" + i + ".png";
-		
-		try {
-			BufferedImage image = ImageIO.read(new File(filename));
-			switch (i){
-			case 1:
-				g2.drawImage(image, 440, 0, null);
-				break;
-			case 2:
-				g2.drawImage(image, 880, 0, null);
-				break;
-			case 3:
-				g2.drawImage(image, 1320, 0, null);
-				break;
-			case 4:
-				g2.drawImage(image,  0, 440, null);
-				break;
-			case 5:
-				g2.drawImage(image, 440, 440, null);
-				break;
-			case 6:
-				g2.drawImage(image,  880, 440, null);
-				break;
-			}
-		} catch (IOException e) {
-			System.out.println("did not load image correctly");
-			e.printStackTrace();
-		}
-		}
-		else{
-			String filename = "src/panels/UnexploredPanel.png";
 
-			try {
-				BufferedImage image = ImageIO.read(new File(filename));
-				switch (i){
-				case 1:
-					g2.drawImage(image, 440, 0, null);
-					break;
-				case 2:
-					g2.drawImage(image, 880, 0, null);
-					break;
-				case 3:
-					g2.drawImage(image, 1320, 0, null);
-					break;
-				case 4:
-					g2.drawImage(image,  0, 440, null);
-					break;
-				case 5:
-					g2.drawImage(image, 440, 440, null);
-					break;
-				case 6:
-					g2.drawImage(image,  880, 440, null);
-					break;
+		for (int i = 1; i < 7; i++) {
+			if (map.get(i).getIsExplored()) {
+				String filename = "src/panels/panel" + i + ".png";
+
+				try {
+					BufferedImage image = ImageIO.read(new File(filename));
+					switch (i) {
+					case 1:
+						g2.drawImage(image, 440, 0, null);
+						break;
+					case 2:
+						g2.drawImage(image, 880, 0, null);
+						break;
+					case 3:
+						g2.drawImage(image, 1320, 0, null);
+						break;
+					case 4:
+						g2.drawImage(image, 0, 440, null);
+						break;
+					case 5:
+						g2.drawImage(image, 440, 440, null);
+						break;
+					case 6:
+						g2.drawImage(image, 880, 440, null);
+						break;
+					}
+				} catch (IOException e) {
+					System.out.println("did not load image correctly");
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				System.out.println("did not load image correctly");
-				e.printStackTrace();
+			} else {
+				String filename = "src/panels/UnexploredPanel.png";
+
+				try {
+					BufferedImage image = ImageIO.read(new File(filename));
+					switch (i) {
+					case 1:
+						g2.drawImage(image, 440, 0, null);
+						break;
+					case 2:
+						g2.drawImage(image, 880, 0, null);
+						break;
+					case 3:
+						g2.drawImage(image, 1320, 0, null);
+						break;
+					case 4:
+						g2.drawImage(image, 0, 440, null);
+						break;
+					case 5:
+						g2.drawImage(image, 440, 440, null);
+						break;
+					case 6:
+						g2.drawImage(image, 880, 440, null);
+						break;
+					}
+				} catch (IOException e) {
+					System.out.println("did not load image correctly");
+					e.printStackTrace();
+				}
 			}
 		}
-		}
-		
+
 	}
 
-
 	private void drawPlayer1Panel(Graphics2D g2) {
-		String filename = "src/panels/" + this.player2Civilization + ".png";
-		
+		String filename = "src/panels/" + this.player1Civilization + ".png";
+
 		try {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 0, 0, null);
@@ -665,12 +806,12 @@ public class Board extends JPanel {
 			System.out.println("did not load image correctly");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void drawPlayer2Panel(Graphics2D g2) {
-		String filename = "src/panels/" + this.player1Civilization + ".png";
-		
+		String filename = "src/panels/" + this.player2Civilization + ".png";
+
 		try {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 1320, 440, null);
@@ -678,9 +819,8 @@ public class Board extends JPanel {
 			System.out.println("did not load image correctly");
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
 
 	private void changePlayerTurn() {
 		if (this.currentPlayer == this.player1)
@@ -716,12 +856,17 @@ public class Board extends JPanel {
 			for (Figure f : currentPlayer.figures) {
 				f.setUsedThisTurn(false);
 			}
+			this.currentMovementFigure = null;
 			if (this.currentPlayer == this.firstPlayer)
 				this.changePlayerTurn();
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = RESEARCH;
 			}
+
+			this.player1.resetMoves();
+			this.player2.resetMoves();
+			this.validTiles.clear();
 		} else {
 			if (this.currentPlayer == this.firstPlayer)
 				this.changePlayerTurn();
