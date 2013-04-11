@@ -134,7 +134,13 @@ public class City {
 		if(startX - 1 < 0 && startY - 1 < 0){
 			//bottom left corner
 			
-			Panel southWestPanel = neighbors.get("West").getNeighbors().get("North");
+			Panel southWestPanel = new Panel();
+					
+			try{
+				southWestPanel = neighbors.get("West").getNeighbors().get("North");
+			}catch (NullPointerException e){
+				southWestPanel = null;
+			}
 			
 			if(southPanel == null || westPanel == null || southWestPanel == null){
 				return null;
@@ -165,7 +171,12 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY - 1 < 0){
 			//bottom right corner
 			
-			Panel southEastPanel = neighbors.get("West").getNeighbors().get("South");
+			Panel southEastPanel = new Panel();
+					try{
+						southEastPanel = neighbors.get("West").getNeighbors().get("South");
+					}catch (NullPointerException e){
+						southEastPanel = null;
+					}
 			
 			if(southPanel == null || eastPanel == null || southEastPanel == null){
 				return null;
@@ -193,7 +204,12 @@ public class City {
 		}else if(startX - 1 < 0 && startY + 2 > startPanel.getTiles()[0].length){
 			//top left corner
 			
-			Panel northWestPanel = neighbors.get("East").getNeighbors().get("North");
+			Panel northWestPanel = new Panel();
+					try{
+						northWestPanel = neighbors.get("East").getNeighbors().get("North");
+					}catch (NullPointerException e){
+						northWestPanel = null;
+					}
 			
 			if(northPanel == null || westPanel == null || northWestPanel == null){
 				return null;
@@ -221,7 +237,12 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY + 2 > startPanel.getTiles()[0].length){
 			//top right corner
 			
-			Panel northEastPanel = neighbors.get("East").getNeighbors().get("South");
+			Panel northEastPanel = new Panel();
+					try{
+						northEastPanel = neighbors.get("East").getNeighbors().get("South");
+					}catch (NullPointerException e){
+						northEastPanel = null;
+					}
 			
 			if(northPanel == null || eastPanel == null || northEastPanel == null){
 				return null;
