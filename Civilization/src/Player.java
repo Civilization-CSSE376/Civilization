@@ -21,7 +21,7 @@ public class Player {
 	private int speed = 2;
 	private int handSize = 2;
 	private int stackSize = 2;
-	private int trade = 0;
+	int trade = 0;
 	private int combatAdvantage = 0;
 
 	public Player() {

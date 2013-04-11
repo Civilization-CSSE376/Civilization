@@ -41,7 +41,7 @@ public class Board extends JPanel {
 	private Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
-	public static ArrayList<Player> players;
+	public static ArrayList<Player> players = new ArrayList<Player>();
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
@@ -73,8 +73,10 @@ public class Board extends JPanel {
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
 		
-		City city1 = new City(map.get(0).getTiles()[1][1]);
-		City city2 = new City(map.get(7).getTiles()[2][2]);		
+		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
+		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);		
+		
+		
 		
 		city1.setLocation(130, 130);
 		city2.setLocation((440 * 4) - 115, 750);
@@ -179,7 +181,14 @@ public class Board extends JPanel {
 					map.indexOf(panel), tile.getxPos(), tile.getyPos());
 			displayTileInfoWindow(tile);
 			
-			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
+			if(Board.this.currentPhase.equals(TRADE)){
+				//TODO: ask if want 
+				
+				for(City c: Board.this.currentPlayer.cities){
+					Board.this.currentPlayer.trade += c.calcTrade();
+				}
+			}
+			else if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
 				if(tile.getTerrain() != Tile.Terrain.Water){
 					ArrayList<Figure> figures = tile.getFigures();
 					Figure settler = new Settler(currentPlayer, tile);

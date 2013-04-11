@@ -16,10 +16,18 @@ public class City {
 	private int culture = 0;
 	private int trade = 0;
 	private Double screenLocation;
-
+	
+	public boolean isValid;
 	
 	public City(Tile location){
 		this.location = location;
+	}
+
+	
+	public City(Tile location, Player player){
+		this.location = location;
+		this.outskirts = this.getOutskirts(location);
+		this.isValid = this.validOutskirts(player);
 	}
 	
 	public void setCapital(){
@@ -43,7 +51,7 @@ public class City {
 	 * Calculates the production of this city
 	 * @return totalProduction
 	 */
-	private int calcProduction(){
+	int calcProduction(){
 		int totalProduction = 0;
 		
 		for(Tile t : this.outskirts){
@@ -57,7 +65,7 @@ public class City {
 	 * Calculates the culture of this city
 	 * @return totalCulture
 	 */
-	private int calcCulture(){
+	int calcCulture(){
 		int totalCulture = 0;
 		
 		for(Tile t : this.outskirts){
@@ -71,7 +79,7 @@ public class City {
 	 * Calculates the trade of this city.
 	 * @return totalTrade
 	 */
-	private int calcTrade(){
+	int calcTrade(){
 		int totalTrade = 0;
 		
 		for(Tile t : this.outskirts){
@@ -87,11 +95,11 @@ public class City {
 	 * @return the 8 tiles of the outskirts in a hashset structure. returns null
 	 * 			if the outskirts contain a null tile
 	 */
-	private HashSet<Tile> getOutskirts(Tile startTile){//written assuming typical plot (x,y) rather than array (row, column) 
+	private ArrayList<Tile> getOutskirts(Tile startTile){//written assuming typical plot (x,y) rather than array (row, column) 
 		Panel startPanel = Board.findPanel(startTile);//so every direction has to be replaced with the clockwise direction
 		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
-		HashSet<Tile> outskirts = new HashSet<Tile>();
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 		
 		Panel westPanel = neighbors.get("North");
 		Panel eastPanel = neighbors.get("South");
@@ -320,14 +328,14 @@ public class City {
 	 * @param outskirts -the 8 surrounding tiles of the city
 	 * @return true if the startTile and all the tiles in the outskirts pass all restrictions else false
 	 */
-	private boolean validOutskirts(Player buildingPlayer, Tile startTile, HashSet<Tile> outskirts){
+	private boolean validOutskirts(Player buildingPlayer){
 		
 		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
 		ArrayList<Player> enemyPlayers = new ArrayList<Player>();
 		ArrayList<City> enemyCities = new ArrayList<City>();
 		ArrayList<Tile> enemyOutskirts = new ArrayList<Tile>();
-		HashSet<Tile> cityTiles = new HashSet<Tile>(outskirts);
-		cityTiles.add(startTile);
+		HashSet<Tile> cityTiles = new HashSet<Tile>(this.outskirts);
+		cityTiles.add(this.location);
 		
 		for(Player p : Board.players){
 			
@@ -353,7 +361,7 @@ public class City {
 		
 		
 		//water test
-		if(startTile.getTerrain().equals(Tile.Terrain.Water)){
+		if(this.location.getTerrain().equals(Tile.Terrain.Water)){
 			return false;
 		}
 		
