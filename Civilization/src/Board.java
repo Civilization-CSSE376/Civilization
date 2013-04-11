@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -56,6 +57,8 @@ public class Board extends JPanel {
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
+		
+		setPanelNeighbors();
 
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
@@ -95,6 +98,73 @@ public class Board extends JPanel {
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
+	}
+
+	private void setPanelNeighbors() {
+		//panel 0
+		HashMap<String, Panel> neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(4));
+		neighbors.put("East", this.map.get(1));
+		neighbors.put("West", null);
+		this.map.get(0).setNeighbors(neighbors);
+		
+		//panel 1
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(5));
+		neighbors.put("East", this.map.get(2));
+		neighbors.put("West", this.map.get(0));
+		this.map.get(1).setNeighbors(neighbors);
+		
+		//panel 2
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(6));
+		neighbors.put("East", this.map.get(3));
+		neighbors.put("West", this.map.get(1));
+		this.map.get(2).setNeighbors(neighbors);
+		
+		//panel 3
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(7));
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(2));
+		this.map.get(3).setNeighbors(neighbors);
+		
+		//panel 4
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(0));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(5));
+		neighbors.put("West", null);
+		this.map.get(4).setNeighbors(neighbors);
+		
+		//panel 5
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(1));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(6));
+		neighbors.put("West", this.map.get(4));
+		this.map.get(5).setNeighbors(neighbors);
+		
+		//panel 6
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(2));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(7));
+		neighbors.put("West", this.map.get(5));
+		this.map.get(6).setNeighbors(neighbors);
+		
+		//panel 7
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(3));
+		neighbors.put("South", null);
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(6));
+		this.map.get(5).setNeighbors(neighbors);
+		
 	}
 
 	public void checkUnexploredPanel(int x, int y) {

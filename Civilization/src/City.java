@@ -101,10 +101,31 @@ public class City {
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 		
-		Panel westPanel = neighbors.get("North");
-		Panel eastPanel = neighbors.get("South");
-		Panel southPanel = neighbors.get("West");
-		Panel northPanel = neighbors.get("East");
+		Panel westPanel = new Panel();
+		Panel eastPanel = new Panel();
+		Panel southPanel = new Panel();
+		Panel northPanel = new Panel();
+		
+		try{
+			westPanel = neighbors.get("North");
+		} catch (NullPointerException e){
+			westPanel = null;
+		}
+		try{
+			eastPanel = neighbors.get("South");
+			} catch (NullPointerException e){
+				eastPanel = null;
+			}
+		try{
+			southPanel = neighbors.get("West");
+			} catch (NullPointerException e){
+				southPanel = null;
+			}
+		try{
+			northPanel = neighbors.get("East");
+			} catch (NullPointerException e){
+				northPanel = null;
+			}
 
 		int startX = startTile.getxPos();
 		int startY = startTile.getyPos();
