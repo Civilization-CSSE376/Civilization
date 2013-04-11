@@ -5,9 +5,9 @@ public class Player {
 
 	private Point2D.Double location;
 
-//	private enum Government {
-//		// fill me in
-//	}
+	// private enum Government {
+	// // fill me in
+	// }
 
 	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
 	public ArrayList<Figure> figures = new ArrayList<Figure>();
@@ -26,22 +26,21 @@ public class Player {
 
 	public Player() {
 		this.location = new Point2D.Double(55, 55);
-		
+
 	}
-	
 
 	private void setCapital(City capital) {
 
 		boolean alreadyHave = false;
 
-		for(City city : this.cities){
-			if(city.getIsCapital()){
-				
+		for (City city : this.cities) {
+			if (city.getIsCapital()) {
+
 			}
 		}
-				
+
 	}
-	
+
 	// Move this to the separate unit classes.
 	public Point2D.Double getLocation() {
 		return this.location;
@@ -78,6 +77,10 @@ public class Player {
 		} else
 			System.out.println("\nInvalid location -- cannot move player.");
 
+	}
+
+	public int getSpeed() {
+		return this.speed;
 	}
 
 }

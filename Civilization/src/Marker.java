@@ -21,6 +21,16 @@ public class Marker {
 	private int coin = 0;
 	
 	public Marker(MarkerType mType,  String specificType){
+		this.buildingType.add("Market");
+		this.buildingType.add("Temple");
+		this.buildingType.add("Granary");
+		this.buildingType.add("Library");
+		this.buildingType.add("Barracks");
+		this.buildingType.add("Workshop");
+		this.buildingType.add("TradingPost");
+		this.buildingType.add("Harbor");
+		
+		
 		
 	}
 }
