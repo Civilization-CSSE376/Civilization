@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -42,7 +43,7 @@ public class Board extends JPanel {
 	private Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
-	public static ArrayList<Player> players;
+	public static ArrayList<Player> players = new ArrayList<Player>();
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
@@ -57,6 +58,8 @@ public class Board extends JPanel {
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
+
+		setPanelNeighbors();
 
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
@@ -79,8 +82,8 @@ public class Board extends JPanel {
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
 
-		City city1 = new City(map.get(0).getTiles()[1][1]);
-		City city2 = new City(map.get(7).getTiles()[2][2]);
+		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
+		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
 
 		city1.setLocation(130, 130);
 		city2.setLocation((440 * 4) - 115, 750);
@@ -99,6 +102,73 @@ public class Board extends JPanel {
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
+	}
+
+	private void setPanelNeighbors() {
+		// panel 0
+		HashMap<String, Panel> neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(4));
+		neighbors.put("East", this.map.get(1));
+		neighbors.put("West", null);
+		this.map.get(0).setNeighbors(neighbors);
+
+		// panel 1
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(5));
+		neighbors.put("East", this.map.get(2));
+		neighbors.put("West", this.map.get(0));
+		this.map.get(1).setNeighbors(neighbors);
+
+		// panel 2
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(6));
+		neighbors.put("East", this.map.get(3));
+		neighbors.put("West", this.map.get(1));
+		this.map.get(2).setNeighbors(neighbors);
+
+		// panel 3
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(7));
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(2));
+		this.map.get(3).setNeighbors(neighbors);
+
+		// panel 4
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(0));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(5));
+		neighbors.put("West", null);
+		this.map.get(4).setNeighbors(neighbors);
+
+		// panel 5
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(1));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(6));
+		neighbors.put("West", this.map.get(4));
+		this.map.get(5).setNeighbors(neighbors);
+
+		// panel 6
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(2));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(7));
+		neighbors.put("West", this.map.get(5));
+		this.map.get(6).setNeighbors(neighbors);
+
+		// panel 7
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(3));
+		neighbors.put("South", null);
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(6));
+		this.map.get(5).setNeighbors(neighbors);
+
 	}
 
 	public void checkUnexploredPanel(int x, int y) {
@@ -169,6 +239,7 @@ public class Board extends JPanel {
 			Tile tile = findTile(panel, x, y);
 			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 					map.indexOf(panel), tile.getxPos(), tile.getyPos());
+
 			// displayTileInfoWindow(tile);
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
@@ -184,8 +255,8 @@ public class Board extends JPanel {
 				}
 				if (makeNewCityWindow(newCity)) {
 
-					City city = new City(tile);// new City(tile, currentPlayer);
-					if (true) {// city.isValid()) {
+					City city = new City(tile, currentPlayer);
+					if (city.isValid) {
 						city.setLocation(x, y);
 						currentPlayer.cities.add(city);
 						tile.setCity(city);
@@ -220,12 +291,12 @@ public class Board extends JPanel {
 									&& !figure.getUsedThisTurn()) {
 								makeMovementWindow(figures);
 								getValidTiles(panel, tile);
+
 							}
 
 						}
 					}
 				}
-
 				else {
 					System.out.printf("Player has %d moves.\n",
 							currentMovementFigure.getNumberOfMoves());
@@ -238,7 +309,9 @@ public class Board extends JPanel {
 							currentMovementFigure.setTileLocal(tile);
 							tile.getFigures().add(currentMovementFigure);
 							// currentMovementFigure.setUsedThisTurn(true);
+
 							currentMovementFigure.decreaseMoves();
+
 							currentMovementFigure = null;
 							checkUnexploredPanelNew(x, y);
 							Board.this.validTiles.clear();
@@ -246,6 +319,13 @@ public class Board extends JPanel {
 						}
 					}
 				}
+			} else if (Board.this.currentPhase.equals(TRADE)) {
+				// TODO: ask if want to trade
+
+				for (City c : Board.this.currentPlayer.cities) {
+					Board.this.currentPlayer.trade += c.calcTrade();
+				}
+				System.out.println(currentPlayer.trade);
 			}
 		}
 
