@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.util.Hashtable;
 
@@ -47,14 +48,14 @@ public class Board extends JPanel {
 	private Player currentPlayer;
 
 	private int phase;
-	
+
 	private String player1Civilization;
 	private String player2Civilization;
 
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
-		
+
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
 
@@ -72,16 +73,16 @@ public class Board extends JPanel {
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		
+
 		City city1 = new City(map.get(0).getTiles()[1][1]);
-		City city2 = new City(map.get(7).getTiles()[2][2]);		
-		
+		City city2 = new City(map.get(7).getTiles()[2][2]);
+
 		city1.setLocation(130, 130);
 		city2.setLocation((440 * 4) - 115, 750);
-		
+
 		this.player1.cities.add(city1);
 		this.player2.cities.add(city2);
-		
+
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
 
@@ -94,7 +95,6 @@ public class Board extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 	}
-	
 
 	public void checkUnexploredPanel(int x, int y) {
 
@@ -130,41 +130,28 @@ public class Board extends JPanel {
 	}
 
 	public void makeMovementWindow(final ArrayList<Figure> figures) {
-		final JFrame frame = new JFrame("Movement");
-		frame.setLayout(new GridLayout(1, 2));
-
-		frame.setSize(600, 600);
-
-		JButton move = new JButton("Move this figure");
-		JButton cancel = new JButton("Cancel");
-
-		frame.add(move);
-		frame.add(cancel);
-		frame.setVisible(true);
-
-		move.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				currentMovementFigure = figures.get(0);
-				frame.setVisible(false);
-				frame.dispose();
-			}
-		});
-
-		cancel.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				currentMovementFigure = null;
-				frame.setVisible(false);
-				frame.dispose();
-			}
-		});
-
+		int answer = JOptionPane.showConfirmDialog(null,
+				"Do you want move this unit?", "Movement",
+				JOptionPane.YES_NO_OPTION);
+		if (answer == JOptionPane.YES_OPTION) {
+			currentMovementFigure = figures.get(0);
+			return;
+		} else {
+			currentMovementFigure = null;
+			return;
+		}
 	}
-	
-	
+
+	public Boolean makeNewCityWindow(final Figure figure) {
+		int answer = JOptionPane.showConfirmDialog(null,
+				"Do you want to create a new city using this unit?",
+				"Create New City", JOptionPane.YES_NO_OPTION);
+		if (answer == JOptionPane.YES_OPTION)
+			return true;
+		else
+			return false;
+	}
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
@@ -178,9 +165,35 @@ public class Board extends JPanel {
 			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 					map.indexOf(panel), tile.getxPos(), tile.getyPos());
 			displayTileInfoWindow(tile);
-			
-			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)){
-				if(tile.getTerrain() != Tile.Terrain.Water){
+
+			if (Board.this.currentPhase.equals(START_OF_TURN)) {
+				Figure newCity = null;
+				for (Figure f : tile.getFigures()) {
+					if (f instanceof Settler) {
+						newCity = f;
+						break;
+					}
+				}
+				if (newCity == null) {
+					return;
+				}
+				if (makeNewCityWindow(newCity)) {
+
+					City city = new City(tile);// new City(tile, currentPlayer);
+					if (true) {// city.isValid()) {
+						city.setLocation(x, y);
+						currentPlayer.cities.add(city);
+						tile.setCity(city);
+						currentPlayer.figures.remove(newCity);
+						tile.getFigure().remove(newCity);
+						repaint();
+					}
+
+				}
+				return;
+
+			} else if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
+				if (tile.getTerrain() != Tile.Terrain.Water) {
 					ArrayList<Figure> figures = tile.getFigures();
 					Figure settler = new Settler(currentPlayer, tile);
 					settler.setLocation(x, y);
@@ -188,8 +201,7 @@ public class Board extends JPanel {
 					currentPlayer.figures.add(settler);
 					repaint();
 				}
-			}
-			else if (Board.this.currentPhase.equals(MOVEMENT)) {
+			} else if (Board.this.currentPhase.equals(MOVEMENT)) {
 				if (currentMovementFigure == null
 						|| currentMovementFigure.location.equals(tile)) {
 					ArrayList<Figure> figures = tile.getFigures();
@@ -225,10 +237,13 @@ public class Board extends JPanel {
 		private void displayTileInfoWindow(Tile tile) {
 			JFrame frame = new JFrame("Tile info");
 			frame.setLayout(new GridLayout(6, 1));
-			JLabel terrain = new JLabel("Terrain is " + tile.getTerrain().toString());
+			JLabel terrain = new JLabel("Terrain is "
+					+ tile.getTerrain().toString());
 			JLabel trade = new JLabel("Trade is " + tile.getTrade());
-			JLabel production = new JLabel("Production is " + tile.getProduction());
-			JLabel resource = new JLabel("Resource is " + tile.getResource().toString());
+			JLabel production = new JLabel("Production is "
+					+ tile.getProduction());
+			JLabel resource = new JLabel("Resource is "
+					+ tile.getResource().toString());
 			JLabel culture = new JLabel("Culture is " + tile.getCulture());
 			JLabel coin = new JLabel("Coin is " + tile.getCoins());
 			frame.add(terrain);
@@ -239,7 +254,7 @@ public class Board extends JPanel {
 			frame.add(coin);
 			frame.pack();
 			frame.setVisible(true);
-			
+
 		}
 
 		@Override
@@ -457,8 +472,8 @@ public class Board extends JPanel {
 		map.get(0).changeIsExplored(); // Player 1's initial location
 		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
-	
-	public void drawTerrain(Graphics2D g2){
+
+	public void drawTerrain(Graphics2D g2) {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 4; j++) {
 				for (int k = 0; k < 4; k++) {
@@ -533,39 +548,39 @@ public class Board extends JPanel {
 				24);
 		g2.setColor(Color.BLACK);
 		g2.fill(bottomSpace);
-		
+
 		drawPlayer1Panel(g2);
 		drawPanels(g2);
-		drawPlayer2Panel(g2);		
-		
+		drawPlayer2Panel(g2);
+
 		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
 		g2.drawString("Current Phase: " + this.currentPhase, 50, 900);
 
-		if (this.currentPlayer == this.player1){
+		if (this.currentPlayer == this.player1) {
 			g2.setColor(Color.RED);
 			g2.drawString("Player 1's turn.", 500, 900);
-		}
-		else{
+		} else {
 			g2.setColor(Color.ORANGE);
 			g2.drawString("Player 2's turn.", 500, 900);
 		}
-		
-		for(City cities : player1.cities){
-			Rectangle2D.Double p1City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+
+		for (City cities : player1.cities) {
+			Rectangle2D.Double p1City = new Rectangle2D.Double(
+					cities.getLocation().x - 25, cities.getLocation().y - 25,
 					50, 50);
 			g2.setColor(Color.RED);
 			g2.fill(p1City);
-			
+
 		}
-		
-		for(City cities : player2.cities){
-			Rectangle2D.Double p2City = new Rectangle2D.Double(cities.getLocation().x - 25, cities.getLocation().y - 25,
+
+		for (City cities : player2.cities) {
+			Rectangle2D.Double p2City = new Rectangle2D.Double(
+					cities.getLocation().x - 25, cities.getLocation().y - 25,
 					50, 50);
 			g2.setColor(Color.ORANGE);
 			g2.fill(p2City);
 		}
-		
 
 		for (Figure figure : player1.figures) {
 			Ellipse2D.Double player1 = new Ellipse2D.Double(
@@ -588,76 +603,74 @@ public class Board extends JPanel {
 	}
 
 	private void drawPanels(Graphics2D g2) {
-		
-		for(int i = 1; i < 7; i++){
-		if(map.get(i).getIsExplored()){
-		String filename = "src/panels/panel" + i + ".png";
-		
-		try {
-			BufferedImage image = ImageIO.read(new File(filename));
-			switch (i){
-			case 1:
-				g2.drawImage(image, 440, 0, null);
-				break;
-			case 2:
-				g2.drawImage(image, 880, 0, null);
-				break;
-			case 3:
-				g2.drawImage(image, 1320, 0, null);
-				break;
-			case 4:
-				g2.drawImage(image,  0, 440, null);
-				break;
-			case 5:
-				g2.drawImage(image, 440, 440, null);
-				break;
-			case 6:
-				g2.drawImage(image,  880, 440, null);
-				break;
-			}
-		} catch (IOException e) {
-			System.out.println("did not load image correctly");
-			e.printStackTrace();
-		}
-		}
-		else{
-			String filename = "src/panels/UnexploredPanel.png";
 
-			try {
-				BufferedImage image = ImageIO.read(new File(filename));
-				switch (i){
-				case 1:
-					g2.drawImage(image, 440, 0, null);
-					break;
-				case 2:
-					g2.drawImage(image, 880, 0, null);
-					break;
-				case 3:
-					g2.drawImage(image, 1320, 0, null);
-					break;
-				case 4:
-					g2.drawImage(image,  0, 440, null);
-					break;
-				case 5:
-					g2.drawImage(image, 440, 440, null);
-					break;
-				case 6:
-					g2.drawImage(image,  880, 440, null);
-					break;
+		for (int i = 1; i < 7; i++) {
+			if (map.get(i).getIsExplored()) {
+				String filename = "src/panels/panel" + i + ".png";
+
+				try {
+					BufferedImage image = ImageIO.read(new File(filename));
+					switch (i) {
+					case 1:
+						g2.drawImage(image, 440, 0, null);
+						break;
+					case 2:
+						g2.drawImage(image, 880, 0, null);
+						break;
+					case 3:
+						g2.drawImage(image, 1320, 0, null);
+						break;
+					case 4:
+						g2.drawImage(image, 0, 440, null);
+						break;
+					case 5:
+						g2.drawImage(image, 440, 440, null);
+						break;
+					case 6:
+						g2.drawImage(image, 880, 440, null);
+						break;
+					}
+				} catch (IOException e) {
+					System.out.println("did not load image correctly");
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				System.out.println("did not load image correctly");
-				e.printStackTrace();
+			} else {
+				String filename = "src/panels/UnexploredPanel.png";
+
+				try {
+					BufferedImage image = ImageIO.read(new File(filename));
+					switch (i) {
+					case 1:
+						g2.drawImage(image, 440, 0, null);
+						break;
+					case 2:
+						g2.drawImage(image, 880, 0, null);
+						break;
+					case 3:
+						g2.drawImage(image, 1320, 0, null);
+						break;
+					case 4:
+						g2.drawImage(image, 0, 440, null);
+						break;
+					case 5:
+						g2.drawImage(image, 440, 440, null);
+						break;
+					case 6:
+						g2.drawImage(image, 880, 440, null);
+						break;
+					}
+				} catch (IOException e) {
+					System.out.println("did not load image correctly");
+					e.printStackTrace();
+				}
 			}
 		}
-		}
-		
-	}
 
+	}
 
 	private void drawPlayer1Panel(Graphics2D g2) {
 		String filename = "src/panels/" + this.player2Civilization + ".png";
-		
+
 		try {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 0, 0, null);
@@ -665,12 +678,12 @@ public class Board extends JPanel {
 			System.out.println("did not load image correctly");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void drawPlayer2Panel(Graphics2D g2) {
 		String filename = "src/panels/" + this.player1Civilization + ".png";
-		
+
 		try {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 1320, 440, null);
@@ -678,9 +691,8 @@ public class Board extends JPanel {
 			System.out.println("did not load image correctly");
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
 
 	private void changePlayerTurn() {
 		if (this.currentPlayer == this.player1)
