@@ -126,8 +126,10 @@ public class Board extends JPanel {
 
 	public void checkUnexploredPanelNew(int x, int y) {
 		Panel panel = findPanel(x, y);
-		if (!panel.getIsExplored())
+		if (!panel.getIsExplored()){
 			panel.changeIsExplored();
+			this.currentPlayer.setNumberMoves(0);
+		}
 	}
 
 	public void makeMovementWindow(final ArrayList<Figure> figures) {

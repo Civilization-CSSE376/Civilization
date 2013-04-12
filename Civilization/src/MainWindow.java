@@ -129,7 +129,7 @@ public class MainWindow extends JFrame {
 				JFrame player1Window = new JFrame("Player 1 Details");
 				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 				player1Window.setIconImage(icon.getImage());
-				player1Window.setSize(700, 800);
+				player1Window.setSize(900, 565);
 				player1Window.setVisible(true);
 			}
 			
@@ -139,14 +139,42 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame player2Window = new JFrame("Player 2 Details");
+				final JFrame player2Window = new JFrame("Player 2 Details");
+				player2Window.setLayout(null);
+				
 				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 				player2Window.setIconImage(icon.getImage());
-				player2Window.setSize(700, 800);
-				player2Window.setVisible(true);
 				
-			}
-			
+				player2Window.setSize(900, 565);
+				player2Window.setAlwaysOnTop(true);
+				player2Window.setVisible(true);
+				MainWindow.this.setEnabled(false);
+				player2Window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				
+				JPanel mainPanel = new JPanel();
+				mainPanel.setBackground(Color.BLACK);
+				JButton close = new JButton("Close");
+				mainPanel.add(close);
+				mainPanel.setLocation(550, 493);
+				mainPanel.setSize(334, 35);
+				player2Window.add(mainPanel);
+				
+				
+				
+				
+				close.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						MainWindow.this.setEnabled(true);
+						player2Window.dispose();
+					}
+					
+				});
+				
+				
+				
+			}	
 		});
 		
 		this.marketDetails.addActionListener(new ActionListener() {
