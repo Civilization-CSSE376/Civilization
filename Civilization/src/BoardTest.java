@@ -542,6 +542,7 @@ public class BoardTest {
 		target.items[0] = new JRadioButtonMenuItem("Settler");
 		target.items[1] = new JRadioButtonMenuItem("Army");
 		target.items[2] = new JRadioButtonMenuItem("Cancel");
+		target.currentFigure = null;
 		assertNull(Board.currentFigure);
 		target.handleBuild(0);
 		assertNull(Board.currentFigure);
