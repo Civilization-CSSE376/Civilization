@@ -16,10 +16,23 @@ public class City {
 	private int culture = 0;
 	private int trade = 0;
 	private Double screenLocation;
-
+	
+	public boolean isValid = false;
 	
 	public City(Tile location){
 		this.location = location;
+	}
+
+	
+	public City(Tile location, Player player){
+		this.location = location;
+		this.outskirts = this.getOutskirts(location);
+		if(this.outskirts != null)
+			this.isValid = this.validOutskirts(player);
+	}
+	
+	public int getProduction(){
+		return this.production;
 	}
 	
 	public void setCapital(){
@@ -43,13 +56,13 @@ public class City {
 	 * Calculates the production of this city
 	 * @return totalProduction
 	 */
-	private int calcProduction(){
+	int calcProduction(){
 		int totalProduction = 0;
 		
 		for(Tile t : this.outskirts){
 			totalProduction += t.getProduction();
 		}
-		
+		this.production = totalProduction;
 		return totalProduction;
 	}
 	
@@ -57,7 +70,7 @@ public class City {
 	 * Calculates the culture of this city
 	 * @return totalCulture
 	 */
-	private int calcCulture(){
+	int calcCulture(){
 		int totalCulture = 0;
 		
 		for(Tile t : this.outskirts){
@@ -71,7 +84,7 @@ public class City {
 	 * Calculates the trade of this city.
 	 * @return totalTrade
 	 */
-	private int calcTrade(){
+	int calcTrade(){
 		int totalTrade = 0;
 		
 		for(Tile t : this.outskirts){
@@ -87,16 +100,37 @@ public class City {
 	 * @return the 8 tiles of the outskirts in a hashset structure. returns null
 	 * 			if the outskirts contain a null tile
 	 */
-	private HashSet<Tile> getOutskirts(Tile startTile){//written assuming typical plot (x,y) rather than array (row, column) 
+	private ArrayList<Tile> getOutskirts(Tile startTile){//written assuming typical plot (x,y) rather than array (row, column) 
 		Panel startPanel = Board.findPanel(startTile);//so every direction has to be replaced with the clockwise direction
 		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
-		HashSet<Tile> outskirts = new HashSet<Tile>();
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 		
-		Panel westPanel = neighbors.get("North");
-		Panel eastPanel = neighbors.get("South");
-		Panel southPanel = neighbors.get("West");
-		Panel northPanel = neighbors.get("East");
+		Panel westPanel = new Panel();
+		Panel eastPanel = new Panel();
+		Panel southPanel = new Panel();
+		Panel northPanel = new Panel();
+		
+		try{
+			westPanel = neighbors.get("North");
+		} catch (NullPointerException e){
+			westPanel = null;
+		}
+		try{
+			eastPanel = neighbors.get("South");
+			} catch (NullPointerException e){
+				eastPanel = null;
+			}
+		try{
+			southPanel = neighbors.get("West");
+			} catch (NullPointerException e){
+				southPanel = null;
+			}
+		try{
+			northPanel = neighbors.get("East");
+			} catch (NullPointerException e){
+				northPanel = null;
+			}
 
 		int startX = startTile.getxPos();
 		int startY = startTile.getyPos();
@@ -105,7 +139,13 @@ public class City {
 		if(startX - 1 < 0 && startY - 1 < 0){
 			//bottom left corner
 			
-			Panel southWestPanel = neighbors.get("West").getNeighbors().get("North");
+			Panel southWestPanel = new Panel();
+					
+			try{
+				southWestPanel = neighbors.get("West").getNeighbors().get("North");
+			}catch (NullPointerException e){
+				southWestPanel = null;
+			}
 			
 			if(southPanel == null || westPanel == null || southWestPanel == null){
 				return null;
@@ -136,7 +176,12 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY - 1 < 0){
 			//bottom right corner
 			
-			Panel southEastPanel = neighbors.get("West").getNeighbors().get("South");
+			Panel southEastPanel = new Panel();
+					try{
+						southEastPanel = neighbors.get("West").getNeighbors().get("South");
+					}catch (NullPointerException e){
+						southEastPanel = null;
+					}
 			
 			if(southPanel == null || eastPanel == null || southEastPanel == null){
 				return null;
@@ -164,7 +209,12 @@ public class City {
 		}else if(startX - 1 < 0 && startY + 2 > startPanel.getTiles()[0].length){
 			//top left corner
 			
-			Panel northWestPanel = neighbors.get("East").getNeighbors().get("North");
+			Panel northWestPanel = new Panel();
+					try{
+						northWestPanel = neighbors.get("East").getNeighbors().get("North");
+					}catch (NullPointerException e){
+						northWestPanel = null;
+					}
 			
 			if(northPanel == null || westPanel == null || northWestPanel == null){
 				return null;
@@ -192,7 +242,12 @@ public class City {
 		}else if(startX + 2 > startPanel.getTiles().length && startY + 2 > startPanel.getTiles()[0].length){
 			//top right corner
 			
-			Panel northEastPanel = neighbors.get("East").getNeighbors().get("South");
+			Panel northEastPanel = new Panel();
+					try{
+						northEastPanel = neighbors.get("East").getNeighbors().get("South");
+					}catch (NullPointerException e){
+						northEastPanel = null;
+					}
 			
 			if(northPanel == null || eastPanel == null || northEastPanel == null){
 				return null;
@@ -320,14 +375,14 @@ public class City {
 	 * @param outskirts -the 8 surrounding tiles of the city
 	 * @return true if the startTile and all the tiles in the outskirts pass all restrictions else false
 	 */
-	private boolean validOutskirts(Player buildingPlayer, Tile startTile, HashSet<Tile> outskirts){
+	private boolean validOutskirts(Player buildingPlayer){
 		
 		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
 		ArrayList<Player> enemyPlayers = new ArrayList<Player>();
 		ArrayList<City> enemyCities = new ArrayList<City>();
 		ArrayList<Tile> enemyOutskirts = new ArrayList<Tile>();
-		HashSet<Tile> cityTiles = new HashSet<Tile>(outskirts);
-		cityTiles.add(startTile);
+		HashSet<Tile> cityTiles = new HashSet<Tile>(this.outskirts);
+		cityTiles.add(this.location);
 		
 		for(Player p : Board.players){
 			
@@ -353,7 +408,7 @@ public class City {
 		
 		
 		//water test
-		if(startTile.getTerrain().equals(Tile.Terrain.Water)){
+		if(this.location.getTerrain().equals(Tile.Terrain.Water)){
 			return false;
 		}
 		
@@ -413,6 +468,11 @@ public class City {
 			this.screenLocation = new Point2D.Double(newX, newY);
 		} else
 			System.out.println("\nInvalid location -- cannot move player.");
+	}
+
+
+	public boolean getHasAction() {
+		return this.hasAction;
 	}
 	
 }

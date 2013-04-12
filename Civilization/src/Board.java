@@ -3,11 +3,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -15,11 +17,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 
 import java.util.Hashtable;
 
@@ -41,7 +48,7 @@ public class Board extends JPanel {
 	private Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
-	public static ArrayList<Player> players;
+	public static ArrayList<Player> players = new ArrayList<Player>();
 	// private Market market;
 	private Player firstPlayer;
 	private Player currentPlayer;
@@ -57,6 +64,8 @@ public class Board extends JPanel {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
 
+		setPanelNeighbors();
+
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
 
@@ -66,6 +75,9 @@ public class Board extends JPanel {
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
 
+		settler1.resetMoves(player1.getSpeed());
+		settler2.resetMoves(player2.getSpeed());
+
 		settler1.setLocation(10, 10);
 		settler2.setLocation((440 * 4) - 5, 830);
 
@@ -74,16 +86,16 @@ public class Board extends JPanel {
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		
-		City city1 = new City(map.get(0).getTiles()[1][1]);
-		City city2 = new City(map.get(7).getTiles()[2][2]);		
-		
+
+		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
+		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
+
 		city1.setLocation(130, 130);
 		city2.setLocation((440 * 4) - 115, 750);
-		
+
 		this.player1.cities.add(city1);
 		this.player2.cities.add(city2);
-		
+
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
 
@@ -95,6 +107,73 @@ public class Board extends JPanel {
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
+	}
+
+	private void setPanelNeighbors() {
+		// panel 0
+		HashMap<String, Panel> neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(4));
+		neighbors.put("East", this.map.get(1));
+		neighbors.put("West", null);
+		this.map.get(0).setNeighbors(neighbors);
+
+		// panel 1
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(5));
+		neighbors.put("East", this.map.get(2));
+		neighbors.put("West", this.map.get(0));
+		this.map.get(1).setNeighbors(neighbors);
+
+		// panel 2
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(6));
+		neighbors.put("East", this.map.get(3));
+		neighbors.put("West", this.map.get(1));
+		this.map.get(2).setNeighbors(neighbors);
+
+		// panel 3
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", null);
+		neighbors.put("South", this.map.get(7));
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(2));
+		this.map.get(3).setNeighbors(neighbors);
+
+		// panel 4
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(0));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(5));
+		neighbors.put("West", null);
+		this.map.get(4).setNeighbors(neighbors);
+
+		// panel 5
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(1));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(6));
+		neighbors.put("West", this.map.get(4));
+		this.map.get(5).setNeighbors(neighbors);
+
+		// panel 6
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(2));
+		neighbors.put("South", null);
+		neighbors.put("East", this.map.get(7));
+		neighbors.put("West", this.map.get(5));
+		this.map.get(6).setNeighbors(neighbors);
+
+		// panel 7
+		neighbors = new HashMap<String, Panel>();
+		neighbors.put("North", this.map.get(3));
+		neighbors.put("South", null);
+		neighbors.put("East", null);
+		neighbors.put("West", this.map.get(6));
+		this.map.get(5).setNeighbors(neighbors);
+
 	}
 
 	public void checkUnexploredPanel(int x, int y) {
@@ -128,42 +207,322 @@ public class Board extends JPanel {
 		Panel panel = findPanel(x, y);
 		if (!panel.getIsExplored()){
 			panel.changeIsExplored();
-			this.currentPlayer.setNumberMoves(0);
 		}
 	}
 
 	public void makeMovementWindow(final ArrayList<Figure> figures) {
-		final JFrame frame = new JFrame("Movement");
-		frame.setLayout(new GridLayout(1, 2));
+		if (figures.get(0).getUsedThisTurn()
+				|| figures.get(0).getNumberOfMoves() == 0) {
+			return;
+		}
+		int answer = JOptionPane.showConfirmDialog(null,
+				"Do you want move this unit?", "Movement",
+				JOptionPane.YES_NO_OPTION);
+		if (answer == JOptionPane.YES_OPTION) {
+			currentMovementFigure = figures.get(0);
+			return;
+		} else {
+			currentMovementFigure = null;
+			return;
+		}
+	}
 
-		frame.setSize(600, 600);
+	public Boolean makeNewCityWindow(final Figure figure) {
+		int answer = JOptionPane.showConfirmDialog(null,
+				"Do you want to create a new city using this unit?",
+				"Create New City", JOptionPane.YES_NO_OPTION);
+		if (answer == JOptionPane.YES_OPTION)
+			return true;
+		else
+			return false;
+	}
 
-		JButton move = new JButton("Move this figure");
-		JButton cancel = new JButton("Cancel");
-
-		frame.add(move);
-		frame.add(cancel);
-		frame.setVisible(true);
-
-		move.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				currentMovementFigure = figures.get(0);
-				frame.setVisible(false);
-				frame.dispose();
+	private void startOfTurn() {
+		Figure newCity = null;
+		for (Figure f : Board.currentTile.getFigures()) {
+			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
+				newCity = f;
+				break;
 			}
-		});
+		}
+		if (newCity == null) {
+			return;
+		}
+		if (makeNewCityWindow(newCity)) {
 
-		cancel.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				currentMovementFigure = null;
-				frame.setVisible(false);
-				frame.dispose();
+			City city = new City(Board.currentTile, currentPlayer);
+			if (city.isValid) {
+				city.setLocation(Board.currentClick.x, Board.currentClick.y);
+				currentPlayer.cities.add(city);
+				Board.currentTile.setCity(city);
+				currentPlayer.figures.remove(newCity);
+				Board.currentTile.getFigure().remove(newCity);
+				repaint();
 			}
-		});
+
+		}
+		return;
+	}
+
+	private JRadioButtonMenuItem items[];
+	private static Panel currentPanel = null;
+	private static Tile currentTile = null;
+	private static Point currentClick = null;
+	private static Figure currentFigure = null;
+	private static City currentCity = null;
+	
+	private void cityManagement() {
+		if (currentTile.getCity() != null
+				&& currentTile.getCity().getHasAction()
+				&& currentPlayer.cities.contains(currentTile.getCity())) {
+			currentFigure = null;
+			currentCity = currentTile.getCity();
+			JPopupMenu menu = new JPopupMenu();
+			InitialHandler handler = new InitialHandler();
+			ButtonGroup group = new ButtonGroup();
+			items = new JRadioButtonMenuItem[2];
+
+			items[0] = new JRadioButtonMenuItem("Settler");
+			items[1] = new JRadioButtonMenuItem("Cancel");
+
+			for (int i = 0; i < items.length; i++) {
+				menu.add(items[i]);
+				group.add(items[i]);
+				items[i].addActionListener(handler);
+			}
+
+			menu.show(this, Board.currentClick.x, Board.currentClick.y);
+		}
+		else{
+			if(currentFigure != null && !checkSpaceForEnemyFigures(Board.currentTile)){
+				addSettler(currentTile);
+				currentFigure = null;;
+				currentCity.setHasAction(false);
+				currentCity = null;
+			}
+		}
+
+	}
+
+	public boolean checkSpaceForEnemyFigures(Tile tile) {
+		Player enemy;
+		if(currentPlayer.equals(player1))
+			enemy = player2;
+		else
+			enemy = player1;
+		
+		for(Figure f :tile.getFigures()){
+			if(f.getOwner().equals(enemy))
+				return true;
+		}
+		return false;
+	}
+
+	private class InitialHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					if (items[i].getText().equals("Settler")) {
+						Figure settler = new Settler(currentPlayer,
+								Board.currentTile);
+						settler.setLocation(Board.currentClick.x,
+								Board.currentClick.y);
+						settler.resetMoves(currentPlayer.getSpeed());
+						Board.currentFigure = settler;
+					}
+					repaint();
+					return;
+				}
+		}
+	}
+
+	private void movement() {
+		if (currentMovementFigure == null
+				|| currentMovementFigure.location.equals(Board.currentTile)) {
+			ArrayList<Figure> figures = Board.currentTile.getFigures();
+			if (!figures.isEmpty()) {
+				Figure figure = figures.get(0);
+				if (figure.getOwner() != null) {
+					if (figure.getOwner().equals(Board.this.currentPlayer)
+							&& !figure.getUsedThisTurn()) {
+						makeMovementWindow(figures);
+						getValidTiles(Board.currentPanel, Board.currentTile);
+					}
+				}
+			}
+		} else {
+			System.out.printf("Player has %d moves.\n",
+					currentMovementFigure.getNumberOfMoves());
+			if (currentMovementFigure.getNumberOfMoves() > 0) {
+				if (Board.this.validTiles.contains(Board.currentTile)) {
+					System.out.println("Tile valid! Moving figure.");
+					Tile oldTile = currentMovementFigure.location;
+					oldTile.getFigures().remove(currentMovementFigure);
+					Board.this.currentMovementFigure.setLocation(
+							Board.currentClick.x, Board.currentClick.y);
+					currentMovementFigure.setTileLocal(Board.currentTile);
+					Board.currentTile.getFigures().add(currentMovementFigure);
+					// currentMovementFigure.setUsedThisTurn(true);
+
+					currentMovementFigure.decreaseMoves();
+
+					currentMovementFigure = null;
+					checkUnexploredPanelNew(Board.currentClick.x,
+							Board.currentClick.y);
+					Board.this.validTiles.clear();
+					Board.this.repaint();
+				}
+			}
+		}
+	}
+
+	public void getValidTiles(Panel panel, Tile tile) {
+		int panelNumber = map.indexOf(panel);
+		int x = tile.getxPos();
+		int y = tile.getyPos();
+		Tile tileToCheck;
+		if (currentMovementFigure.getNumberOfMoves() == 1) { // Can't end
+																// on water!
+			for (int i = y - 1; i <= y + 1; i++) {
+				for (int j = x - 1; j <= x + 1; j++) {
+					if(i == y || j == x){
+					if (!(i == y && j == x)) {
+
+						if (i != -1 && i != 4 && j != -1 && j != 4) {
+							tileToCheck = map.get(panelNumber).getTiles()[i][j];
+							if (!tileToCheck.getTerrain().toString()
+									.equals("Water"))
+								Board.this.validTiles.add(tileToCheck);
+						} else if (i == -1 && j == -1) {
+							if (panelNumber > 4) {
+								tileToCheck = map.get(panelNumber - 5)
+										.getTiles()[3][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == -1 && j == 4) {
+							if (panelNumber > 0 && panelNumber < 4) {
+								tileToCheck = map.get(panelNumber + 3)
+										.getTiles()[0][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4 && j == -1) {
+							if (panelNumber > 3 && panelNumber < 7) {
+								tileToCheck = map.get(panelNumber - 3)
+										.getTiles()[3][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4 && j == 4) {
+							if (panelNumber < 3) {
+								tileToCheck = map.get(panelNumber + 5)
+										.getTiles()[0][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == -1) {
+							if (panelNumber > 0 && panelNumber != 4) {
+								tileToCheck = map.get(panelNumber - 1)
+										.getTiles()[3][j];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4) {
+							if (panelNumber < 7 && panelNumber != 3) {
+								tileToCheck = map.get(panelNumber + 1)
+										.getTiles()[0][j];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (j == -1) {
+							if (panelNumber > 3) {
+								tileToCheck = map.get(panelNumber - 4)
+										.getTiles()[i][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else {
+							if (panelNumber < 4) {
+								tileToCheck = map.get(panelNumber + 4)
+										.getTiles()[i][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						}
+					}
+					}
+				}
+
+			}
+		} else {
+			for (int i = y - 1; i <= y + 1; i++) {
+				for (int j = x - 1; j <= x + 1; j++) {
+					if(i == y || j == x){
+					if (!(i == y && j == x)) {
+						System.out.println("Adding tile... i = " + i
+								+ " and j = " + j);
+						if (i != -1 && i != 4 && j != -1 && j != 4) {
+							Board.this.validTiles.add(map.get(panelNumber)
+									.getTiles()[i][j]);
+						} else if (i == -1 && j == -1) {
+							if (panelNumber > 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 5).getTiles()[3][3]);
+							}
+						} else if (i == -1 && j == 4) {
+							if (panelNumber > 0 && panelNumber < 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 3).getTiles()[0][3]);
+							}
+						} else if (i == 4 && j == -1) {
+							if (panelNumber > 3 && panelNumber < 7) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 3).getTiles()[3][0]);
+							}
+						} else if (i == 4 && j == 4) {
+							if (panelNumber < 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 5).getTiles()[0][0]);
+							}
+						} else if (i == -1) {
+							if (panelNumber > 0 && panelNumber != 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 1).getTiles()[3][j]);
+							}
+						} else if (i == 4) {
+							if (panelNumber < 7 && panelNumber != 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 1).getTiles()[0][j]);
+							}
+						} else if (j == -1) {
+							if (panelNumber > 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 4).getTiles()[i][3]);
+							}
+						} else {
+							if (panelNumber < 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 4).getTiles()[i][0]);
+							}
+						}
+
+					}
+				}
+				}
+			}
+		}
+
+		System.out.println("Array size: " + Board.this.validTiles.size());
 
 	}
 
@@ -173,195 +532,30 @@ public class Board extends JPanel {
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
+			Board.currentClick = new Point(x, y);
 			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
-			Panel panel = findPanel(x, y);
-			Tile tile = findTile(panel, x, y);
-			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
-					map.indexOf(panel), tile.getxPos(), tile.getyPos());
-//			displayTileInfoWindow(tile);
+			Board.currentPanel = findPanel(x, y);
+			Board.currentTile = findTile(Board.currentPanel, x, y);
+			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
 
-			if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
-				if (tile.getTerrain() != Tile.Terrain.Water) {
-					ArrayList<Figure> figures = tile.getFigures();
-					Figure settler = new Settler(currentPlayer, tile);
-					settler.setLocation(x, y);
-					figures.add(settler);
-					currentPlayer.figures.add(settler);
-					repaint();
-				}
+			// displayTileInfoWindow(tile);
+
+			if (Board.this.currentPhase.equals(START_OF_TURN)) {
+				startOfTurn();
+			} else if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
+				cityManagement();
 			} else if (Board.this.currentPhase.equals(MOVEMENT)) {
-				System.out.printf("Player has %d moves.\n", Board.this.currentPlayer.getNumberOfMoves());
-				if (Board.this.currentPlayer.getNumberOfMoves() > 0) {
-					if (currentMovementFigure == null
-							|| currentMovementFigure.location.equals(tile)) {
-						ArrayList<Figure> figures = tile.getFigures();
-						if (!figures.isEmpty()) {
-							Figure figure = figures.get(0);
-							if (figure.getOwner() != null) {
-								if (figure.getOwner().equals(
-										Board.this.currentPlayer)
-										&& !figure.getUsedThisTurn()) {
-									makeMovementWindow(figures);
-									getValidTiles(panel, tile);
-								}
-							}
+				movement();
+			} else if (Board.this.currentPhase.equals(TRADE)) {
+				// TODO: ask if want to trade
 
-						}
-					} else {
-
-						if (Board.this.validTiles.contains(tile)) {
-							System.out.println("Tile valid! Moving figure.");
-							Tile oldTile = currentMovementFigure.location;
-							oldTile.getFigures().remove(currentMovementFigure);
-							Board.this.currentMovementFigure.setLocation(x, y);
-							currentMovementFigure.setTileLocal(tile);
-							tile.getFigures().add(currentMovementFigure);
-//							currentMovementFigure.setUsedThisTurn(true);
-							currentMovementFigure = null;
-							checkUnexploredPanelNew(x, y);
-							Board.this.validTiles.clear();
-							Board.this.currentPlayer.decreaseMoves();
-							Board.this.repaint();
-						}
-					}
+				for (City c : Board.this.currentPlayer.cities) {
+					Board.this.currentPlayer.trade += c.calcTrade();
 				}
+				System.out.println(currentPlayer.trade);
 			}
-
-		}
-
-		private void getValidTiles(Panel panel, Tile tile) {
-			int panelNumber = map.indexOf(panel);
-			int x = tile.getxPos();
-			int y = tile.getyPos();
-			Tile tileToCheck;
-			if (Board.this.currentPlayer.getNumberOfMoves() == 1) { // Can't end
-																	// on water!
-				for (int i = x - 1; i <= x + 1; i++) {
-					for (int j = y - 1; j <= y + 1; j++) {
-
-						if (!(i == x && j == y)) {
-
-							if (i != -1 && i != 4 && j != -1 && j != 4) {
-								tileToCheck = map.get(panelNumber).getTiles()[i][j];
-								if (!tileToCheck.getTerrain().toString().equals("Water"))
-									Board.this.validTiles.add(tileToCheck);
-							} else if (i == -1 && j == -1) {
-								if (panelNumber > 4) {
-									tileToCheck = map.get(panelNumber - 5)
-											.getTiles()[3][3];
-									if (!tileToCheck.getTerrain().toString().equals(
-											"Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == -1 && j == 4) {
-								if (panelNumber > 0 && panelNumber < 4) {
-									tileToCheck = map.get(panelNumber + 3)
-											.getTiles()[0][3];
-									if (!tileToCheck.getTerrain().toString().equals(
-											"Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4 && j == -1) {
-								if (panelNumber > 3 && panelNumber < 7) {
-									tileToCheck = map.get(panelNumber - 3)
-											.getTiles()[3][0];
-									if (!tileToCheck.getTerrain().toString().equals(
-											"Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4 && j == 4) {
-								if (panelNumber < 3) {
-									tileToCheck = map.get(panelNumber + 5)
-											.getTiles()[0][0];
-									if (!tileToCheck.getTerrain().toString().equals(
-											"Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == -1) {
-								if (panelNumber > 0 && panelNumber != 4) {
-									tileToCheck = map.get(panelNumber - 1)
-											.getTiles()[3][j];
-									if (!tileToCheck.getTerrain().toString().equals(
-											"Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4) {
-								if (panelNumber < 7 && panelNumber != 3) {
-									tileToCheck = map.get(panelNumber + 1).getTiles()[0][j];
-									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (j == -1) {
-								if(panelNumber > 3){
-									tileToCheck = map.get(panelNumber - 4).getTiles()[i][3];
-									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
-								}
-							} else {
-								if(panelNumber < 4){
-									tileToCheck = map.get(panelNumber + 4).getTiles()[i][0];
-									if(!tileToCheck.getTerrain().toString().equals("Water")) Board.this.validTiles.add(tileToCheck);
-								}
-							}
-
-						}
-					}
-
-				}
-			} else {
-				for (int i = x - 1; i <= x + 1; i++) {
-					for (int j = y - 1; j <= y + 1; j++) {
-
-						if (!(i == x && j == y)) {
-							System.out.println("Adding tile... i = " + i + " and j = " + j);
-							if (i != -1 && i != 4 && j != -1 && j != 4) {
-								Board.this.validTiles.add(map.get(panelNumber).getTiles()[i][j]);
-							} else if (i == -1 && j == -1) {
-								if (panelNumber > 4) {
-										Board.this.validTiles.add(map.get(panelNumber - 5)
-												.getTiles()[3][3]);
-								}
-							} else if (i == -1 && j == 4) {
-								if (panelNumber > 0 && panelNumber < 4) {
-										Board.this.validTiles.add(map.get(panelNumber + 3)
-												.getTiles()[0][3]);
-								}
-							} else if (i == 4 && j == -1) {
-								if (panelNumber > 3 && panelNumber < 7) {
-										Board.this.validTiles.add(map.get(panelNumber - 3)
-												.getTiles()[3][0]);
-								}
-							} else if (i == 4 && j == 4) {
-								if (panelNumber < 3) {
-										Board.this.validTiles.add(map.get(panelNumber + 5)
-												.getTiles()[0][0]);
-								}
-							} else if (i == -1) {
-								if (panelNumber > 0 && panelNumber != 4) {
-										Board.this.validTiles.add(map.get(panelNumber - 1)
-												.getTiles()[3][j]);
-								}
-							} else if (i == 4) {
-								if (panelNumber < 7 && panelNumber != 3) {
-									Board.this.validTiles.add(map.get(panelNumber + 1).getTiles()[0][j]);
-								}
-							} else if (j == -1) {
-								if(panelNumber > 3){
-									Board.this.validTiles.add(map.get(panelNumber - 4).getTiles()[i][3]);
-								}
-							} else {
-								if(panelNumber < 4){
-									Board.this.validTiles.add(map.get(panelNumber + 4).getTiles()[i][0]);
-								}
-							}
-
-						}
-					}
-
-				}
-			}
-			
-			System.out.println("Array size: " + Board.this.validTiles.size());
-
 		}
 
 		private void displayTileInfoWindow(Tile tile) {
@@ -603,72 +797,72 @@ public class Board extends JPanel {
 		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
 
-	// public void drawTerrain(Graphics2D g2) {
-	// for (int i = 0; i < 8; i++) {
-	// for (int j = 0; j < 4; j++) {
-	// for (int k = 0; k < 4; k++) {
-	// Color rectColor = Color.RED;
-	// if (map.get(i).getIsExplored()) {
-	// switch (map.get(i).getTiles()[j][k].getTerrain()
-	// .toString()) {
-	// case "Desert":
-	// rectColor = Color.YELLOW;
-	// break;
-	// case "Mountain":
-	// rectColor = Color.DARK_GRAY;
-	// break;
-	// case "Forest":
-	// rectColor = Color.WHITE;
-	// break;
-	// case "Grassland":
-	// rectColor = Color.GREEN;
-	// break;
-	// case "Water":
-	// rectColor = Color.BLUE;
-	// break;
-	// }
-	// if (i > 3) {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * (i - 4)) + (110 * j),
-	// 440 + (110 * k), 110, 110);
-	// g2.setColor(rectColor);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// } else {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * i) + (110 * j), (110 * k), 110, 110);
-	// g2.setColor(rectColor);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// }
-	// // System.out.println("Tile[" + j + "][" + k +
-	// // "] created at location " + (20 + (440 * i) + (110 *
-	// // j)) +
-	// // " " + (20 + nextRow + (110 * k)));
-	// } else {
-	// if (i > 3) {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * (i - 4)) + (110 * j),
-	// 440 + (110 * k), 110, 110);
-	// g2.setColor(Color.BLACK);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// } else {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * i) + (110 * j), (110 * k), 110, 110);
-	// g2.setColor(Color.BLACK);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
+	public void drawTerrain(Graphics2D g2) {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 4; j++) {
+				for (int k = 0; k < 4; k++) {
+					Color rectColor = Color.RED;
+					if (map.get(i).getIsExplored()) {
+						switch (map.get(i).getTiles()[j][k].getTerrain()
+								.toString()) {
+						case "Desert":
+							rectColor = Color.YELLOW;
+							break;
+						case "Mountain":
+							rectColor = Color.DARK_GRAY;
+							break;
+						case "Forest":
+							rectColor = Color.WHITE;
+							break;
+						case "Grassland":
+							rectColor = Color.GREEN;
+							break;
+						case "Water":
+							rectColor = Color.BLUE;
+							break;
+						}
+						if (i > 3) {
+							Rectangle2D.Double rect = new Rectangle2D.Double(
+									(440 * (i - 4)) + (110 * j),
+									440 + (110 * k), 110, 110);
+							g2.setColor(rectColor);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						} else {
+							Rectangle2D.Double rect = new Rectangle2D.Double(
+									(440 * i) + (110 * j), (110 * k), 110, 110);
+							g2.setColor(rectColor);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						}
+						// System.out.println("Tile[" + j + "][" + k +
+						// "] created at location " + (20 + (440 * i) + (110 *
+						// j)) +
+						// " " + (20 + nextRow + (110 * k)));
+					} else {
+						if (i > 3) {
+							Rectangle2D.Double rect = new Rectangle2D.Double(
+									(440 * (i - 4)) + (110 * j),
+									440 + (110 * k), 110, 110);
+							g2.setColor(Color.BLACK);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						} else {
+							Rectangle2D.Double rect = new Rectangle2D.Double(
+									(440 * i) + (110 * j), (110 * k), 110, 110);
+							g2.setColor(Color.BLACK);
+							g2.fill(rect);
+							g2.setColor(Color.WHITE);
+							g2.draw(rect);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -701,6 +895,10 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.RED);
 			g2.fill(p1City);
+			g2.setColor(Color.black);
+			g2.drawString("" + cities.getProduction(),
+					(float) cities.getLocation().x,
+					(float) cities.getLocation().y);
 
 		}
 
@@ -710,6 +908,10 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.ORANGE);
 			g2.fill(p2City);
+			g2.setColor(Color.black);
+			g2.drawString("" + cities.getProduction(),
+					(float) cities.getLocation().x,
+					(float) cities.getLocation().y);
 		}
 
 		for (Figure figure : player1.figures) {
@@ -799,6 +1001,7 @@ public class Board extends JPanel {
 	}
 
 	private void drawPlayer1Panel(Graphics2D g2) {
+
 		String filename = "src/panels/" + this.player1Civilization + ".png";
 
 		try {
@@ -812,6 +1015,7 @@ public class Board extends JPanel {
 	}
 
 	private void drawPlayer2Panel(Graphics2D g2) {
+
 		String filename = "src/panels/" + this.player2Civilization + ".png";
 
 		try {
@@ -846,11 +1050,17 @@ public class Board extends JPanel {
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
+				for (City c : this.currentPlayer.cities) {
+					c.calcProduction();
+				}
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
-			if (this.currentPlayer == this.firstPlayer)
+			if (this.currentPlayer == this.firstPlayer) {
 				this.changePlayerTurn();
-			else {
+				for (City c : this.currentPlayer.cities) {
+					c.calcProduction();
+				}
+			} else {
 				this.changePlayerTurn();
 				this.currentPhase = MOVEMENT;
 			}
@@ -866,8 +1076,11 @@ public class Board extends JPanel {
 				this.currentPhase = RESEARCH;
 			}
 
-			this.player1.resetMoves();
-			this.player2.resetMoves();
+			for (Figure p1Figs : player1.figures)
+				p1Figs.resetMoves(player1.getSpeed());
+			for (Figure p2Figs : player2.figures)
+				p2Figs.resetMoves(player2.getSpeed());
+
 			this.validTiles.clear();
 		} else {
 			if (this.currentPlayer == this.firstPlayer)
@@ -903,4 +1116,36 @@ public class Board extends JPanel {
 		this.repaint();
 
 	}
+
+	private void addSettler(Tile tile) {
+		if (tile.getTerrain() != Tile.Terrain.Water) {
+			currentFigure.setTileLocal(currentTile);
+			currentFigure.setLocation(currentClick.x, currentClick.y);
+			ArrayList<Figure> figures = tile.getFigures();
+			figures.add(currentFigure);
+			currentPlayer.figures.add(currentFigure);
+			repaint();
+		}
+	}
+	
+	// For testing...
+	public ArrayList<Tile> getValidTileList(){
+		return this.validTiles;
+	}
+	
+	// For testing...
+	public void setCurrentMovementFigure(){
+		this.currentMovementFigure = this.player1.figures.get(0);
+	}
+	
+	// For testing...
+	public void setCurrentMovementFigureMoves(){
+		this.currentMovementFigure.decreaseMoves();
+	}
+	
+	// For testing...
+	public void resetValidTileList(){
+		this.validTiles.clear();
+	}
+
 }

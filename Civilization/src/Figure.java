@@ -5,6 +5,7 @@ public abstract class Figure {
 	private Player owner;
 	private Point2D.Double screenLocation;
 	private boolean usedThisTurn = false;
+	private int moves = 0;
 
 	public Figure(Player player, Tile local) {
 		this.owner = player;
@@ -17,6 +18,18 @@ public abstract class Figure {
 		System.out.println(local.getyPos());
 	}
 
+	public int getNumberOfMoves(){
+		return this.moves;
+	}
+	
+	public void resetMoves(int playerSpeed){
+		this.moves = playerSpeed;
+	}
+	
+	public void decreaseMoves(){
+		this.moves -= 1;
+	}
+	
 	public boolean getUsedThisTurn(){
 		return this.usedThisTurn;
 	}
