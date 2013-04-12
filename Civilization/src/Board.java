@@ -3,11 +3,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -18,10 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 
 import java.util.Hashtable;
 
@@ -205,6 +210,10 @@ public class Board extends JPanel {
 	}
 
 	public void makeMovementWindow(final ArrayList<Figure> figures) {
+		if (figures.get(0).getUsedThisTurn()
+				|| figures.get(0).getNumberOfMoves() == 0) {
+			return;
+		}
 		int answer = JOptionPane.showConfirmDialog(null,
 				"Do you want move this unit?", "Movement",
 				JOptionPane.YES_NO_OPTION);
@@ -227,98 +236,317 @@ public class Board extends JPanel {
 			return false;
 	}
 
+	private void startOfTurn() {
+		Figure newCity = null;
+		for (Figure f : Board.currentTile.getFigures()) {
+			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
+				newCity = f;
+				break;
+			}
+		}
+		if (newCity == null) {
+			return;
+		}
+		if (makeNewCityWindow(newCity)) {
+
+			City city = new City(Board.currentTile, currentPlayer);
+			if (city.isValid) {
+				city.setLocation(Board.currentClick.x, Board.currentClick.y);
+				currentPlayer.cities.add(city);
+				Board.currentTile.setCity(city);
+				currentPlayer.figures.remove(newCity);
+				Board.currentTile.getFigure().remove(newCity);
+				repaint();
+			}
+
+		}
+		return;
+	}
+
+	private JRadioButtonMenuItem items[];
+	private static Panel currentPanel = null;
+	private static Tile currentTile = null;
+	private static Point currentClick = null;
+	private static Figure currentFigure = null;
+	private static City currentCity = null;
+	
+	private void cityManagement() {
+		if (currentTile.getCity() != null
+				&& currentTile.getCity().getHasAction()
+				&& currentPlayer.cities.contains(currentTile.getCity())) {
+			currentFigure = null;
+			currentCity = currentTile.getCity();
+			JPopupMenu menu = new JPopupMenu();
+			InitialHandler handler = new InitialHandler();
+			ButtonGroup group = new ButtonGroup();
+			items = new JRadioButtonMenuItem[2];
+
+			items[0] = new JRadioButtonMenuItem("Settler");
+			items[1] = new JRadioButtonMenuItem("Cancel");
+
+			for (int i = 0; i < items.length; i++) {
+				menu.add(items[i]);
+				group.add(items[i]);
+				items[i].addActionListener(handler);
+			}
+
+			menu.show(this, Board.currentClick.x, Board.currentClick.y);
+		}
+		else{
+			if(currentFigure != null && !checkSpaceForEnemyFigures(Board.currentTile)){
+				addSettler(currentTile);
+				currentFigure = null;;
+				currentCity.setHasAction(false);
+				currentCity = null;
+			}
+		}
+
+	}
+
+	public boolean checkSpaceForEnemyFigures(Tile tile) {
+		Player enemy;
+		if(currentPlayer.equals(player1))
+			enemy = player2;
+		else
+			enemy = player1;
+		
+		for(Figure f :tile.getFigures()){
+			if(f.getOwner().equals(enemy))
+				return true;
+		}
+		return false;
+	}
+
+	private class InitialHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					if (items[i].getText().equals("Settler")) {
+						Figure settler = new Settler(currentPlayer,
+								Board.currentTile);
+						settler.setLocation(Board.currentClick.x,
+								Board.currentClick.y);
+						settler.resetMoves(currentPlayer.getSpeed());
+						Board.currentFigure = settler;
+					}
+					repaint();
+					return;
+				}
+		}
+	}
+
+	private void movement() {
+		if (currentMovementFigure == null
+				|| currentMovementFigure.location.equals(Board.currentTile)) {
+			ArrayList<Figure> figures = Board.currentTile.getFigures();
+			if (!figures.isEmpty()) {
+				Figure figure = figures.get(0);
+				if (figure.getOwner() != null) {
+					if (figure.getOwner().equals(Board.this.currentPlayer)
+							&& !figure.getUsedThisTurn()) {
+						makeMovementWindow(figures);
+						getValidTiles(Board.currentPanel, Board.currentTile);
+					}
+				}
+			}
+		} else {
+			System.out.printf("Player has %d moves.\n",
+					currentMovementFigure.getNumberOfMoves());
+			if (currentMovementFigure.getNumberOfMoves() > 0) {
+				if (Board.this.validTiles.contains(Board.currentTile)) {
+					System.out.println("Tile valid! Moving figure.");
+					Tile oldTile = currentMovementFigure.location;
+					oldTile.getFigures().remove(currentMovementFigure);
+					Board.this.currentMovementFigure.setLocation(
+							Board.currentClick.x, Board.currentClick.y);
+					currentMovementFigure.setTileLocal(Board.currentTile);
+					Board.currentTile.getFigures().add(currentMovementFigure);
+					// currentMovementFigure.setUsedThisTurn(true);
+
+					currentMovementFigure.decreaseMoves();
+
+					currentMovementFigure = null;
+					checkUnexploredPanelNew(Board.currentClick.x,
+							Board.currentClick.y);
+					Board.this.validTiles.clear();
+					Board.this.repaint();
+				}
+			}
+		}
+	}
+
+	private void getValidTiles(Panel panel, Tile tile) {
+		int panelNumber = map.indexOf(panel);
+		int x = tile.getxPos();
+		int y = tile.getyPos();
+		Tile tileToCheck;
+		if (currentMovementFigure.getNumberOfMoves() == 1) { // Can't end
+																// on water!
+			for (int i = x - 1; i <= x + 1; i++) {
+				for (int j = y - 1; j <= y + 1; j++) {
+
+					if (!(i == x && j == y)) {
+
+						if (i != -1 && i != 4 && j != -1 && j != 4) {
+							tileToCheck = map.get(panelNumber).getTiles()[i][j];
+							if (!tileToCheck.getTerrain().toString()
+									.equals("Water"))
+								Board.this.validTiles.add(tileToCheck);
+						} else if (i == -1 && j == -1) {
+							if (panelNumber > 4) {
+								tileToCheck = map.get(panelNumber - 5)
+										.getTiles()[3][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == -1 && j == 4) {
+							if (panelNumber > 0 && panelNumber < 4) {
+								tileToCheck = map.get(panelNumber + 3)
+										.getTiles()[0][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4 && j == -1) {
+							if (panelNumber > 3 && panelNumber < 7) {
+								tileToCheck = map.get(panelNumber - 3)
+										.getTiles()[3][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4 && j == 4) {
+							if (panelNumber < 3) {
+								tileToCheck = map.get(panelNumber + 5)
+										.getTiles()[0][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == -1) {
+							if (panelNumber > 0 && panelNumber != 4) {
+								tileToCheck = map.get(panelNumber - 1)
+										.getTiles()[3][j];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (i == 4) {
+							if (panelNumber < 7 && panelNumber != 3) {
+								tileToCheck = map.get(panelNumber + 1)
+										.getTiles()[0][j];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else if (j == -1) {
+							if (panelNumber > 3) {
+								tileToCheck = map.get(panelNumber - 4)
+										.getTiles()[i][3];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						} else {
+							if (panelNumber < 4) {
+								tileToCheck = map.get(panelNumber + 4)
+										.getTiles()[i][0];
+								if (!tileToCheck.getTerrain().toString()
+										.equals("Water"))
+									Board.this.validTiles.add(tileToCheck);
+							}
+						}
+
+					}
+				}
+
+			}
+		} else {
+			for (int i = x - 1; i <= x + 1; i++) {
+				for (int j = y - 1; j <= y + 1; j++) {
+
+					if (!(i == x && j == y)) {
+						System.out.println("Adding tile... i = " + i
+								+ " and j = " + j);
+						if (i != -1 && i != 4 && j != -1 && j != 4) {
+							Board.this.validTiles.add(map.get(panelNumber)
+									.getTiles()[i][j]);
+						} else if (i == -1 && j == -1) {
+							if (panelNumber > 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 5).getTiles()[3][3]);
+							}
+						} else if (i == -1 && j == 4) {
+							if (panelNumber > 0 && panelNumber < 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 3).getTiles()[0][3]);
+							}
+						} else if (i == 4 && j == -1) {
+							if (panelNumber > 3 && panelNumber < 7) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 3).getTiles()[3][0]);
+							}
+						} else if (i == 4 && j == 4) {
+							if (panelNumber < 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 5).getTiles()[0][0]);
+							}
+						} else if (i == -1) {
+							if (panelNumber > 0 && panelNumber != 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 1).getTiles()[3][j]);
+							}
+						} else if (i == 4) {
+							if (panelNumber < 7 && panelNumber != 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 1).getTiles()[0][j]);
+							}
+						} else if (j == -1) {
+							if (panelNumber > 3) {
+								Board.this.validTiles.add(map.get(
+										panelNumber - 4).getTiles()[i][3]);
+							}
+						} else {
+							if (panelNumber < 4) {
+								Board.this.validTiles.add(map.get(
+										panelNumber + 4).getTiles()[i][0]);
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+
+		System.out.println("Array size: " + Board.this.validTiles.size());
+
+	}
+
 	public class EnvironmentHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
+			Board.currentClick = new Point(x, y);
 			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
-			Panel panel = findPanel(x, y);
-			Tile tile = findTile(panel, x, y);
-			System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
-					map.indexOf(panel), tile.getxPos(), tile.getyPos());
+			Board.currentPanel = findPanel(x, y);
+			Board.currentTile = findTile(Board.currentPanel, x, y);
+			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
+			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
 
 			// displayTileInfoWindow(tile);
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
-				Figure newCity = null;
-				for (Figure f : tile.getFigures()) {
-					if (f instanceof Settler && currentPlayer.figures.contains(f)) {
-						newCity = f;
-						break;
-					}
-				}
-				if (newCity == null) {
-					return;
-				}
-				if (makeNewCityWindow(newCity)) {
-
-					City city = new City(tile, currentPlayer);
-					if (city.isValid) {
-						city.setLocation(x, y);
-						currentPlayer.cities.add(city);
-						tile.setCity(city);
-						currentPlayer.figures.remove(newCity);
-						tile.getFigure().remove(newCity);
-						repaint();
-					}
-
-				}
-				return;
-
+				startOfTurn();
 			} else if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
-				if (tile.getTerrain() != Tile.Terrain.Water) {
-					ArrayList<Figure> figures = tile.getFigures();
-					Figure settler = new Settler(currentPlayer, tile);
-					settler.setLocation(x, y);
-					settler.resetMoves(currentPlayer.getSpeed());
-					figures.add(settler);
-					currentPlayer.figures.add(settler);
-					repaint();
-				}
+				cityManagement();
 			} else if (Board.this.currentPhase.equals(MOVEMENT)) {
-				if (currentMovementFigure == null
-						|| currentMovementFigure.location.equals(tile)) {
-
-					ArrayList<Figure> figures = tile.getFigures();
-					if (!figures.isEmpty()) {
-						Figure figure = figures.get(0);
-						if (figure.getOwner() != null) {
-							if (figure.getOwner().equals(
-									Board.this.currentPlayer)
-									&& !figure.getUsedThisTurn()) {
-								makeMovementWindow(figures);
-								getValidTiles(panel, tile);
-
-							}
-
-						}
-					}
-				}
-				else {
-					System.out.printf("Player has %d moves.\n",
-							currentMovementFigure.getNumberOfMoves());
-					if (currentMovementFigure.getNumberOfMoves() > 0) {
-						if (Board.this.validTiles.contains(tile)) {
-							System.out.println("Tile valid! Moving figure.");
-							Tile oldTile = currentMovementFigure.location;
-							oldTile.getFigures().remove(currentMovementFigure);
-							Board.this.currentMovementFigure.setLocation(x, y);
-							currentMovementFigure.setTileLocal(tile);
-							tile.getFigures().add(currentMovementFigure);
-							// currentMovementFigure.setUsedThisTurn(true);
-
-							currentMovementFigure.decreaseMoves();
-
-							currentMovementFigure = null;
-							checkUnexploredPanelNew(x, y);
-							Board.this.validTiles.clear();
-							Board.this.repaint();
-						}
-					}
-				}
+				movement();
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
 
@@ -327,155 +555,6 @@ public class Board extends JPanel {
 				}
 				System.out.println(currentPlayer.trade);
 			}
-		}
-
-		private void getValidTiles(Panel panel, Tile tile) {
-			int panelNumber = map.indexOf(panel);
-			int x = tile.getxPos();
-			int y = tile.getyPos();
-			Tile tileToCheck;
-			if (currentMovementFigure.getNumberOfMoves() == 1) { // Can't end
-																	// on water!
-				for (int i = x - 1; i <= x + 1; i++) {
-					for (int j = y - 1; j <= y + 1; j++) {
-
-						if (!(i == x && j == y)) {
-
-							if (i != -1 && i != 4 && j != -1 && j != 4) {
-								tileToCheck = map.get(panelNumber).getTiles()[i][j];
-								if (!tileToCheck.getTerrain().toString()
-										.equals("Water"))
-									Board.this.validTiles.add(tileToCheck);
-							} else if (i == -1 && j == -1) {
-								if (panelNumber > 4) {
-									tileToCheck = map.get(panelNumber - 5)
-											.getTiles()[3][3];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == -1 && j == 4) {
-								if (panelNumber > 0 && panelNumber < 4) {
-									tileToCheck = map.get(panelNumber + 3)
-											.getTiles()[0][3];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4 && j == -1) {
-								if (panelNumber > 3 && panelNumber < 7) {
-									tileToCheck = map.get(panelNumber - 3)
-											.getTiles()[3][0];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4 && j == 4) {
-								if (panelNumber < 3) {
-									tileToCheck = map.get(panelNumber + 5)
-											.getTiles()[0][0];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == -1) {
-								if (panelNumber > 0 && panelNumber != 4) {
-									tileToCheck = map.get(panelNumber - 1)
-											.getTiles()[3][j];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (i == 4) {
-								if (panelNumber < 7 && panelNumber != 3) {
-									tileToCheck = map.get(panelNumber + 1)
-											.getTiles()[0][j];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else if (j == -1) {
-								if (panelNumber > 3) {
-									tileToCheck = map.get(panelNumber - 4)
-											.getTiles()[i][3];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							} else {
-								if (panelNumber < 4) {
-									tileToCheck = map.get(panelNumber + 4)
-											.getTiles()[i][0];
-									if (!tileToCheck.getTerrain().toString()
-											.equals("Water"))
-										Board.this.validTiles.add(tileToCheck);
-								}
-							}
-
-						}
-					}
-
-				}
-			} else {
-				for (int i = x - 1; i <= x + 1; i++) {
-					for (int j = y - 1; j <= y + 1; j++) {
-
-						if (!(i == x && j == y)) {
-							System.out.println("Adding tile... i = " + i
-									+ " and j = " + j);
-							if (i != -1 && i != 4 && j != -1 && j != 4) {
-								Board.this.validTiles.add(map.get(panelNumber)
-										.getTiles()[i][j]);
-							} else if (i == -1 && j == -1) {
-								if (panelNumber > 4) {
-									Board.this.validTiles.add(map.get(
-											panelNumber - 5).getTiles()[3][3]);
-								}
-							} else if (i == -1 && j == 4) {
-								if (panelNumber > 0 && panelNumber < 4) {
-									Board.this.validTiles.add(map.get(
-											panelNumber + 3).getTiles()[0][3]);
-								}
-							} else if (i == 4 && j == -1) {
-								if (panelNumber > 3 && panelNumber < 7) {
-									Board.this.validTiles.add(map.get(
-											panelNumber - 3).getTiles()[3][0]);
-								}
-							} else if (i == 4 && j == 4) {
-								if (panelNumber < 3) {
-									Board.this.validTiles.add(map.get(
-											panelNumber + 5).getTiles()[0][0]);
-								}
-							} else if (i == -1) {
-								if (panelNumber > 0 && panelNumber != 4) {
-									Board.this.validTiles.add(map.get(
-											panelNumber - 1).getTiles()[3][j]);
-								}
-							} else if (i == 4) {
-								if (panelNumber < 7 && panelNumber != 3) {
-									Board.this.validTiles.add(map.get(
-											panelNumber + 1).getTiles()[0][j]);
-								}
-							} else if (j == -1) {
-								if (panelNumber > 3) {
-									Board.this.validTiles.add(map.get(
-											panelNumber - 4).getTiles()[i][3]);
-								}
-							} else {
-								if (panelNumber < 4) {
-									Board.this.validTiles.add(map.get(
-											panelNumber + 4).getTiles()[i][0]);
-								}
-							}
-
-						}
-					}
-
-				}
-			}
-
-			System.out.println("Array size: " + Board.this.validTiles.size());
-
 		}
 
 		private void displayTileInfoWindow(Tile tile) {
@@ -815,6 +894,10 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.RED);
 			g2.fill(p1City);
+			g2.setColor(Color.black);
+			g2.drawString("" + cities.getProduction(),
+					(float) cities.getLocation().x,
+					(float) cities.getLocation().y);
 
 		}
 
@@ -824,6 +907,10 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.ORANGE);
 			g2.fill(p2City);
+			g2.setColor(Color.black);
+			g2.drawString("" + cities.getProduction(),
+					(float) cities.getLocation().x,
+					(float) cities.getLocation().y);
 		}
 
 		for (Figure figure : player1.figures) {
@@ -962,11 +1049,17 @@ public class Board extends JPanel {
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
+				for (City c : this.currentPlayer.cities) {
+					c.calcProduction();
+				}
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
-			if (this.currentPlayer == this.firstPlayer)
+			if (this.currentPlayer == this.firstPlayer) {
 				this.changePlayerTurn();
-			else {
+				for (City c : this.currentPlayer.cities) {
+					c.calcProduction();
+				}
+			} else {
 				this.changePlayerTurn();
 				this.currentPhase = MOVEMENT;
 			}
@@ -1021,5 +1114,16 @@ public class Board extends JPanel {
 		// }
 		this.repaint();
 
+	}
+
+	private void addSettler(Tile tile) {
+		if (tile.getTerrain() != Tile.Terrain.Water) {
+			currentFigure.setTileLocal(currentTile);
+			currentFigure.setLocation(currentClick.x, currentClick.y);
+			ArrayList<Figure> figures = tile.getFigures();
+			figures.add(currentFigure);
+			currentPlayer.figures.add(currentFigure);
+			repaint();
+		}
 	}
 }

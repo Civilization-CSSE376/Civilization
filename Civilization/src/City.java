@@ -31,6 +31,10 @@ public class City {
 			this.isValid = this.validOutskirts(player);
 	}
 	
+	public int getProduction(){
+		return this.production;
+	}
+	
 	public void setCapital(){
 		this.isCapital = true;
 	}
@@ -58,7 +62,7 @@ public class City {
 		for(Tile t : this.outskirts){
 			totalProduction += t.getProduction();
 		}
-		
+		this.production = totalProduction;
 		return totalProduction;
 	}
 	
@@ -464,6 +468,11 @@ public class City {
 			this.screenLocation = new Point2D.Double(newX, newY);
 		} else
 			System.out.println("\nInvalid location -- cannot move player.");
+	}
+
+
+	public boolean getHasAction() {
+		return this.hasAction;
 	}
 	
 }
