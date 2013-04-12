@@ -22,6 +22,10 @@ public class City {
 	public City(Tile location){
 		this.location = location;
 	}
+	
+	public ArrayList<Tile> getOutskirts(){
+		return this.outskirts;
+	}
 
 	
 	public City(Tile location, Player player){

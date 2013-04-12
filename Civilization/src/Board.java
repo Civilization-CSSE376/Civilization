@@ -266,10 +266,11 @@ public class Board extends JPanel {
 	private JRadioButtonMenuItem items[];
 	private static Panel currentPanel = null;
 	private static Tile currentTile = null;
-	private static Point currentClick = null;
-	private static Figure currentFigure = null;
-	private static City currentCity = null;
-	
+	public static Point currentClick = null;
+	public static Figure currentFigure = null;
+	static City currentCity = null;
+	private static boolean goingForResource = false;
+
 	private void cityManagement() {
 		if (currentTile.getCity() != null
 				&& currentTile.getCity().getHasAction()
@@ -279,10 +280,12 @@ public class Board extends JPanel {
 			JPopupMenu menu = new JPopupMenu();
 			InitialHandler handler = new InitialHandler();
 			ButtonGroup group = new ButtonGroup();
-			items = new JRadioButtonMenuItem[2];
+			items = new JRadioButtonMenuItem[3];
 
-			items[0] = new JRadioButtonMenuItem("Settler");
-			items[1] = new JRadioButtonMenuItem("Cancel");
+			items[0] = new JRadioButtonMenuItem("Build Something");
+			items[1] = new JRadioButtonMenuItem("Collect Resource");
+			// items[2] = new JRadioButtonMenuItem("Devote to the Arts");
+			items[2] = new JRadioButtonMenuItem("Cancel");
 
 			for (int i = 0; i < items.length; i++) {
 				menu.add(items[i]);
@@ -291,30 +294,109 @@ public class Board extends JPanel {
 			}
 
 			menu.show(this, Board.currentClick.x, Board.currentClick.y);
-		}
-		else{
-			if(currentFigure != null && !checkSpaceForEnemyFigures(Board.currentTile)){
-				addSettler(currentTile);
-				currentFigure = null;;
-				currentCity.setHasAction(false);
-				currentCity = null;
+		} else {
+			if (currentFigure != null
+					&& !checkSpaceForEnemyFigures(Board.currentTile)) {
+				if (addFigure(currentTile)) {
+					currentFigure = null;
+					currentCity.setHasAction(false);
+					currentCity = null;
+				}
+			} else if (goingForResource) {
+				if (currentTile.getResource() != null
+						&& currentCity.getOutskirts().contains(currentTile)) {
+					currentPlayer.resources.add(currentTile.getResource());
+					//check that there is enough of that resource left
+					currentCity.setHasAction(false);
+					currentCity = null;
+					goingForResource = false;
+					JOptionPane.showConfirmDialog(null,
+							"You got a new resource",
+							"Collect Resource", JOptionPane.PLAIN_MESSAGE);
+				}
 			}
 		}
+	}
 
+	public void buildSomething() {
+		JPopupMenu menu = new JPopupMenu();
+		BuilderHandler handler = new BuilderHandler();
+		ButtonGroup group = new ButtonGroup();
+		items = new JRadioButtonMenuItem[3];
+
+		// items[0] = new JRadioButtonMenuItem("Building");
+		items[0] = new JRadioButtonMenuItem("Settler");
+		items[1] = new JRadioButtonMenuItem("Army");
+		// items[3] = new JRadioButtonMenuItem("Wonder");
+		// items[4] = new JRadioButtonMenuItem("Units");
+		items[2] = new JRadioButtonMenuItem("Cancel");
+
+		for (int i = 0; i < items.length; i++) {
+			menu.add(items[i]);
+			group.add(items[i]);
+			items[i].addActionListener(handler);
+		}
+
+		menu.show(this, Board.currentClick.x, Board.currentClick.y);
 	}
 
 	public boolean checkSpaceForEnemyFigures(Tile tile) {
 		Player enemy;
-		if(currentPlayer.equals(player1))
+		if (currentPlayer.equals(player1))
 			enemy = player2;
 		else
 			enemy = player1;
-		
-		for(Figure f :tile.getFigures()){
-			if(f.getOwner().equals(enemy))
+
+		for (Figure f : tile.getFigures()) {
+			if (f.getOwner().equals(enemy))
 				return true;
 		}
 		return false;
+	}
+
+	private class BuilderHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					if (items[i].getText().equals("Settler")
+							|| items[i].getText().equals("Army")) {
+						Figure figure;
+						if (items[i].getText().equals("Settler")) {
+							if (currentCity.getProduction() < 6)
+								return;
+							int settlers = 0;
+							for (Figure f : currentPlayer.figures) {
+								if (f instanceof Settler)
+									settlers++;
+							}
+							if (settlers >= 2) {
+								return;
+							}
+							figure = new Settler(currentPlayer,
+									Board.currentTile);
+						} else {
+							if (currentCity.getProduction() < 4)
+								return;
+							int armies = 0;
+							for (Figure f : currentPlayer.figures) {
+								if (f instanceof Army)
+									armies++;
+							}
+							if (armies >= 6) {
+								return;
+							}
+							figure = new Army(currentPlayer, Board.currentTile);
+						}
+						figure.setLocation(Board.currentClick.x,
+								Board.currentClick.y);
+						figure.resetMoves(currentPlayer.getSpeed());
+						Board.currentFigure = figure;
+					}
+					repaint();
+					return;
+				}
+		}
 	}
 
 	private class InitialHandler implements ActionListener {
@@ -322,13 +404,10 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					if (items[i].getText().equals("Settler")) {
-						Figure settler = new Settler(currentPlayer,
-								Board.currentTile);
-						settler.setLocation(Board.currentClick.x,
-								Board.currentClick.y);
-						settler.resetMoves(currentPlayer.getSpeed());
-						Board.currentFigure = settler;
+					if (items[i].getText().equals("Build Something")) {
+						buildSomething();
+					} else if (items[i].getText().equals("Collect Resource")) {
+						goingForResource = true;
 					}
 					repaint();
 					return;
@@ -796,72 +875,72 @@ public class Board extends JPanel {
 		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
 
-	public void drawTerrain(Graphics2D g2) {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 4; j++) {
-				for (int k = 0; k < 4; k++) {
-					Color rectColor = Color.RED;
-					if (map.get(i).getIsExplored()) {
-						switch (map.get(i).getTiles()[j][k].getTerrain()
-								.toString()) {
-						case "Desert":
-							rectColor = Color.YELLOW;
-							break;
-						case "Mountain":
-							rectColor = Color.DARK_GRAY;
-							break;
-						case "Forest":
-							rectColor = Color.WHITE;
-							break;
-						case "Grassland":
-							rectColor = Color.GREEN;
-							break;
-						case "Water":
-							rectColor = Color.BLUE;
-							break;
-						}
-						if (i > 3) {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * (i - 4)) + (110 * j),
-									440 + (110 * k), 110, 110);
-							g2.setColor(rectColor);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						} else {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * i) + (110 * j), (110 * k), 110, 110);
-							g2.setColor(rectColor);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						}
-						// System.out.println("Tile[" + j + "][" + k +
-						// "] created at location " + (20 + (440 * i) + (110 *
-						// j)) +
-						// " " + (20 + nextRow + (110 * k)));
-					} else {
-						if (i > 3) {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * (i - 4)) + (110 * j),
-									440 + (110 * k), 110, 110);
-							g2.setColor(Color.BLACK);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						} else {
-							Rectangle2D.Double rect = new Rectangle2D.Double(
-									(440 * i) + (110 * j), (110 * k), 110, 110);
-							g2.setColor(Color.BLACK);
-							g2.fill(rect);
-							g2.setColor(Color.WHITE);
-							g2.draw(rect);
-						}
-					}
-				}
-			}
-		}
-	}
+	// public void drawTerrain(Graphics2D g2) {
+	// for (int i = 0; i < 8; i++) {
+	// for (int j = 0; j < 4; j++) {
+	// for (int k = 0; k < 4; k++) {
+	// Color rectColor = Color.RED;
+	// if (map.get(i).getIsExplored()) {
+	// switch (map.get(i).getTiles()[j][k].getTerrain()
+	// .toString()) {
+	// case "Desert":
+	// rectColor = Color.YELLOW;
+	// break;
+	// case "Mountain":
+	// rectColor = Color.DARK_GRAY;
+	// break;
+	// case "Forest":
+	// rectColor = Color.WHITE;
+	// break;
+	// case "Grassland":
+	// rectColor = Color.GREEN;
+	// break;
+	// case "Water":
+	// rectColor = Color.BLUE;
+	// break;
+	// }
+	// if (i > 3) {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * (i - 4)) + (110 * j),
+	// 440 + (110 * k), 110, 110);
+	// g2.setColor(rectColor);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// } else {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * i) + (110 * j), (110 * k), 110, 110);
+	// g2.setColor(rectColor);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// }
+	// // System.out.println("Tile[" + j + "][" + k +
+	// // "] created at location " + (20 + (440 * i) + (110 *
+	// // j)) +
+	// // " " + (20 + nextRow + (110 * k)));
+	// } else {
+	// if (i > 3) {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * (i - 4)) + (110 * j),
+	// 440 + (110 * k), 110, 110);
+	// g2.setColor(Color.BLACK);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// } else {
+	// Rectangle2D.Double rect = new Rectangle2D.Double(
+	// (440 * i) + (110 * j), (110 * k), 110, 110);
+	// g2.setColor(Color.BLACK);
+	// g2.fill(rect);
+	// g2.setColor(Color.WHITE);
+	// g2.draw(rect);
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -919,6 +998,13 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.RED);
 			g2.fill(player1);
+			g2.setColor(Color.black);
+			if (figure instanceof Settler)
+				g2.drawString("S", (float) figure.getLocation().x,
+						(float) figure.getLocation().y);
+			else
+				g2.drawString("A", (float) figure.getLocation().x,
+						(float) figure.getLocation().y);
 		}
 
 		for (Figure figure : player2.figures) {
@@ -927,6 +1013,13 @@ public class Board extends JPanel {
 					50, 50);
 			g2.setColor(Color.ORANGE);
 			g2.fill(player2);
+			g2.setColor(Color.black);
+			if (figure instanceof Settler)
+				g2.drawString("S", (float) figure.getLocation().x,
+						(float) figure.getLocation().y);
+			else
+				g2.drawString("A", (float) figure.getLocation().x,
+						(float) figure.getLocation().y);
 		}
 		// System.out.println("Player drawn at " + (this.location.x - 25) + ", "
 		// + (this.location.y - 25));
@@ -1027,7 +1120,7 @@ public class Board extends JPanel {
 
 	}
 
-	private void changePlayerTurn() {
+	public void changePlayerTurn() {
 		if (this.currentPlayer == this.player1)
 			this.currentPlayer = this.player2;
 		else
@@ -1055,12 +1148,20 @@ public class Board extends JPanel {
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
 			if (this.currentPlayer == this.firstPlayer) {
+				for (City c : this.currentPlayer.cities) {
+					c.setHasAction(true);
+				}
 				this.changePlayerTurn();
+				currentCity = null;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
 				}
 			} else {
+				for (City c : this.currentPlayer.cities) {
+					c.setHasAction(true);
+				}
 				this.changePlayerTurn();
+				currentCity = null;
 				this.currentPhase = MOVEMENT;
 			}
 		} else if (this.currentPhase.equals(MOVEMENT)) {
@@ -1116,14 +1217,19 @@ public class Board extends JPanel {
 
 	}
 
-	private void addSettler(Tile tile) {
+	public boolean addFigure(Tile tile) {
 		if (tile.getTerrain() != Tile.Terrain.Water) {
-			currentFigure.setTileLocal(currentTile);
-			currentFigure.setLocation(currentClick.x, currentClick.y);
-			ArrayList<Figure> figures = tile.getFigures();
-			figures.add(currentFigure);
-			currentPlayer.figures.add(currentFigure);
-			repaint();
+			if (currentCity.getOutskirts().contains(tile)) {
+				currentFigure.setTileLocal(currentTile);
+				currentFigure.setLocation(currentClick.x, currentClick.y);
+				ArrayList<Figure> figures = tile.getFigures();
+				figures.add(currentFigure);
+				currentPlayer.figures.add(currentFigure);
+				repaint();
+				return true;
+			}
 		}
+		return false;
 	}
+
 }
