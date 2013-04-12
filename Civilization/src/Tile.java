@@ -60,19 +60,8 @@ public class Tile {
 		this.culture = culture;
 		this.coin = coin;
 
-		if (terrain.equals("M"))
-			this.terrain = Terrain.Mountain;
-		else if (terrain.equals("F"))
-			this.terrain = Terrain.Forest;
-		else if (terrain.equals("G"))
-			this.terrain = Terrain.Grassland;
-		else if (terrain.equals("D"))
-			this.terrain = Terrain.Desert;
-		else if (terrain.equals("W"))
-			this.terrain = Terrain.Water;
-		else
-			System.out.println("Error in Tile: wrong terrain.");
-
+		this.setTerrain(terrain);
+		
 		if (resource.equals("W"))
 			this.resource = Resource.Wheat;
 		else if (resource.equals("S"))
@@ -91,6 +80,23 @@ public class Tile {
 		else
 			System.out.println("Error in Tile: wrong inhabitant.");
 
+	}
+
+	public void setTerrain(String terrain) {
+		if (terrain.equals("M"))
+			this.terrain = Terrain.Mountain;
+		else if (terrain.equals("F"))
+			this.terrain = Terrain.Forest;
+		else if (terrain.equals("G"))
+			this.terrain = Terrain.Grassland;
+		else if (terrain.equals("D"))
+			this.terrain = Terrain.Desert;
+		else if (terrain.equals("W"))
+			this.terrain = Terrain.Water;
+		else
+			System.out.println("Error in Tile: wrong terrain.");
+
+		
 	}
 
 	public Tile(int x, int y) {

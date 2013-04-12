@@ -16,6 +16,7 @@ public class Player {
 	// private ArrayList<CultureCard> cultureCards;
 	// private ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
+	public int cityLimit = 2;
 	private int culture = 0;
 	private int gold = 0;
 	private int speed = 2;
