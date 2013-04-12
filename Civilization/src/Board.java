@@ -104,7 +104,15 @@ public class Board extends JPanel {
 		this.firstPlayer = player1;
 		this.currentPlayer = player1;
 		this.phase = 1;
-
+		
+		//TODO make this more efficient. quickly copied/pasted initially
+		for (City c : this.player1.cities) {
+			this.player1.trade += c.calcTrade();
+		}
+		for(City c : this.player2.cities){
+			this.player2.trade += c.calcTrade();
+		}
+		
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 	}
@@ -250,7 +258,7 @@ public class Board extends JPanel {
 		if (makeNewCityWindow(newCity)) {
 
 			City city = new City(Board.currentTile, currentPlayer);
-			if (city.isValid) {
+			if (city.isValid && currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
 				city.setLocation(Board.currentClick.x, Board.currentClick.y);
 				currentPlayer.cities.add(city);
 				Board.currentTile.setCity(city);
@@ -630,12 +638,14 @@ public class Board extends JPanel {
 	}
 
 	// for testing purposes
-	public Board(Hashtable<String, Panel> map) {
+	public Board(Hashtable<String, Panel> map, ArrayList<Player> player) {
 		this.map = new ArrayList<Panel>();
 		this.map.add(map.get("topLeft"));
 		this.map.add(map.get("topRight"));
 		this.map.add(map.get("bottomLeft"));
 		this.map.add(map.get("bottomRight"));
+		
+		Board.players = player;
 	}
 
 	public Board(ArrayList<String> civilizations) {
