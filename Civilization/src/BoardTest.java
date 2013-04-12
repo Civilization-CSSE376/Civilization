@@ -544,6 +544,7 @@ public class BoardTest {
 		target.items[2] = new JRadioButtonMenuItem("Cancel");
 		assertNull(Board.currentFigure);
 		target.handleBuild(0);
+		assertNull(Board.currentFigure);
 		assertEquals(0, Board.map.get(0).getTiles()[0][1].getFigures().size());
 		target.handleBuild(1);
 		assertNotNull(Board.currentFigure);
