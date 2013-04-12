@@ -45,7 +45,7 @@ public class Board extends JPanel {
 
 	private Player player1;
 	private Player player2;
-	private Figure currentMovementFigure = null;
+	Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
 	public static ArrayList<Player> players = new ArrayList<Player>();
@@ -224,7 +224,8 @@ public class Board extends JPanel {
 			return;
 		}
 		int answer = JOptionPane.showConfirmDialog(null,
-				"Do you want move this unit?", "Movement",
+				"Do you want move this unit? Unit has" +
+						figures.get(0).getNumberOfMoves() + "moves left.", "Movement",
 				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
@@ -272,9 +273,9 @@ public class Board extends JPanel {
 		return;
 	}
 
-	private JRadioButtonMenuItem items[];
+	JRadioButtonMenuItem items[];
 	private static Panel currentPanel = null;
-	private static Tile currentTile = null;
+	static Tile currentTile = null;
 	public static Point currentClick = null;
 	public static Figure currentFigure = null;
 	static City currentCity = null;
@@ -363,46 +364,14 @@ public class Board extends JPanel {
 		return false;
 	}
 
+	
+	
 	private class BuilderHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					if (items[i].getText().equals("Settler")
-							|| items[i].getText().equals("Army")) {
-						Figure figure;
-						if (items[i].getText().equals("Settler")) {
-							if (currentCity.getProduction() < 6)
-								return;
-							int settlers = 0;
-							for (Figure f : currentPlayer.figures) {
-								if (f instanceof Settler)
-									settlers++;
-							}
-							if (settlers >= 2) {
-								return;
-							}
-							figure = new Settler(currentPlayer,
-									Board.currentTile);
-						} else {
-							if (currentCity.getProduction() < 4)
-								return;
-							int armies = 0;
-							for (Figure f : currentPlayer.figures) {
-								if (f instanceof Army)
-									armies++;
-							}
-							if (armies >= 6) {
-								return;
-							}
-							figure = new Army(currentPlayer, Board.currentTile);
-						}
-						figure.setLocation(Board.currentClick.x,
-								Board.currentClick.y);
-						figure.resetMoves(currentPlayer.getSpeed());
-						Board.currentFigure = figure;
-					}
-					repaint();
+					handleBuild(i);
 					return;
 				}
 		}
@@ -424,7 +393,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	private void movement() {
+	public void movement() {
 		if (currentMovementFigure == null
 				|| currentMovementFigure.location.equals(Board.currentTile)) {
 			ArrayList<Figure> figures = Board.currentTile.getFigures();
@@ -439,8 +408,6 @@ public class Board extends JPanel {
 				}
 			}
 		} else {
-			System.out.printf("Player has %d moves.\n",
-					currentMovementFigure.getNumberOfMoves());
 			if (currentMovementFigure.getNumberOfMoves() > 0) {
 				if (Board.this.validTiles.contains(Board.currentTile)) {
 					System.out.println("Tile valid! Moving figure.");
@@ -460,6 +427,10 @@ public class Board extends JPanel {
 					Board.this.validTiles.clear();
 					Board.this.repaint();
 				}
+//				else
+//					JOptionPane.showConfirmDialog(null,
+//							"Invalid Tile",
+//							"Movement", JOptionPane.PLAIN_MESSAGE);
 			}
 		}
 	}
@@ -481,7 +452,7 @@ public class Board extends JPanel {
 							if (!tileToCheck.getTerrain().toString()
 									.equals("Water"))
 								Board.this.validTiles.add(tileToCheck);
-						} else if (i == -1 && j == -1) {
+						} /*else if (i == -1 && j == -1) {
 							if (panelNumber > 4) {
 								tileToCheck = map.get(panelNumber - 5)
 										.getTiles()[3][3];
@@ -513,7 +484,7 @@ public class Board extends JPanel {
 										.equals("Water"))
 									Board.this.validTiles.add(tileToCheck);
 							}
-						} else if (i == -1) {
+						} */else if (i == -1) {
 							if (panelNumber > 0 && panelNumber != 4) {
 								tileToCheck = map.get(panelNumber - 1)
 										.getTiles()[3][j];
@@ -561,7 +532,7 @@ public class Board extends JPanel {
 						if (i != -1 && i != 4 && j != -1 && j != 4) {
 							Board.this.validTiles.add(map.get(panelNumber)
 									.getTiles()[i][j]);
-						} else if (i == -1 && j == -1) {
+						}/* else if (i == -1 && j == -1) {
 							if (panelNumber > 4) {
 								Board.this.validTiles.add(map.get(
 										panelNumber - 5).getTiles()[3][3]);
@@ -581,7 +552,7 @@ public class Board extends JPanel {
 								Board.this.validTiles.add(map.get(
 										panelNumber + 5).getTiles()[0][0]);
 							}
-						} else if (i == -1) {
+						}*/ else if (i == -1) {
 							if (panelNumber > 0 && panelNumber != 4) {
 								Board.this.validTiles.add(map.get(
 										panelNumber - 1).getTiles()[3][j]);
@@ -1261,6 +1232,44 @@ public class Board extends JPanel {
 	// For testing...
 	public void resetValidTileList(){
 		this.validTiles.clear();
+	}
+
+	void handleBuild(int i) {
+		if (items[i].getText().equals("Settler")
+				|| items[i].getText().equals("Army")) {
+			Figure figure;
+			if (items[i].getText().equals("Settler")) {
+				if (currentCity.getProduction() < 6)
+					return;
+				int settlers = 0;
+				for (Figure f : currentPlayer.figures) {
+					if (f instanceof Settler)
+						settlers++;
+				}
+				if (settlers >= 2) {
+					return;
+				}
+				figure = new Settler(currentPlayer,
+						Board.currentTile);
+			} else {
+				if (currentCity.getProduction() < 4)
+					return;
+				int armies = 0;
+				for (Figure f : currentPlayer.figures) {
+					if (f instanceof Army)
+						armies++;
+				}
+				if (armies >= 6) {
+					return;
+				}
+				figure = new Army(currentPlayer, Board.currentTile);
+			}
+			figure.setLocation(Board.currentClick.x,
+					Board.currentClick.y);
+			figure.resetMoves(currentPlayer.getSpeed());
+			Board.currentFigure = figure;
+		}
+		repaint();
 	}
 
 }
