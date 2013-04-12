@@ -245,7 +245,7 @@ public class Board extends JPanel {
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
 				Figure newCity = null;
 				for (Figure f : tile.getFigures()) {
-					if (f instanceof Settler) {
+					if (f instanceof Settler && currentPlayer.figures.contains(f)) {
 						newCity = f;
 						break;
 					}
