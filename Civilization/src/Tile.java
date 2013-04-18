@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -21,7 +22,7 @@ public class Tile {
 	private int culture = 0;
 	private int coin = 0;
 	private Resource resource = Resource.None;
-	private Point screenLocation;
+	private Point2D.Double screenLocation;
 
 	// This will hold the abstract objects of figures such as scouts and armies.
 	// It also contains the huts and villages
@@ -148,6 +149,14 @@ public class Tile {
 
 	public ArrayList<Figure> getFigures() {
 		return this.figures;
+	}
+
+	public void setScreenLocation(int x, int y) {
+		this.screenLocation = new Point2D.Double(x, y);
+	}
+
+	public Point2D.Double getScreenLocation() {
+		return this.screenLocation;
 	}
 
 }

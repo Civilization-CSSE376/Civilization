@@ -63,6 +63,7 @@ public class Board extends JPanel {
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
+		setTileLocations();
 
 		setPanelNeighbors();
 
@@ -78,7 +79,7 @@ public class Board extends JPanel {
 		settler1.resetMoves(player1.getSpeed());
 		settler2.resetMoves(player2.getSpeed());
 
-		settler1.setLocation(10, 10);
+		settler1.setLocation(10, 140);
 		settler2.setLocation((440 * 4) - 5, 830);
 
 		this.player1.figures.add(settler1);
@@ -262,7 +263,9 @@ public class Board extends JPanel {
 			City city = new City(tile, currentPlayer);
 			if (city.isValid
 					&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
-				city.setLocation(Board.currentClick.x, Board.currentClick.y);
+				city.setScreenLocation(tile.getScreenLocation());
+				// city.setLocation(tile.getScreenLocation().x,
+				// tile.getScreenLocation().y);
 				currentPlayer.cities.add(city);
 				tile.setCity(city);
 				currentPlayer.figures.remove(newCity);
@@ -302,7 +305,8 @@ public class Board extends JPanel {
 				items[i].addActionListener(handler);
 			}
 
-			menu.show(this, Board.currentClick.x, Board.currentClick.y);
+			menu.show(this, (int) tile.getScreenLocation().x,
+					(int) tile.getScreenLocation().y);
 		} else {
 			if (figure != null && !checkSpaceForEnemyFigures(tile)) {
 				if (addFigure(tile, city, figure)) {
@@ -410,8 +414,11 @@ public class Board extends JPanel {
 					System.out.println("Tile valid! Moving figure.");
 					Tile oldTile = currentMovementFigure.location;
 					oldTile.getFigures().remove(currentMovementFigure);
-					Board.this.currentMovementFigure.setLocation(
-							Board.currentClick.x, Board.currentClick.y);
+					Board.this.currentMovementFigure.setScreenLocation(tile
+							.getScreenLocation());
+					// Board.this.currentMovementFigure.setLocation(
+					// tile.getScreenLocation().x,
+					// tile.getScreenLocation().y);
 					currentMovementFigure.setTileLocal(tile);
 					tile.getFigures().add(currentMovementFigure);
 					// currentMovementFigure.setUsedThisTurn(true);
@@ -419,8 +426,8 @@ public class Board extends JPanel {
 					currentMovementFigure.decreaseMoves();
 
 					currentMovementFigure = null;
-					checkUnexploredPanelNew(Board.currentClick.x,
-							Board.currentClick.y);
+					checkUnexploredPanelNew((int) tile.getScreenLocation().x,
+							(int) tile.getScreenLocation().y);
 					Board.this.validTiles.clear();
 					Board.this.repaint();
 				}
@@ -575,10 +582,13 @@ public class Board extends JPanel {
 			int x = e.getX();
 			int y = e.getY();
 			Board.currentClick = new Point(x, y);
-			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
+			// System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
 			Panel panel = findPanel(x, y);
 			Tile tile = findTile(panel, x, y);
+			System.out.println("\nTile located at "
+					+ tile.getScreenLocation().x + " , "
+					+ tile.getScreenLocation().y);
 			Board.currentTile = tile;
 			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
@@ -805,7 +815,8 @@ public class Board extends JPanel {
 				} else {
 					String[] stringTiles;
 					stringTiles = text.split("_");
-
+					System.out.println(index + "   [" + (index % 4) + "] ["
+							+ (int) (Math.floor(index / 4)) + "]");
 					tiles[(index % 4)][(int) (Math.floor(index / 4))] = new Tile(
 							(index % 4), (int) (Math.floor(index / 4)),
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
@@ -840,6 +851,28 @@ public class Board extends JPanel {
 
 		map.get(0).changeIsExplored(); // Player 1's initial location
 		map.get(7).changeIsExplored(); // Player 2's initial location
+	}
+
+	private void setTileLocations() {
+		for (int i = 0; i < 8; i++) {
+			Panel p = map.get(i);
+			int basex = 0, basey = 0, x = 0, y = 0;
+
+			if (i < 4) {
+				basey = 0;
+			} else {
+				basey = 440;
+			}
+			basex = 440 * (i % 4);
+
+			for (int yp = 0; yp < 4; yp++) {
+				for (int xp = 0; xp < 4; xp++) {
+					x = (xp * 110) + basex;
+					y = (yp * 110) + basey;
+					p.getTiles()[xp][yp].setScreenLocation(x, y);
+				}
+			}
+		}
 	}
 
 	// public void drawTerrain(Graphics2D g2) {
@@ -1188,7 +1221,9 @@ public class Board extends JPanel {
 		if (tile.getTerrain() != Tile.Terrain.Water) {
 			if (city.getOutskirts().contains(tile)) {
 				figure.setTileLocal(tile);
-				figure.setLocation(currentClick.x, currentClick.y);
+				figure.setScreenLocation(tile.getScreenLocation());
+				// figure.setLocation(tile.getScreenLocation().x,
+				// tile.getScreenLocation().y);
 				ArrayList<Figure> figures = tile.getFigures();
 				figures.add(figure);
 				currentPlayer.figures.add(figure);
@@ -1248,7 +1283,9 @@ public class Board extends JPanel {
 				}
 				figure = new Army(currentPlayer, tile);
 			}
-			figure.setLocation(Board.currentClick.x, Board.currentClick.y);
+			figure.setScreenLocation(tile.getScreenLocation());
+			// figure.setLocation(tile.getScreenLocation().x,
+			// tile.getScreenLocation().y);
 			figure.resetMoves(currentPlayer.getSpeed());
 			Board.currentFigure = figure;
 		}

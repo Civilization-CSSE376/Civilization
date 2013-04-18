@@ -15,7 +15,7 @@ public class City {
 	private int production = 0;
 	private int culture = 0;
 	private int trade = 0;
-	private Double screenLocation;
+	private Point2D.Double screenLocation;
 	
 	public boolean isValid = false;
 	
@@ -442,6 +442,10 @@ public class City {
 		this.outskirts = outskirts;
 	}
 
+	public void setScreenLocation(Point2D.Double screen){
+		this.screenLocation = screen;
+	}
+	
 	public void setLocation(int x, int y) {
 		int newX = 0;
 		int newY = 0;
