@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,17 +21,19 @@ public class Tile {
 	private int culture = 0;
 	private int coin = 0;
 	private Resource resource = Resource.None;
+	private Point screenLocation;
 
 	// This will hold the abstract objects of figures such as scouts and armies.
 	// It also contains the huts and villages
 
 	private ArrayList<Figure> figures = new ArrayList<Figure>();
 
-	 private Marker marker = null; // this will hold the abstract object that represents
+	private Marker marker = null; // this will hold the abstract object that
+									// represents
 	// cities, buildings, great people, etc.
 
-	 private City city = null;
-	 
+	private City city = null;
+
 	public Marker getMarker() {
 		return marker;
 	}
@@ -61,7 +64,7 @@ public class Tile {
 		this.coin = coin;
 
 		this.setTerrain(terrain);
-		
+
 		if (resource.equals("W"))
 			this.resource = Resource.Wheat;
 		else if (resource.equals("S"))
@@ -96,7 +99,6 @@ public class Tile {
 		else
 			System.out.println("Error in Tile: wrong terrain.");
 
-		
 	}
 
 	public Tile(int x, int y) {
@@ -139,8 +141,8 @@ public class Tile {
 	public int getProduction() {
 		return this.production;
 	}
-	
-	public ArrayList<Figure> getFigure(){
+
+	public ArrayList<Figure> getFigure() {
 		return this.figures;
 	}
 
