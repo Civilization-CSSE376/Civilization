@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JRadioButtonMenuItem;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -223,6 +225,7 @@ public class BoardTest {
 
 	@Test
 	public void testCheckUnexploredPanel(){
+		Board target = new Board("America", "China");
 		assertTrue(Board.map.get(0).getIsExplored());
 		assertFalse(Board.map.get(1).getIsExplored());
 		assertFalse(Board.map.get(2).getIsExplored());
@@ -509,4 +512,42 @@ public class BoardTest {
 		assertTrue(target.addFigure(Board.map.get(7).getTiles()[3][2]));
 	}
 
+	@Test
+	public void testmovement(){
+		Board target = new Board("America", "China");
+		target.currentMovementFigure = Board.map.get(0).getTiles()[0][0].getFigures().get(0);
+		target.getValidTiles(Board.map.get(0), Board.map.get(0).getTiles()[0][0]);
+		target.currentTile = Board.map.get(0).getTiles()[0][1];
+		target.currentClick = new Point(150, 0);
+		target.movement();
+		assertEquals(0, Board.map.get(0).getTiles()[0][0].getFigures().size());
+		assertEquals(1, Board.map.get(0).getTiles()[0][1].getFigures().size());
+		target.currentMovementFigure = Board.map.get(0).getTiles()[0][1].getFigures().get(0);
+		target.currentTile = Board.map.get(0).getTiles()[0][2];
+		target.currentClick = new Point(150, 0);
+		target.movement();
+		assertEquals(0, Board.map.get(0).getTiles()[0][2].getFigures().size());
+		assertEquals(1, Board.map.get(0).getTiles()[0][1].getFigures().size());
+	}
+	
+	@Test
+	public void handleBuild(){
+		Board target = new Board("America", "China");
+		target.currentClick = new Point(250, 0);
+		target.currentCity = Board.map.get(0).getTiles()[1][1].getCity();
+		target.currentCity.calcProduction();
+		target.currentTile = Board.map.get(0).getTiles()[0][1];
+		target.items = new JRadioButtonMenuItem[3];
+
+		target.items[0] = new JRadioButtonMenuItem("Settler");
+		target.items[1] = new JRadioButtonMenuItem("Army");
+		target.items[2] = new JRadioButtonMenuItem("Cancel");
+		assertNull(Board.currentFigure);
+		target.handleBuild(0);
+		assertEquals(0, Board.map.get(0).getTiles()[0][1].getFigures().size());
+		target.handleBuild(1);
+		assertNotNull(Board.currentFigure);
+		
+	}
+	
 }
