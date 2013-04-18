@@ -1,17 +1,21 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -126,11 +130,100 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame player1Window = new JFrame("Player 1 Details");
+				final JFrame player1Window = new JFrame("Player 1 Details");
+				player1Window.setResizable(false);
+				player1Window.setLayout(null);
+				
 				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 				player1Window.setIconImage(icon.getImage());
-				player1Window.setSize(700, 800);
+				
+				player1Window.setSize(900, 565);
+				player1Window.setAlwaysOnTop(true);
 				player1Window.setVisible(true);
+				MainWindow.this.setEnabled(false);
+				player1Window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				
+				JPanel buttonPanel = new JPanel();
+				JPanel civPic = new JPanel();
+				JPanel info = new JPanel();
+				JPanel buffer = new JPanel();
+				
+				info.setBackground(Color.BLACK);
+				buttonPanel.setBackground(Color.BLACK);
+				buffer.setBackground(Color.BLACK);
+				
+				JButton closeButton = new JButton("Close");
+				buttonPanel.add(closeButton);
+				
+				buttonPanel.setLocation(550, 500);
+				buttonPanel.setSize(345, 40);
+				
+				civPic.setLocation(0,-6);
+				civPic.setSize(550, 565);
+				String picFile = "src/civs/" + MainWindow.this.p1Civilization + ".png";
+				JLabel picLabel;
+				try {
+					BufferedImage civPicture = ImageIO.read(new File(picFile));
+					picLabel = new JLabel(new ImageIcon(civPicture));
+					civPic.add(picLabel);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				info.setLocation(600, 0);
+				info.setSize(295, 500);
+				info.setLayout(new GridLayout(5, 1));
+				String gov = "";
+				if(MainWindow.this.p1Civilization.equals("Rome")) gov = "Republic";
+				else if(MainWindow.this.p1Civilization.equals("Russia")) gov = "Communism";
+				else gov = "Despotism";
+				
+				JLabel government = new JLabel("Government: " + gov);
+				government.setForeground(Color.WHITE);
+//				government.setLocation(25, 25);
+//				government.setSize(300, 25);
+				
+				JLabel governmentAbility = new JLabel("Government ability: ");
+				governmentAbility.setForeground(Color.WHITE);
+//				government.setLocation(25, 100);
+//				government.setSize(300, 25);
+				
+				JLabel trade = new JLabel("Trade: ");
+				trade.setForeground(Color.WHITE);
+				
+				JLabel gold = new JLabel("Gold: ");
+				gold.setForeground(Color.WHITE);
+				
+				JLabel resources = new JLabel("Resources: ");
+				resources.setForeground(Color.WHITE);
+				
+				info.add(government);
+				info.add(governmentAbility);
+				info.add(trade);
+				info.add(gold);
+				info.add(resources);
+				
+				buffer.setLocation(550, 0);
+				buffer.setSize(50, 500);
+				
+				player1Window.add(buttonPanel);
+				player1Window.add(civPic);
+				player1Window.add(info);
+				player1Window.add(buffer);
+				
+				closeButton.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						MainWindow.this.setEnabled(true);
+						player1Window.dispose();
+					}
+					
+				});
+				
+				
+				
 			}
 			
 		});
@@ -139,14 +232,101 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame player2Window = new JFrame("Player 2 Details");
+				final JFrame player2Window = new JFrame("Player 2 Details");
+				player2Window.setResizable(false);
+				player2Window.setLayout(null);
+				
 				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 				player2Window.setIconImage(icon.getImage());
-				player2Window.setSize(700, 800);
-				player2Window.setVisible(true);
 				
-			}
-			
+				player2Window.setSize(900, 565);
+				player2Window.setAlwaysOnTop(true);
+				player2Window.setVisible(true);
+				MainWindow.this.setEnabled(false);
+				player2Window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				
+				JPanel buttonPanel = new JPanel();
+				JPanel civPic = new JPanel();
+				JPanel info = new JPanel();
+				JPanel buffer = new JPanel();
+				
+				info.setBackground(Color.BLACK);
+				buttonPanel.setBackground(Color.BLACK);
+				buffer.setBackground(Color.BLACK);
+				
+				JButton closeButton = new JButton("Close");
+				buttonPanel.add(closeButton);
+				
+				buttonPanel.setLocation(550, 500);
+				buttonPanel.setSize(345, 40);
+				
+				civPic.setLocation(0,-6);
+				civPic.setSize(550, 565);
+				String picFile = "src/civs/" + MainWindow.this.p2Civilization + ".png";
+				JLabel picLabel;
+				try {
+					BufferedImage civPicture = ImageIO.read(new File(picFile));
+					picLabel = new JLabel(new ImageIcon(civPicture));
+					civPic.add(picLabel);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				info.setLocation(600, 0);
+				info.setSize(295, 500);
+				info.setLayout(new GridLayout(5, 1));
+				String gov = "";
+				if(MainWindow.this.p1Civilization.equals("Rome")) gov = "Republic";
+				else if(MainWindow.this.p1Civilization.equals("Russia")) gov = "Communism";
+				else gov = "Despotism";
+				
+				JLabel government = new JLabel("Government: " + gov);
+				government.setForeground(Color.WHITE);
+//				government.setLocation(25, 25);
+//				government.setSize(300, 25);
+				
+				JLabel governmentAbility = new JLabel("Government ability: ");
+				governmentAbility.setForeground(Color.WHITE);
+//				government.setLocation(25, 100);
+//				government.setSize(300, 25);
+				
+				JLabel trade = new JLabel("Trade: ");
+				trade.setForeground(Color.WHITE);
+				
+				JLabel gold = new JLabel("Gold: ");
+				gold.setForeground(Color.WHITE);
+				
+				JLabel resources = new JLabel("Resources: ");
+				resources.setForeground(Color.WHITE);
+				
+				info.add(government);
+				info.add(governmentAbility);
+				info.add(trade);
+				info.add(gold);
+				info.add(resources);
+				
+				buffer.setLocation(550, 0);
+				buffer.setSize(50, 500);
+				
+				player2Window.add(buttonPanel);
+				player2Window.add(civPic);
+				player2Window.add(info);
+				player2Window.add(buffer);
+				
+				closeButton.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						MainWindow.this.setEnabled(true);
+						player2Window.dispose();
+					}
+					
+				});
+				
+				
+				
+			}	
 		});
 		
 		this.marketDetails.addActionListener(new ActionListener() {

@@ -62,5 +62,11 @@ public class PlayerTest {
 		assertEquals(165, target.getLocation().x, 0);
 		assertEquals(165, target.getLocation().y, 0);
 	}
+	
+	@Test
+	public void testPlayerInitialSpeed(){
+		Player target = new Player();
+		assertEquals(2, target.getSpeed());
+	}
 
 }

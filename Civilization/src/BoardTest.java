@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JRadioButtonMenuItem;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -212,21 +214,18 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testGetFirstPlayer() {
-		Board target = new Board("America", "China");
-		assertNotNull(target.getFirstPlayer());
+	public void testGetFirstPlayer(){
+		assertNotNull(board.getFirstPlayer());
 	}
 
 	@Test
-	public void testGetPhase() {
-		Board target = new Board("America", "China");
-		assertEquals(1, target.getPhase());
+	public void testGetPhase(){
+		assertEquals(1, board.getPhase());
 	}
 
 	@Test
-	public void testCheckUnexploredPanel() {
+	public void testCheckUnexploredPanel(){
 		Board target = new Board("America", "China");
-
 		assertTrue(Board.map.get(0).getIsExplored());
 		assertFalse(Board.map.get(1).getIsExplored());
 		assertFalse(Board.map.get(2).getIsExplored());
@@ -235,50 +234,251 @@ public class BoardTest {
 		assertFalse(Board.map.get(5).getIsExplored());
 		assertFalse(Board.map.get(6).getIsExplored());
 		assertTrue(Board.map.get(7).getIsExplored());
-
-		target.checkUnexploredPanel(500, 300);
+		
+		board.checkUnexploredPanel(500, 300);
 		assertTrue(Board.map.get(1).getIsExplored());
 		assertFalse(Board.map.get(2).getIsExplored());
-
-		target.checkUnexploredPanel(500, 300);
+		
+		board.checkUnexploredPanel(500, 300);
 		assertTrue(Board.map.get(1).getIsExplored());
-
-		target.checkUnexploredPanel(1000, 300);
+		
+		board.checkUnexploredPanel(1000, 300);
 		assertTrue(Board.map.get(2).getIsExplored());
-
-		target.checkUnexploredPanel(1000, 300);
+		
+		board.checkUnexploredPanel(1000, 300);
 		assertTrue(Board.map.get(2).getIsExplored());
-
-		target.checkUnexploredPanel(1700, 300);
+		
+		board.checkUnexploredPanel(1700, 300);
 		assertTrue(Board.map.get(3).getIsExplored());
-
-		target.checkUnexploredPanel(1700, 300);
+		
+		board.checkUnexploredPanel(1700, 300);
 		assertTrue(Board.map.get(3).getIsExplored());
-
-		target.checkUnexploredPanel(1800, 300);
-
-		target.checkUnexploredPanel(300, 500);
+		
+		board.checkUnexploredPanel(1800, 300);
+		
+		board.checkUnexploredPanel(300, 500);
 		assertTrue(Board.map.get(4).getIsExplored());
-
-		target.checkUnexploredPanel(300, 500);
+		
+		board.checkUnexploredPanel(300, 500);
 		assertTrue(Board.map.get(4).getIsExplored());
-
-		target.checkUnexploredPanel(500, 500);
+		
+		board.checkUnexploredPanel(500, 500);
 		assertTrue(Board.map.get(5).getIsExplored());
-
-		target.checkUnexploredPanel(500, 500);
+		
+		board.checkUnexploredPanel(500, 500);
 		assertTrue(Board.map.get(5).getIsExplored());
-
-		target.checkUnexploredPanel(1000, 500);
+		
+		board.checkUnexploredPanel(1000, 500);
 		assertTrue(Board.map.get(6).getIsExplored());
-
-		target.checkUnexploredPanel(1000, 500);
+		
+		board.checkUnexploredPanel(1000, 500);
 		assertTrue(Board.map.get(6).getIsExplored());
-
-		target.checkUnexploredPanel(1400, 880);
+		
+		board.checkUnexploredPanel(1400, 880);
 		assertTrue(Board.map.get(6).getIsExplored());
+		
+		board.checkUnexploredPanel(1400, 881);
+		
+	}
+	
+	@Test
+	public void testCheckTiles(){
+		
+		// Test middle tile, panel 0
+		Tile testTile = Board.map.get(0).getTiles()[1][1];
+		board.setCurrentMovementFigure();
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top left corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top row middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][1];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test rightmost column middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[1][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom row middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][1];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom left corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test leftmost column middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[1][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top left corner tile, panel 5
+		testTile = Board.map.get(5).getTiles()[0][0];
+		board.getValidTiles(Board.map.get(5), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom left corner tile, panel 1
+		testTile = Board.map.get(1).getTiles()[3][0];
+		board.getValidTiles(Board.map.get(1), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 4
+		testTile = Board.map.get(4).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(4), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 4
+		testTile = Board.map.get(4).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(4), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 3
+		testTile = Board.map.get(3).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(3), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 7
+		testTile = Board.map.get(7).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(7), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 7
+		testTile = Board.map.get(7).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(7), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		board.setCurrentMovementFigureMoves(); // Now they can't land on water.
+		// Test middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[1][1];
+		board.setCurrentMovementFigure();
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top left corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top row middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][1];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(1, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test rightmost column middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[1][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom row middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][1];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom left corner tile, panel 0
+		testTile = Board.map.get(0).getTiles()[3][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test leftmost column middle tile, panel 0
+		testTile = Board.map.get(0).getTiles()[1][0];
+		board.getValidTiles(Board.map.get(0), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top left corner tile, panel 5
+		testTile = Board.map.get(5).getTiles()[0][0];
+		board.getValidTiles(Board.map.get(5), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom left corner tile, panel 1
+		testTile = Board.map.get(1).getTiles()[3][0];
+		board.getValidTiles(Board.map.get(1), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 4
+		testTile = Board.map.get(4).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(4), testTile);
+		assertEquals(4, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 4
+		testTile = Board.map.get(4).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(4), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 3
+		testTile = Board.map.get(3).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(3), testTile);
+		assertEquals(1, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test bottom right corner tile, panel 7
+		testTile = Board.map.get(7).getTiles()[3][3];
+		board.getValidTiles(Board.map.get(7), testTile);
+		assertEquals(2, board.getValidTileList().size());
+		board.resetValidTileList();
+		
+		// Test top right corner tile, panel 7
+		testTile = Board.map.get(7).getTiles()[0][3];
+		board.getValidTiles(Board.map.get(7), testTile);
+		assertEquals(3, board.getValidTileList().size());
+		board.resetValidTileList();
 
-		target.checkUnexploredPanel(1400, 881);
 
 	}
 
@@ -312,4 +512,44 @@ public class BoardTest {
 		assertTrue(target.addFigure(Board.map.get(7).getTiles()[3][2]));
 	}
 
+	@Test
+	public void testmovement(){
+		Board target = new Board("America", "China");
+		target.currentMovementFigure = Board.map.get(0).getTiles()[0][0].getFigures().get(0);
+		target.getValidTiles(Board.map.get(0), Board.map.get(0).getTiles()[0][0]);
+		target.currentTile = Board.map.get(0).getTiles()[0][1];
+		target.currentClick = new Point(150, 0);
+		target.movement();
+		assertEquals(0, Board.map.get(0).getTiles()[0][0].getFigures().size());
+		assertEquals(1, Board.map.get(0).getTiles()[0][1].getFigures().size());
+		target.currentMovementFigure = Board.map.get(0).getTiles()[0][1].getFigures().get(0);
+		target.currentTile = Board.map.get(0).getTiles()[0][2];
+		target.currentClick = new Point(150, 0);
+		target.movement();
+		assertEquals(0, Board.map.get(0).getTiles()[0][2].getFigures().size());
+		assertEquals(1, Board.map.get(0).getTiles()[0][1].getFigures().size());
+	}
+	
+	@Test
+	public void handleBuild(){
+		Board target = new Board("America", "China");
+		target.currentClick = new Point(250, 0);
+		target.currentCity = Board.map.get(0).getTiles()[1][1].getCity();
+		target.currentCity.calcProduction();
+		target.currentTile = Board.map.get(0).getTiles()[0][1];
+		target.items = new JRadioButtonMenuItem[3];
+
+		target.items[0] = new JRadioButtonMenuItem("Settler");
+		target.items[1] = new JRadioButtonMenuItem("Army");
+		target.items[2] = new JRadioButtonMenuItem("Cancel");
+		target.currentFigure = null;
+		assertNull(Board.currentFigure);
+		target.handleBuild(0);
+		assertNull(Board.currentFigure);
+		assertEquals(0, Board.map.get(0).getTiles()[0][1].getFigures().size());
+		target.handleBuild(1);
+		assertNotNull(Board.currentFigure);
+		
+	}
+	
 }
