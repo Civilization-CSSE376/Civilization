@@ -266,8 +266,6 @@ public class Board extends JPanel {
 			if (city.isValid
 					&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
 				city.setScreenLocation(tile.getScreenLocation());
-				// city.setLocation(tile.getScreenLocation().x,
-				// tile.getScreenLocation().y);
 				currentPlayer.cities.add(city);
 				tile.setCity(city);
 				currentPlayer.figures.remove(newCity);
@@ -287,7 +285,7 @@ public class Board extends JPanel {
 	static City currentCity = null;
 	private static boolean goingForResource = false;
 
-	private City cityManagement(Tile tile, City city, Figure figure,
+	public City cityManagement(Tile tile, City city, Figure figure,
 			Marker marker) {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
@@ -324,14 +322,14 @@ public class Board extends JPanel {
 					city.setHasAction(false);
 					city = null;
 				}
-			} else if (goingForResource) {
+			} else if (isGoingForResource()) {
 				if ((tile.getResource() != null && !tile.getResource().toString().equals("None"))
 						&& city.getOutskirts().contains(tile)) {
 					currentPlayer.resources.add(tile.getResource());
 					// check that there is enough of that resource left
 					city.setHasAction(false);
 					city = null;
-					goingForResource = false;
+					setGoingForResource(false);
 					JOptionPane.showConfirmDialog(null,
 							"You got a new resource: " + tile.getResource().toString(), "Collect Resource",
 							JOptionPane.PLAIN_MESSAGE);
@@ -460,7 +458,7 @@ public class Board extends JPanel {
 					if (items[i].getText().equals("Build Something")) {
 						buildSomething();
 					} else if (items[i].getText().equals("Collect Resource")) {
-						goingForResource = true;
+						setGoingForResource(true);
 					}
 					repaint();
 					return;
@@ -1419,6 +1417,14 @@ public class Board extends JPanel {
 			buildBuilding();
 		}
 		repaint();
+	}
+
+	public static boolean isGoingForResource() {
+		return goingForResource;
+	}
+
+	public static void setGoingForResource(boolean goingForResource) {
+		Board.goingForResource = goingForResource;
 	}
 
 }
