@@ -348,13 +348,13 @@ public class BoardTest {
 		// Test bottom left corner tile, panel 1
 		testTile = Board.map.get(1).getTiles()[3][0];
 		board.getValidTiles(Board.map.get(1), testTile);
-		assertEquals(4, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top right corner tile, panel 4
 		testTile = Board.map.get(4).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(4), testTile);
-		assertEquals(4, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 4
@@ -366,7 +366,7 @@ public class BoardTest {
 		// Test top right corner tile, panel 3
 		testTile = Board.map.get(3).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(3), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(4, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 7
@@ -398,19 +398,19 @@ public class BoardTest {
 		// Test top row middle tile, panel 0
 		testTile = Board.map.get(0).getTiles()[0][1];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top right corner tile, panel 0
 		testTile = Board.map.get(0).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(1, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test rightmost column middle tile, panel 0
 		testTile = Board.map.get(0).getTiles()[1][3];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(4, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 0
@@ -422,19 +422,19 @@ public class BoardTest {
 		// Test bottom row middle tile, panel 0
 		testTile = Board.map.get(0).getTiles()[3][1];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(4, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom left corner tile, panel 0
 		testTile = Board.map.get(0).getTiles()[3][0];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(3, board.getValidTileList().size());
+		assertEquals(1, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test leftmost column middle tile, panel 0
 		testTile = Board.map.get(0).getTiles()[1][0];
 		board.getValidTiles(Board.map.get(0), testTile);
-		assertEquals(3, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top left corner tile, panel 5
@@ -446,13 +446,13 @@ public class BoardTest {
 		// Test bottom left corner tile, panel 1
 		testTile = Board.map.get(1).getTiles()[3][0];
 		board.getValidTiles(Board.map.get(1), testTile);
-		assertEquals(4, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top right corner tile, panel 4
 		testTile = Board.map.get(4).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(4), testTile);
-		assertEquals(4, board.getValidTileList().size());
+		assertEquals(1, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 4
@@ -464,7 +464,7 @@ public class BoardTest {
 		// Test top right corner tile, panel 3
 		testTile = Board.map.get(3).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(3), testTile);
-		assertEquals(1, board.getValidTileList().size());
+		assertEquals(4, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 7
@@ -476,7 +476,7 @@ public class BoardTest {
 		// Test top right corner tile, panel 7
 		testTile = Board.map.get(7).getTiles()[0][3];
 		board.getValidTiles(Board.map.get(7), testTile);
-		assertEquals(3, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 	}
