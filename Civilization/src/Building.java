@@ -14,17 +14,14 @@ public class Building extends Marker {
 		this.createBuilding(name);
 	}
 
-	public boolean isValid(Tile tile) {
-
-		boolean alreadyHasStarBuilding = false;
+	public boolean isValid(Tile tile, int production) {
+		if (production < this.cost) {
+			return false;
+		}
 		for (Tile t : tile.getCity().getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
-				alreadyHasStarBuilding = true;
+				return false;
 			}
-		}
-
-		if (alreadyHasStarBuilding) {
-			return false;
 		}
 
 		if (this.allowedTerrain == Terrain.NotWater) {
