@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JRadioButtonMenuItem;
 
+import org.hamcrest.core.IsNull;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -555,45 +556,45 @@ public class BoardTest {
 
 	}
 
-//	@Test
-//	public void testAddMarkerWonder() {
-//		Board target = new Board("America", "China");
-//		City city = new City(new Tile());
-//		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
-//		ArrayList<Tile> outskirts = new ArrayList<Tile>();
-//		outskirts.add(tile);
-//		city.setOutskirts(outskirts);
-//		Wonder marker = new Wonder("Stonehenge");
-//		assertTrue(target.addMarker(tile, city, marker));
-//		assertEquals(marker.getLocation(), tile);
-//		assertEquals(tile.getMarker(), marker);
-//	}
+	// @Test
+	// public void testAddMarkerWonder() {
+	// Board target = new Board("America", "China");
+	// City city = new City(new Tile());
+	// Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+	// ArrayList<Tile> outskirts = new ArrayList<Tile>();
+	// outskirts.add(tile);
+	// city.setOutskirts(outskirts);
+	// Wonder marker = new Wonder("Stonehenge");
+	// assertTrue(target.addMarker(tile, city, marker));
+	// assertEquals(marker.getLocation(), tile);
+	// assertEquals(tile.getMarker(), marker);
+	// }
 
 	@Test
-	public void testMakeBuilding(){
+	public void testMakeBuilding() {
 		Board target = new Board("America", "China");
 		Board.currentCity = Board.map.get(0).getTiles()[1][1].getCity();
 		Board.currentCity.calcProduction();
-		
+
 		target.makeBuilding("Workshop", Board.currentCity);
 		assertNull(Board.currentMarker);
-		
+
 		target.makeBuilding("Granary", Board.currentCity);
 		assertEquals("Granary", Board.currentMarker.name);
-		
+
 	}
 
-//	@Test
-//	public void testAddMarkerInvalidWonder() {
-//		Board target = new Board("America", "China");
-//		City city = new City(new Tile());
-//		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
-//		ArrayList<Tile> outskirts = new ArrayList<Tile>();
-//		outskirts.add(tile);
-//		city.setOutskirts(outskirts);
-//		Wonder marker = new Wonder("Stonehenge");
-//		assertFalse(target.addMarker(tile, city, marker));
-//	}
+	// @Test
+	// public void testAddMarkerInvalidWonder() {
+	// Board target = new Board("America", "China");
+	// City city = new City(new Tile());
+	// Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+	// ArrayList<Tile> outskirts = new ArrayList<Tile>();
+	// outskirts.add(tile);
+	// city.setOutskirts(outskirts);
+	// Wonder marker = new Wonder("Stonehenge");
+	// assertFalse(target.addMarker(tile, city, marker));
+	// }
 
 	@Test
 	public void testAddMarkerGoodBuilding() {
@@ -659,7 +660,7 @@ public class BoardTest {
 		assertFalse(target.addMarker(tile, city, building));
 		assertNull(tile.getMarker());
 	}
-	
+
 	@Test
 	public void testAddMarkerGoodNotWaterBuilding() {
 		Board target = new Board("America", "China");
@@ -705,6 +706,107 @@ public class BoardTest {
 		assertTrue(target.addMarker(tile, city, building));
 		assertEquals(building.getLocation(), tile);
 		assertEquals(tile.getMarker(), building);
+	}
+
+	@Test
+	public void testCityManagementNewSettler() {
+		Board board = new Board("America", "China");
+		Tile tile = new Tile();
+		tile.setTerrain("G");
+		tile.setScreenLocation(0, 0);
+		City city = new City(new Tile());
+		ArrayList<Tile> outs = new ArrayList<Tile>();
+		outs.add(tile);
+		city.setOutskirts(outs);
+		Figure figure = new Settler(board.getCurrentPlayer(), new Tile());
+		Marker marker = null;
+
+		City newcity = board.cityManagement(tile, city, figure, marker);
+		assertNull(Board.currentFigure);
+		assertNull(newcity);
+		assertFalse(city.getHasAction());
+		assertEquals(1, tile.getFigures().size());
+	}
+
+	@Test
+	public void testCityManagementNewArmy() {
+		Board board = new Board("America", "China");
+		Tile tile = new Tile();
+		tile.setTerrain("G");
+		tile.setScreenLocation(0, 0);
+		City city = new City(new Tile());
+		ArrayList<Tile> outs = new ArrayList<Tile>();
+		outs.add(tile);
+		city.setOutskirts(outs);
+		Figure figure = new Army(board.getCurrentPlayer(), new Tile());
+		Marker marker = null;
+
+		City newcity = board.cityManagement(tile, city, figure, marker);
+		assertNull(Board.currentFigure);
+		assertNull(newcity);
+		assertFalse(city.getHasAction());
+		assertEquals(1, tile.getFigures().size());
+	}
+
+	@Test
+	public void testCityManagementNewBuilding() {
+		Board board = new Board("America", "China");
+		Tile tile = new Tile();
+		tile.setTerrain("G");
+		City city = new City(new Tile());
+		ArrayList<Tile> outs = new ArrayList<Tile>();
+		outs.add(tile);
+		city.setOutskirts(outs);
+		Figure figure = null;
+		Marker marker = new Building("Market");
+
+		City newcity = board.cityManagement(tile, city, figure, marker);
+		assertNull(Board.currentMarker);
+		assertNull(newcity);
+		assertFalse(city.getHasAction());
+		assertEquals("Market", tile.getMarker().name);
+	}
+
+	@Test
+	public void testCityManagementBadResource() {
+		Board board = new Board("America", "China");
+		Tile tile = new Tile();
+		tile.setResource(Tile.Resource.None);
+		tile.setTerrain("G");
+		City city = new City(new Tile());
+		ArrayList<Tile> outs = new ArrayList<Tile>();
+		outs.add(tile);
+		city.setOutskirts(outs);
+		Figure figure = null;
+		Marker marker = null;
+		Board.setGoingForResource(true);
+
+		City newcity = board.cityManagement(tile, city, figure, marker);
+		assertTrue(Board.isGoingForResource());
+		assertEquals(city,newcity);
+		assertTrue(city.getHasAction());
+	}
+
+	@Test
+	public void testCityManagementGoodResource() {
+		Board board = new Board("America", "China");
+		Tile tile = new Tile();
+		tile.setResource(Tile.Resource.Iron);
+		tile.setTerrain("G");
+		City city = new City(new Tile());
+		ArrayList<Tile> outs = new ArrayList<Tile>();
+		outs.add(tile);
+		city.setOutskirts(outs);
+		Figure figure = null;
+		Marker marker = null;
+		Board.setGoingForResource(true);
+
+		City newcity = board.cityManagement(tile, city, figure, marker);
+		assertFalse(Board.isGoingForResource());
+		assertNull(newcity);
+		assertFalse(city.getHasAction());
+		assertTrue(board.getCurrentPlayer().resources
+				.contains(Tile.Resource.Iron));
 	}
 
 }
