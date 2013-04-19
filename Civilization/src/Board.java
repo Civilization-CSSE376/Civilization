@@ -341,8 +341,8 @@ public class Board extends JPanel {
 		return city;
 	}
 
-	private boolean addMarker(Tile tile, City city, Marker marker) {
-		if (marker.isValid(tile)) {
+	public boolean addMarker(Tile tile, City city, Marker marker) {
+		if (marker.isValid(tile, city)) {
 			if (city.getOutskirts().contains(tile)) {
 				marker.setTileLocal(tile);
 				marker.setScreenLocation(tile.getScreenLocation());

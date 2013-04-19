@@ -14,13 +14,11 @@ public class Building extends Marker {
 		this.createBuilding(name);
 	}
 
-	public boolean isValid(Tile tile, int production) {
-		if (production < this.cost) {
-			return false;
-		}
-		for (Tile t : tile.getCity().getOutskirts()) {
+	public boolean isValid(Tile tile, City city) {
+		for (Tile t : city.getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
-				return false;
+				if (this.hasStar)
+					return false;
 			}
 		}
 

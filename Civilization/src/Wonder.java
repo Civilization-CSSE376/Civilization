@@ -6,6 +6,7 @@ public class Wonder extends Marker {
 	public Wonder(String name) {
 		super(name);
 		this.createWonder(name);
+		this.allowedTerrain = Terrain.NotWater;
 	}
 	
 	private void createWonder(String name){

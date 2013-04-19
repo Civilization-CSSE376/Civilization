@@ -499,7 +499,7 @@ public class BoardTest {
 	public void testAddFigure() {
 		Board target = new Board("America", "China");
 		Figure figure = new Settler(target.getCurrentPlayer(), new Tile());
-		Board.currentClick = new Point(50,50);
+		Board.currentClick = new Point(50, 50);
 		City city = Board.map.get(0).getTiles()[1][1].getCity();
 		assertFalse(target.addFigure(Board.map.get(7).getTiles()[3][3], city,
 				figure));
@@ -507,7 +507,7 @@ public class BoardTest {
 				figure));
 		target.changePlayerTurn();
 		figure = new Army(target.getCurrentPlayer(), new Tile());
-		Board.currentClick = new Point(50,50);
+		Board.currentClick = new Point(50, 50);
 		city = Board.map.get(7).getTiles()[2][2].getCity();
 		assertFalse(target.addFigure(Board.map.get(7).getTiles()[3][3], city,
 				figure));
@@ -556,8 +556,141 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testAddMarker(){
+	public void testAddMarkerWonder() {
 		Board target = new Board("America", "China");
-		Tile tile = new Tile();
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Wonder marker = new Wonder("Stonehenge");
+		assertTrue(target.addMarker(tile, city, marker));
+		assertEquals(marker.getLocation(), tile);
+		assertEquals(tile.getMarker(), marker);
 	}
+
+	@Test
+	public void testAddMarkerInvalidWonder() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Wonder marker = new Wonder("Stonehenge");
+		assertFalse(target.addMarker(tile, city, marker));
+	}
+
+	@Test
+	public void testAddMarkerGoodBuilding() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Library");
+		assertTrue(target.addMarker(tile, city, building));
+		assertEquals(building.getLocation(), tile);
+		assertEquals(tile.getMarker(), building);
+	}
+
+	@Test
+	public void testAddMarkerInvalidTerrainBuilding() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Library");
+		assertFalse(target.addMarker(tile, city, building));
+		assertNull(tile.getMarker());
+	}
+
+	@Test
+	public void testAddMarkerInvalidTerrainNotWater() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "F", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Library");
+		assertFalse(target.addMarker(tile, city, building));
+		assertNull(tile.getMarker());
+	}
+
+	@Test
+	public void testAddMarkerInvalidTerrainNotWaterMarket() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Market");
+		assertFalse(target.addMarker(tile, city, building));
+		assertNull(tile.getMarker());
+	}
+
+	@Test
+	public void testAddMarkerInvalidNotOutskirts() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		city.setOutskirts(outskirts);
+		Building building = new Building("Market");
+		assertFalse(target.addMarker(tile, city, building));
+		assertNull(tile.getMarker());
+	}
+	
+	@Test
+	public void testAddMarkerGoodNotWaterBuilding() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Market");
+		assertTrue(target.addMarker(tile, city, building));
+		assertEquals(building.getLocation(), tile);
+		assertEquals(tile.getMarker(), building);
+	}
+
+	@Test
+	public void testAddMarkerInvalidHasStar() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+		Tile starTile = new Tile(0, 0, "M", 0, 0, "NONE", 0, "NONE", 0);
+		starTile.setMarker(new Building("Temple"));
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		outskirts.add(starTile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Barracks");
+		assertFalse(target.addMarker(tile, city, building));
+		assertNull(tile.getMarker());
+	}
+
+	@Test
+	public void testAddMarkerGoodHasStarBuilding() {
+		Board target = new Board("America", "China");
+		City city = new City(new Tile());
+		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+		Tile starTile = new Tile(0, 0, "M", 0, 0, "NONE", 0, "NONE", 0);
+		starTile.setMarker(new Building("Temple"));
+		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		outskirts.add(tile);
+		outskirts.add(starTile);
+		city.setOutskirts(outskirts);
+		Building building = new Building("Granary");
+		assertTrue(target.addMarker(tile, city, building));
+		assertEquals(building.getLocation(), tile);
+		assertEquals(tile.getMarker(), building);
+	}
+
 }
