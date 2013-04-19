@@ -34,6 +34,9 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
+	
+
+	
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
 	final String CITY_MANAGEMENT = "City Management";
@@ -1185,7 +1188,7 @@ public class Board extends JPanel {
 	}
 
 	public boolean addFigure(Tile tile, City city, Figure figure) {
-		if (tile.getTerrain() != Tile.Terrain.Water) {
+		if (tile.getTerrain() != Terrain.Water) {
 			if (city.getOutskirts().contains(tile)) {
 				figure.setTileLocal(tile);
 				figure.setLocation(currentClick.x, currentClick.y);

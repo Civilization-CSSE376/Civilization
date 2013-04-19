@@ -4,10 +4,6 @@ import java.util.Random;
 
 public class Tile {
 
-	public enum Terrain {
-		Mountain, Forest, Grassland, Desert, Water
-	};
-
 	public enum Resource {
 		Wheat, Silk, Incense, Iron, None
 	}
