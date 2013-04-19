@@ -281,10 +281,12 @@ public class Board extends JPanel {
 	static Tile currentTile = null;
 	public static Point currentClick = null;
 	public static Figure currentFigure = null;
+	public static Marker currentMarker = null;
 	static City currentCity = null;
 	private static boolean goingForResource = false;
 
-	private City cityManagement(Tile tile, City city, Figure figure) {
+	private City cityManagement(Tile tile, City city, Figure figure,
+			Marker marker) {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = null;
@@ -314,6 +316,12 @@ public class Board extends JPanel {
 					city.setHasAction(false);
 					city = null;
 				}
+			} else if (marker != null && !checkSpaceForEnemyFigures(tile)) {
+				if (addMarker(tile, city, marker)) {
+					currentMarker = null;
+					city.setHasAction(false);
+					city = null;
+				}
 			} else if (goingForResource) {
 				if (tile.getResource() != null
 						&& city.getOutskirts().contains(tile)) {
@@ -331,18 +339,32 @@ public class Board extends JPanel {
 		return city;
 	}
 
+	private boolean addMarker(Tile tile, City city, Marker marker) {
+		if (marker.checkValid(tile)) {
+			if (city.getOutskirts().contains(tile)) {
+				marker.setTileLocal(tile);
+				marker.setScreenLocation(tile.getScreenLocation());
+				tile.setMarker(marker);
+				repaint();
+				return true;
+			}
+		}
+		return false;
+		return false;
+	}
+
 	public void buildSomething() {
 		JPopupMenu menu = new JPopupMenu();
 		BuilderHandler handler = new BuilderHandler();
 		ButtonGroup group = new ButtonGroup();
 		items = new JRadioButtonMenuItem[3];
 
-		// items[0] = new JRadioButtonMenuItem("Building");
-		items[0] = new JRadioButtonMenuItem("Settler");
-		items[1] = new JRadioButtonMenuItem("Army");
-		// items[3] = new JRadioButtonMenuItem("Wonder");
+		items[0] = new JRadioButtonMenuItem("Building");
+		items[1] = new JRadioButtonMenuItem("Settler");
+		items[2] = new JRadioButtonMenuItem("Army");
+		items[3] = new JRadioButtonMenuItem("Wonder");
 		// items[4] = new JRadioButtonMenuItem("Units");
-		items[2] = new JRadioButtonMenuItem("Cancel");
+		items[4] = new JRadioButtonMenuItem("Cancel");
 
 		for (int i = 0; i < items.length; i++) {
 			menu.add(items[i]);
@@ -351,6 +373,48 @@ public class Board extends JPanel {
 		}
 
 		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+	}
+
+	public void buildBuilding() {
+		JPopupMenu menu = new JPopupMenu();
+		BuilderHandler handler = new BuilderHandler();
+		ButtonGroup group = new ButtonGroup();
+		items = new JRadioButtonMenuItem[15];
+
+		items[0] = new JRadioButtonMenuItem("Market");
+		items[1] = new JRadioButtonMenuItem("Bank");
+		items[2] = new JRadioButtonMenuItem("Temple");
+		items[3] = new JRadioButtonMenuItem("Cathedral");
+		items[4] = new JRadioButtonMenuItem("Granary");
+		items[5] = new JRadioButtonMenuItem("Aqueduct");
+		items[6] = new JRadioButtonMenuItem("Library");
+		items[7] = new JRadioButtonMenuItem("University");
+		items[8] = new JRadioButtonMenuItem("Barracks");
+		items[9] = new JRadioButtonMenuItem("Academy");
+		items[10] = new JRadioButtonMenuItem("Workshop");
+		items[11] = new JRadioButtonMenuItem("Iron Mine");
+		items[12] = new JRadioButtonMenuItem("Trading Post");
+		items[13] = new JRadioButtonMenuItem("Harbor");
+		items[14] = new JRadioButtonMenuItem("Cancel");
+
+		for (int i = 0; i < items.length; i++) {
+			menu.add(items[i]);
+			group.add(items[i]);
+			items[i].addActionListener(handler);
+		}
+
+		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+	}
+
+	private class BuildingHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					makeBuilding(items[i].getText());
+					return;
+				}
+		}
 	}
 
 	public boolean checkSpaceForEnemyFigures(Tile tile) {
@@ -365,6 +429,11 @@ public class Board extends JPanel {
 				return true;
 		}
 		return false;
+	}
+
+	public void makeBuilding(String type) {
+		Building newBuilding = new Building(type);
+		Board.currentMarker = newBuilding;
 	}
 
 	private class BuilderHandler implements ActionListener {
@@ -1222,8 +1291,6 @@ public class Board extends JPanel {
 			if (city.getOutskirts().contains(tile)) {
 				figure.setTileLocal(tile);
 				figure.setScreenLocation(tile.getScreenLocation());
-				// figure.setLocation(tile.getScreenLocation().x,
-				// tile.getScreenLocation().y);
 				ArrayList<Figure> figures = tile.getFigures();
 				figures.add(figure);
 				currentPlayer.figures.add(figure);
@@ -1257,37 +1324,40 @@ public class Board extends JPanel {
 	void handleBuild(int i, Tile tile, City city) {
 		if (items[i].getText().equals("Settler")
 				|| items[i].getText().equals("Army")) {
-			Figure figure;
-			if (items[i].getText().equals("Settler")) {
-				if (city.getProduction() < 6)
-					return;
-				int settlers = 0;
-				for (Figure f : currentPlayer.figures) {
-					if (f instanceof Settler)
-						settlers++;
+			if (items[i].getText().equals("Settler")
+					|| items[i].getText().equals("Army")) {
+				Figure figure;
+				if (items[i].getText().equals("Settler")) {
+					if (city.getProduction() < 6)
+						return;
+					int settlers = 0;
+					for (Figure f : currentPlayer.figures) {
+						if (f instanceof Settler)
+							settlers++;
+					}
+					if (settlers >= 2) {
+						return;
+					}
+					figure = new Settler(currentPlayer, tile);
+				} else {
+					if (city.getProduction() < 4)
+						return;
+					int armies = 0;
+					for (Figure f : currentPlayer.figures) {
+						if (f instanceof Army)
+							armies++;
+					}
+					if (armies >= 6) {
+						return;
+					}
+					figure = new Army(currentPlayer, tile);
 				}
-				if (settlers >= 2) {
-					return;
-				}
-				figure = new Settler(currentPlayer, tile);
-			} else {
-				if (city.getProduction() < 4)
-					return;
-				int armies = 0;
-				for (Figure f : currentPlayer.figures) {
-					if (f instanceof Army)
-						armies++;
-				}
-				if (armies >= 6) {
-					return;
-				}
-				figure = new Army(currentPlayer, tile);
+				figure.setScreenLocation(tile.getScreenLocation());
+				figure.resetMoves(currentPlayer.getSpeed());
+				Board.currentFigure = figure;
 			}
-			figure.setScreenLocation(tile.getScreenLocation());
-			// figure.setLocation(tile.getScreenLocation().x,
-			// tile.getScreenLocation().y);
-			figure.resetMoves(currentPlayer.getSpeed());
-			Board.currentFigure = figure;
+		} else if (items[i].getText().equals("Building")) {
+			buildBuilding();
 		}
 		repaint();
 	}
