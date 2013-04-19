@@ -11,14 +11,12 @@ public class Building extends Marker {
 	public Building(String name) {
 		super(name);
 		this.isUpgraded = isItUpgraded(name);
-		this.createBuilding(name);
+		this.translateName(name);
+		this.createBuilding(this.name);
 	}
 
-	public boolean isValid(Tile tile, int production) {
-		if (production < this.cost) {
-			return false;
-		}
-		for (Tile t : tile.getCity().getOutskirts()) {
+	public boolean isValid(Tile tile, City city) {
+		for (Tile t : city.getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
 				return false;
 			}
@@ -34,8 +32,34 @@ public class Building extends Marker {
 	private boolean isItUpgraded(String name) {
 		return this.upgradedBuildings.contains(name);
 	}
+	
+	private void translateName(String name){
+		switch (name){
+		case "Bank":
+			this.name = "Market";
+			break;
+		case "Cathedral":
+			this.name = "Temple";
+			break;
+		case "Aqueduct":
+			this.name = "Granary";
+			break;
+		case "University":
+			this.name = "Library";
+			break;
+		case "Academy":
+			this.name = "Barracks";
+			break;
+		case "IronMine":
+			this.name = "Workshop";
+			break;
+		default:
+			break;
+		}
+	}
 
 	private void createBuilding(String name) {
+		
 		switch (name) {
 		case "Market":
 			this.culture = 1;
@@ -93,7 +117,7 @@ public class Building extends Marker {
 			break;
 		case "Barracks":
 			this.combatAdvantage = 2;
-			this.trade = 1;
+			this.trade = 2;
 			this.hasStar = true;
 			this.cost = 7;
 			this.allowedTerrain = Terrain.NotWater;

@@ -560,4 +560,18 @@ public class BoardTest {
 		Board target = new Board("America", "China");
 		Tile tile = new Tile();
 	}
+	
+	@Test
+	public void testMakeBuilding(){
+		Board target = new Board("America", "China");
+		Board.currentCity = Board.map.get(0).getTiles()[1][1].getCity();
+		Board.currentCity.calcProduction();
+		
+		target.makeBuilding("Workshop", Board.currentCity);
+		assertNull(Board.currentMarker);
+		
+		target.makeBuilding("Granary", Board.currentCity);
+		assertEquals("Granary", Board.currentMarker.name);
+		
+	}
 }
