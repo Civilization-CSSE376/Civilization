@@ -555,4 +555,9 @@ public class BoardTest {
 
 	}
 
+	@Test
+	public void testAddMarker(){
+		Board target = new Board("America", "China");
+		Tile tile = new Tile();
+	}
 }

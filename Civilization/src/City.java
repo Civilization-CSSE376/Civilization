@@ -412,7 +412,7 @@ public class City {
 		
 		
 		//water test
-		if(this.location.getTerrain().equals(Tile.Terrain.Water)){
+		if(this.location.getTerrain().equals(Terrain.Water)){
 			return false;
 		}
 		

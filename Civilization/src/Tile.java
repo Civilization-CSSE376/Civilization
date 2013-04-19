@@ -5,10 +5,6 @@ import java.util.Random;
 
 public class Tile {
 
-	public enum Terrain {
-		Mountain, Forest, Grassland, Desert, Water
-	};
-
 	public enum Resource {
 		Wheat, Silk, Incense, Iron, None
 	}
@@ -124,22 +120,36 @@ public class Tile {
 	}
 
 	public Resource getResource() {
+		if(this.marker != null){
+			return null;
+		}
 		return this.resource;
 	}
 
 	public int getTrade() {
+		if(this.marker != null){
+			return marker.trade;
+		}
 		return this.trade;
 	}
 
 	public int getCulture() {
+		if(this.marker != null){
+			return marker.culture;
+		}
 		return this.culture;
 	}
 
 	public int getCoins() {
+		if(this.marker != null){
+			return marker.coin;
+		}
 		return this.coin;
 	}
 
 	public int getProduction() {
+		if(this.marker != null)
+			return this.marker.production;
 		return this.production;
 	}
 
