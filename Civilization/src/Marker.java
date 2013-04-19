@@ -20,7 +20,7 @@ public abstract class Marker {
 		this.name = name;
 	}
 
-	public boolean isValid(Tile tile) {
+	public boolean isValid(Tile tile, City city) {
 		if (this.allowedTerrain == Terrain.NotWater) {
 			return tile.getTerrain() != Terrain.Water;
 		} else {

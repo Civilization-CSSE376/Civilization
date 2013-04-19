@@ -18,7 +18,8 @@ public class Building extends Marker {
 	public boolean isValid(Tile tile, City city) {
 		for (Tile t : city.getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
-				return false;
+				if (this.hasStar)
+					return false;
 			}
 		}
 
