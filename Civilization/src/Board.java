@@ -314,7 +314,7 @@ public class Board extends JPanel {
 					city = null;
 				}
 			} else if (goingForResource) {
-				if (tile.getResource() != null
+				if ((tile.getResource() != null && !tile.getResource().toString().equals("None"))
 						&& city.getOutskirts().contains(tile)) {
 					currentPlayer.resources.add(tile.getResource());
 					// check that there is enough of that resource left
@@ -322,7 +322,7 @@ public class Board extends JPanel {
 					city = null;
 					goingForResource = false;
 					JOptionPane.showConfirmDialog(null,
-							"You got a new resource", "Collect Resource",
+							"You got a new resource: " + tile.getResource().toString(), "Collect Resource",
 							JOptionPane.PLAIN_MESSAGE);
 				}
 			}
