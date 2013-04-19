@@ -34,9 +34,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
-	
 
-	
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
 	final String CITY_MANAGEMENT = "City Management";
@@ -66,6 +64,7 @@ public class Board extends JPanel {
 	public Board(String p1Civ, String p2Civ) {
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
+		setTileLocations();
 
 		setPanelNeighbors();
 
@@ -82,7 +81,8 @@ public class Board extends JPanel {
 		settler2.resetMoves(player2.getSpeed());
 
 		settler1.setLocation(10, 10);
-		settler2.setLocation((440 * 4) - 5, 830);
+		settler2.setScreenLocation(map.get(7).getTiles()[3][3]
+				.getScreenLocation());
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
@@ -265,7 +265,9 @@ public class Board extends JPanel {
 			City city = new City(tile, currentPlayer);
 			if (city.isValid
 					&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
-				city.setLocation(Board.currentClick.x, Board.currentClick.y);
+				city.setScreenLocation(tile.getScreenLocation());
+				// city.setLocation(tile.getScreenLocation().x,
+				// tile.getScreenLocation().y);
 				currentPlayer.cities.add(city);
 				tile.setCity(city);
 				currentPlayer.figures.remove(newCity);
@@ -281,10 +283,12 @@ public class Board extends JPanel {
 	static Tile currentTile = null;
 	public static Point currentClick = null;
 	public static Figure currentFigure = null;
+	public static Marker currentMarker = null;
 	static City currentCity = null;
 	private static boolean goingForResource = false;
 
-	private City cityManagement(Tile tile, City city, Figure figure) {
+	private City cityManagement(Tile tile, City city, Figure figure,
+			Marker marker) {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = null;
@@ -305,11 +309,18 @@ public class Board extends JPanel {
 				items[i].addActionListener(handler);
 			}
 
-			menu.show(this, Board.currentClick.x, Board.currentClick.y);
+			menu.show(this, (int) tile.getScreenLocation().x,
+					(int) tile.getScreenLocation().y);
 		} else {
 			if (figure != null && !checkSpaceForEnemyFigures(tile)) {
 				if (addFigure(tile, city, figure)) {
 					currentFigure = null;
+					city.setHasAction(false);
+					city = null;
+				}
+			} else if (marker != null && !checkSpaceForEnemyFigures(tile)) {
+				if (addMarker(tile, city, marker)) {
+					currentMarker = null;
 					city.setHasAction(false);
 					city = null;
 				}
@@ -330,18 +341,31 @@ public class Board extends JPanel {
 		return city;
 	}
 
+	private boolean addMarker(Tile tile, City city, Marker marker) {
+		if (marker.isValid(tile)) {
+			if (city.getOutskirts().contains(tile)) {
+				marker.setTileLocal(tile);
+				marker.setScreenLocation(tile.getScreenLocation());
+				tile.setMarker(marker);
+				repaint();
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void buildSomething() {
 		JPopupMenu menu = new JPopupMenu();
 		BuilderHandler handler = new BuilderHandler();
 		ButtonGroup group = new ButtonGroup();
-		items = new JRadioButtonMenuItem[3];
+		items = new JRadioButtonMenuItem[5];
 
-		// items[0] = new JRadioButtonMenuItem("Building");
-		items[0] = new JRadioButtonMenuItem("Settler");
-		items[1] = new JRadioButtonMenuItem("Army");
-		// items[3] = new JRadioButtonMenuItem("Wonder");
+		items[0] = new JRadioButtonMenuItem("Building");
+		items[1] = new JRadioButtonMenuItem("Settler");
+		items[2] = new JRadioButtonMenuItem("Army");
+		items[3] = new JRadioButtonMenuItem("Wonder");
 		// items[4] = new JRadioButtonMenuItem("Units");
-		items[2] = new JRadioButtonMenuItem("Cancel");
+		items[4] = new JRadioButtonMenuItem("Cancel");
 
 		for (int i = 0; i < items.length; i++) {
 			menu.add(items[i]);
@@ -350,6 +374,48 @@ public class Board extends JPanel {
 		}
 
 		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+	}
+
+	public void buildBuilding() {
+		JPopupMenu menu = new JPopupMenu();
+		BuildingHandler handler = new BuildingHandler();
+		ButtonGroup group = new ButtonGroup();
+		items = new JRadioButtonMenuItem[15];
+
+		items[0] = new JRadioButtonMenuItem("Market");
+		items[1] = new JRadioButtonMenuItem("Bank");
+		items[2] = new JRadioButtonMenuItem("Temple");
+		items[3] = new JRadioButtonMenuItem("Cathedral");
+		items[4] = new JRadioButtonMenuItem("Granary");
+		items[5] = new JRadioButtonMenuItem("Aqueduct");
+		items[6] = new JRadioButtonMenuItem("Library");
+		items[7] = new JRadioButtonMenuItem("University");
+		items[8] = new JRadioButtonMenuItem("Barracks");
+		items[9] = new JRadioButtonMenuItem("Academy");
+		items[10] = new JRadioButtonMenuItem("Workshop");
+		items[11] = new JRadioButtonMenuItem("Iron Mine");
+		items[12] = new JRadioButtonMenuItem("Trading Post");
+		items[13] = new JRadioButtonMenuItem("Harbor");
+		items[14] = new JRadioButtonMenuItem("Cancel");
+
+		for (int i = 0; i < items.length; i++) {
+			menu.add(items[i]);
+			group.add(items[i]);
+			items[i].addActionListener(handler);
+		}
+
+		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+	}
+
+	private class BuildingHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					makeBuilding(items[i].getText(), Board.currentCity);
+					return;
+				}
+		}
 	}
 
 	public boolean checkSpaceForEnemyFigures(Tile tile) {
@@ -364,6 +430,15 @@ public class Board extends JPanel {
 				return true;
 		}
 		return false;
+	}
+
+	public void makeBuilding(String type, City city) {
+		Building newBuilding = new Building(type);
+		if (city.getProduction() < newBuilding.getCost())
+			Board.currentMarker = null;
+		else
+			Board.currentMarker = newBuilding;
+
 	}
 
 	private class BuilderHandler implements ActionListener {
@@ -414,11 +489,10 @@ public class Board extends JPanel {
 						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);
-						Board.this.currentMovementFigure.setLocation(
-								Board.currentClick.x, Board.currentClick.y);
+						Board.this.currentMovementFigure.setScreenLocation(tile
+								.getScreenLocation());
 						currentMovementFigure.setTileLocal(tile);
 						tile.getFigures().add(currentMovementFigure);
-						// currentMovementFigure.setUsedThisTurn(true);
 
 					} else {
 						checkUnexploredPanelNew(Board.currentClick.x,
@@ -606,10 +680,13 @@ public class Board extends JPanel {
 			int x = e.getX();
 			int y = e.getY();
 			Board.currentClick = new Point(x, y);
-			System.out.printf("\nMouse clicked at %d, %d\n", x, y);
+			// System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
 			Panel panel = findPanel(x, y);
 			Tile tile = findTile(panel, x, y);
+			System.out.println("\nTile located at "
+					+ tile.getScreenLocation().x + " , "
+					+ tile.getScreenLocation().y);
 			Board.currentTile = tile;
 			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
@@ -619,41 +696,37 @@ public class Board extends JPanel {
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
 				startOfTurn(tile);
 			} else if (Board.this.currentPhase.equals(CITY_MANAGEMENT)) {
-				currentCity = cityManagement(tile, currentCity, currentFigure);
+				currentCity = cityManagement(tile, currentCity, currentFigure,
+						currentMarker);
 			} else if (Board.this.currentPhase.equals(MOVEMENT)) {
 				movement(tile, panel);
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
-
-				for (City c : Board.this.currentPlayer.cities) {
-					Board.this.currentPlayer.trade += c.calcTrade();
-				}
-				System.out.println(currentPlayer.trade);
 			}
 		}
 
-//		private void displayTileInfoWindow(Tile tile) {
-//			JFrame frame = new JFrame("Tile info");
-//			frame.setLayout(new GridLayout(6, 1));
-//			JLabel terrain = new JLabel("Terrain is "
-//					+ tile.getTerrain().toString());
-//			JLabel trade = new JLabel("Trade is " + tile.getTrade());
-//			JLabel production = new JLabel("Production is "
-//					+ tile.getProduction());
-//			JLabel resource = new JLabel("Resource is "
-//					+ tile.getResource().toString());
-//			JLabel culture = new JLabel("Culture is " + tile.getCulture());
-//			JLabel coin = new JLabel("Coin is " + tile.getCoins());
-//			frame.add(terrain);
-//			frame.add(trade);
-//			frame.add(production);
-//			frame.add(resource);
-//			frame.add(culture);
-//			frame.add(coin);
-//			frame.pack();
-//			frame.setVisible(true);
-//
-//		}
+		// private void displayTileInfoWindow(Tile tile) {
+		// JFrame frame = new JFrame("Tile info");
+		// frame.setLayout(new GridLayout(6, 1));
+		// JLabel terrain = new JLabel("Terrain is "
+		// + tile.getTerrain().toString());
+		// JLabel trade = new JLabel("Trade is " + tile.getTrade());
+		// JLabel production = new JLabel("Production is "
+		// + tile.getProduction());
+		// JLabel resource = new JLabel("Resource is "
+		// + tile.getResource().toString());
+		// JLabel culture = new JLabel("Culture is " + tile.getCulture());
+		// JLabel coin = new JLabel("Coin is " + tile.getCoins());
+		// frame.add(terrain);
+		// frame.add(trade);
+		// frame.add(production);
+		// frame.add(resource);
+		// frame.add(culture);
+		// frame.add(coin);
+		// frame.pack();
+		// frame.setVisible(true);
+		//
+		// }
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
@@ -836,7 +909,8 @@ public class Board extends JPanel {
 				} else {
 					String[] stringTiles;
 					stringTiles = text.split("_");
-
+					System.out.println(index + "   [" + (index % 4) + "] ["
+							+ (int) (Math.floor(index / 4)) + "]");
 					tiles[(index % 4)][(int) (Math.floor(index / 4))] = new Tile(
 							(index % 4), (int) (Math.floor(index / 4)),
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
@@ -871,6 +945,28 @@ public class Board extends JPanel {
 
 		map.get(0).changeIsExplored(); // Player 1's initial location
 		map.get(7).changeIsExplored(); // Player 2's initial location
+	}
+
+	private void setTileLocations() {
+		for (int i = 0; i < 8; i++) {
+			Panel p = map.get(i);
+			int basex = 0, basey = 0, x = 0, y = 0;
+
+			if (i < 4) {
+				basey = 0;
+			} else {
+				basey = 440;
+			}
+			basex = 440 * (i % 4);
+
+			for (int yp = 0; yp < 4; yp++) {
+				for (int xp = 0; xp < 4; xp++) {
+					x = (xp * 110) + basex;
+					y = (yp * 110) + basey;
+					p.getTiles()[xp][yp].setScreenLocation(x, y);
+				}
+			}
+		}
 	}
 
 	// public void drawTerrain(Graphics2D g2) {
@@ -940,7 +1036,8 @@ public class Board extends JPanel {
 	// }
 	// }
 
-	// TODO: make this more efficient? instead of drawing the entire game board every stinkin' time...
+	// TODO: make this more efficient? instead of drawing the entire game board
+	// every stinkin' time...
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -1019,6 +1116,30 @@ public class Board extends JPanel {
 			else
 				g2.drawString("A", (float) figure.getLocation().x,
 						(float) figure.getLocation().y);
+		}
+
+		for (City c : player1.cities) {
+			for (Tile t : c.getOutskirts()) {
+				if (t.getMarker() != null) {
+					Rectangle2D.Double marker = new Rectangle2D.Double(t
+							.getMarker().getScreenLocation().x - 25, t
+							.getMarker().getScreenLocation().y - 25, 50, 50);
+					g2.setColor(Color.RED);
+					g2.draw(marker);
+				}
+			}
+		}
+
+		for (City c : player2.cities) {
+			for (Tile t : c.getOutskirts()) {
+				if (t.getMarker() != null) {
+					Rectangle2D.Double marker = new Rectangle2D.Double(t
+							.getMarker().getScreenLocation().x - 25, t
+							.getMarker().getScreenLocation().y - 25, 50, 50);
+					g2.setColor(Color.ORANGE);
+					g2.draw(marker);
+				}
+			}
 		}
 		// System.out.println("Player drawn at " + (this.location.x - 25) + ", "
 		// + (this.location.y - 25));
@@ -1134,11 +1255,19 @@ public class Board extends JPanel {
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = TRADE;
+				for (City c : Board.this.currentPlayer.cities) {
+					Board.this.currentPlayer.trade += c.calcTrade();
+				}
+				System.out.println(currentPlayer.trade);
 			}
 		} else if (this.currentPhase.equals(TRADE)) {
-			if (this.currentPlayer == this.firstPlayer)
+			if (this.currentPlayer == this.firstPlayer) {
 				this.changePlayerTurn();
-			else {
+				for (City c : Board.this.currentPlayer.cities) {
+					Board.this.currentPlayer.trade += c.calcTrade();
+				}
+				System.out.println(currentPlayer.trade);
+			} else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
 				for (City c : this.currentPlayer.cities) {
@@ -1220,7 +1349,7 @@ public class Board extends JPanel {
 		if (tile.getTerrain() != Terrain.Water) {
 			if (city.getOutskirts().contains(tile)) {
 				figure.setTileLocal(tile);
-				figure.setLocation(currentClick.x, currentClick.y);
+				figure.setScreenLocation(tile.getScreenLocation());
 				ArrayList<Figure> figures = tile.getFigures();
 				figures.add(figure);
 				currentPlayer.figures.add(figure);
@@ -1254,35 +1383,40 @@ public class Board extends JPanel {
 	void handleBuild(int i, Tile tile, City city) {
 		if (items[i].getText().equals("Settler")
 				|| items[i].getText().equals("Army")) {
-			Figure figure;
-			if (items[i].getText().equals("Settler")) {
-				if (city.getProduction() < 6)
-					return;
-				int settlers = 0;
-				for (Figure f : currentPlayer.figures) {
-					if (f instanceof Settler)
-						settlers++;
+			if (items[i].getText().equals("Settler")
+					|| items[i].getText().equals("Army")) {
+				Figure figure;
+				if (items[i].getText().equals("Settler")) {
+					if (city.getProduction() < 6)
+						return;
+					int settlers = 0;
+					for (Figure f : currentPlayer.figures) {
+						if (f instanceof Settler)
+							settlers++;
+					}
+					if (settlers >= 2) {
+						return;
+					}
+					figure = new Settler(currentPlayer, tile);
+				} else {
+					if (city.getProduction() < 4)
+						return;
+					int armies = 0;
+					for (Figure f : currentPlayer.figures) {
+						if (f instanceof Army)
+							armies++;
+					}
+					if (armies >= 6) {
+						return;
+					}
+					figure = new Army(currentPlayer, tile);
 				}
-				if (settlers >= 2) {
-					return;
-				}
-				figure = new Settler(currentPlayer, tile);
-			} else {
-				if (city.getProduction() < 4)
-					return;
-				int armies = 0;
-				for (Figure f : currentPlayer.figures) {
-					if (f instanceof Army)
-						armies++;
-				}
-				if (armies >= 6) {
-					return;
-				}
-				figure = new Army(currentPlayer, tile);
+				figure.setScreenLocation(tile.getScreenLocation());
+				figure.resetMoves(currentPlayer.getSpeed());
+				Board.currentFigure = figure;
 			}
-			figure.setLocation(Board.currentClick.x, Board.currentClick.y);
-			figure.resetMoves(currentPlayer.getSpeed());
-			Board.currentFigure = figure;
+		} else if (items[i].getText().equals("Building")) {
+			buildBuilding();
 		}
 		repaint();
 	}
