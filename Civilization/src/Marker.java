@@ -49,4 +49,9 @@ public abstract class Marker {
 		return this.cost;
 	}
 
+	public static Marker makeMarker(String markerString) {
+		Building newBuilding = new Building(markerString);
+		return newBuilding;
+	}
+
 }

@@ -100,4 +100,13 @@ public abstract class Figure {
 		this.screenLocation = new Point2D.Double(screenLocation2.x + 55,
 				screenLocation2.y + 55);
 	}
+
+	public static Figure getFigure(Player p, String figureName, Tile tile) {
+		if (figureName.equals("Army"))
+			return new Army(p, tile);
+		else if (figureName.equals("Settler"))
+			return new Settler(p, tile);
+		else
+			return null;
+	}
 }
