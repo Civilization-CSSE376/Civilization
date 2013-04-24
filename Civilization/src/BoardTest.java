@@ -556,19 +556,19 @@ public class BoardTest {
 
 	}
 
-	// @Test
-	// public void testAddMarkerWonder() {
-	// Board target = new Board("America", "China");
-	// City city = new City(new Tile());
-	// Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
-	// ArrayList<Tile> outskirts = new ArrayList<Tile>();
-	// outskirts.add(tile);
-	// city.setOutskirts(outskirts);
-	// Wonder marker = new Wonder("Stonehenge");
-	// assertTrue(target.addMarker(tile, city, marker));
-	// assertEquals(marker.getLocation(), tile);
-	// assertEquals(tile.getMarker(), marker);
-	// }
+	 @Test
+	 public void testAddMarkerWonder() {
+	 Board target = new Board("America", "China");
+	 City city = new City(new Tile());
+	 Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
+	 ArrayList<Tile> outskirts = new ArrayList<Tile>();
+	 outskirts.add(tile);
+	 city.setOutskirts(outskirts);
+	 Wonder marker = new Wonder("Stonehenge");
+	 assertTrue(target.addMarker(tile, city, marker));
+	 assertEquals(marker.getLocation(), tile);
+	 assertEquals(tile.getMarker(), marker);
+	 }
 
 	@Test
 	public void testMakeBuilding() {
@@ -584,17 +584,17 @@ public class BoardTest {
 
 	}
 
-	// @Test
-	// public void testAddMarkerInvalidWonder() {
-	// Board target = new Board("America", "China");
-	// City city = new City(new Tile());
-	// Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
-	// ArrayList<Tile> outskirts = new ArrayList<Tile>();
-	// outskirts.add(tile);
-	// city.setOutskirts(outskirts);
-	// Wonder marker = new Wonder("Stonehenge");
-	// assertFalse(target.addMarker(tile, city, marker));
-	// }
+	 @Test
+	 public void testAddMarkerInvalidWonder() {
+	 Board target = new Board("America", "China");
+	 City city = new City(new Tile());
+	 Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
+	 ArrayList<Tile> outskirts = new ArrayList<Tile>();
+	 outskirts.add(tile);
+	 city.setOutskirts(outskirts);
+	 Wonder marker = new Wonder("Stonehenge");
+	 assertFalse(target.addMarker(tile, city, marker));
+	 }
 
 	@Test
 	public void testAddMarkerGoodBuilding() {
