@@ -54,81 +54,37 @@ public class GameSetup extends JFrame {
 		ButtonGroup languageChoices = new ButtonGroup();
 		languageChoices.add(chooseEnglish);
 		languageChoices.add(chooseSpanish);
+		
+		String[] civs = { "Russia", "Germany", "Egypt", "Rome", "America", "China"};
+		ButtonGroup player1CivilizationChoices = new ButtonGroup();
+		ButtonGroup player2CivilizationChoices = new ButtonGroup();
 
 		// Player 1 Civilization Selection
-		JRadioButton chooseRussia = new JRadioButton("Russia");
-		chooseRussia.addActionListener(new Player1CivRadioListener());
-		chooseRussia.setSelected(true);
-		this.player1Civilization = chooseRussia.getText();
-
-		JRadioButton chooseGermany = new JRadioButton("Germany");
-		chooseGermany.addActionListener(new Player1CivRadioListener());
-
-		JRadioButton chooseEgypt = new JRadioButton("Egypt");
-		chooseEgypt.addActionListener(new Player1CivRadioListener());
-
-		JRadioButton chooseRome = new JRadioButton("Rome");
-		chooseRome.addActionListener(new Player1CivRadioListener());
-
-		JRadioButton chooseAmerica = new JRadioButton("America");
-		chooseAmerica.addActionListener(new Player1CivRadioListener());
-
-		JRadioButton chooseChina = new JRadioButton("China");
-		chooseChina.addActionListener(new Player1CivRadioListener());
-
-		ButtonGroup player1CivilizationChoices = new ButtonGroup();
-		player1CivilizationChoices.add(chooseRussia);
-		player1CivilizationChoices.add(chooseGermany);
-		player1CivilizationChoices.add(chooseEgypt);
-		player1CivilizationChoices.add(chooseRome);
-		player1CivilizationChoices.add(chooseAmerica);
-		player1CivilizationChoices.add(chooseChina);
+		for(int i = 0; i < 6; i++){
+			JRadioButton chooseCiv = new JRadioButton(civs[i]);
+			chooseCiv.addActionListener(new Player1CivRadioListener());
+			if(i == 0) {
+				chooseCiv.setSelected(true);
+				this.player1Civilization = chooseCiv.getText();
+			}
+			player1CivilizationChoices.add(chooseCiv);
+			this.player1CivilizationManager.add(chooseCiv);
+		}
 
 		// Player 2 Civilization Selection
-		JRadioButton chooseRussia2 = new JRadioButton("Russia");
-		chooseRussia2.addActionListener(new Player2CivRadioListener());
-		chooseRussia2.setSelected(true);
-		this.player2Civilization = chooseRussia2.getText();
-
-		JRadioButton chooseGermany2 = new JRadioButton("Germany");
-		chooseGermany2.addActionListener(new Player2CivRadioListener());
-
-		JRadioButton chooseEgypt2 = new JRadioButton("Egypt");
-		chooseEgypt2.addActionListener(new Player2CivRadioListener());
-
-		JRadioButton chooseRome2 = new JRadioButton("Rome");
-		chooseRome2.addActionListener(new Player2CivRadioListener());
-
-		JRadioButton chooseAmerica2 = new JRadioButton("America");
-		chooseAmerica2.addActionListener(new Player2CivRadioListener());
-
-		JRadioButton chooseChina2 = new JRadioButton("China");
-		chooseChina2.addActionListener(new Player2CivRadioListener());
-
-		ButtonGroup player2CivilizationChoices = new ButtonGroup();
-		player2CivilizationChoices.add(chooseRussia2);
-		player2CivilizationChoices.add(chooseGermany2);
-		player2CivilizationChoices.add(chooseEgypt2);
-		player2CivilizationChoices.add(chooseRome2);
-		player2CivilizationChoices.add(chooseAmerica2);
-		player2CivilizationChoices.add(chooseChina2);
+		for(int i = 0; i < 6; i++){
+			JRadioButton chooseCiv = new JRadioButton(civs[i]);
+			chooseCiv.addActionListener(new Player2CivRadioListener());
+			if(i == 0) {
+				chooseCiv.setSelected(true);
+				this.player2Civilization = chooseCiv.getText();
+			}
+			player2CivilizationChoices.add(chooseCiv);
+			this.player2CivilizationManager.add(chooseCiv);
+		}
 
 		this.languageManager.add(chooseEnglish);
 		this.languageManager.add(chooseSpanish);
-
-		this.player1CivilizationManager.add(chooseRussia);
-		this.player1CivilizationManager.add(chooseGermany);
-		this.player1CivilizationManager.add(chooseEgypt);
-		this.player1CivilizationManager.add(chooseRome);
-		this.player1CivilizationManager.add(chooseAmerica);
-		this.player1CivilizationManager.add(chooseChina);
-
-		this.player2CivilizationManager.add(chooseRussia2);
-		this.player2CivilizationManager.add(chooseGermany2);
-		this.player2CivilizationManager.add(chooseEgypt2);
-		this.player2CivilizationManager.add(chooseRome2);
-		this.player2CivilizationManager.add(chooseAmerica2);
-		this.player2CivilizationManager.add(chooseChina2);
 
 		this.add(languageSelection);
 		this.add(this.languageManager);

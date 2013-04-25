@@ -73,6 +73,9 @@ public class Board extends JPanel {
 
 		this.player1 = new Player();
 		this.player2 = new Player();
+		
+//		players.add(this.player1);
+//		players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
@@ -381,7 +384,9 @@ public class Board extends JPanel {
 		BuildingHandler handler = new BuildingHandler();
 		ButtonGroup group = new ButtonGroup();
 		items = new JRadioButtonMenuItem[15];
-
+		String[] buildings = {"Market", "Bank", "Temple", "Cathedral", "Granary", "Aqueduct", "Library", "University", "Barracks", "Academy", "Workshop", "Iron Mine", "Trading Post", "Harbor", "Cancel"};
+		
+//		for(int i = 0; i < 15; i++) items[i] = new JRadioButtonMenuItem(buildings[i]);
 		items[0] = new JRadioButtonMenuItem("Market");
 		items[1] = new JRadioButtonMenuItem("Bank");
 		items[2] = new JRadioButtonMenuItem("Temple");
@@ -1121,11 +1126,12 @@ public class Board extends JPanel {
 		for (City c : player1.cities) {
 			for (Tile t : c.getOutskirts()) {
 				if (t.getMarker() != null) {
-					Rectangle2D.Double marker = new Rectangle2D.Double(t
-							.getMarker().getScreenLocation().x - 25, t
-							.getMarker().getScreenLocation().y - 25, 50, 50);
-					g2.setColor(Color.RED);
-					g2.draw(marker);
+					drawBuilding(g2, t.getMarker());
+//					Rectangle2D.Double marker = new Rectangle2D.Double(t
+//							.getMarker().getScreenLocation().x - 25, t
+//							.getMarker().getScreenLocation().y - 25, 50, 50);
+//					g2.setColor(Color.RED);
+//					g2.draw(marker);
 				}
 			}
 		}
@@ -1133,17 +1139,33 @@ public class Board extends JPanel {
 		for (City c : player2.cities) {
 			for (Tile t : c.getOutskirts()) {
 				if (t.getMarker() != null) {
-					Rectangle2D.Double marker = new Rectangle2D.Double(t
-							.getMarker().getScreenLocation().x - 25, t
-							.getMarker().getScreenLocation().y - 25, 50, 50);
-					g2.setColor(Color.ORANGE);
-					g2.draw(marker);
+					drawBuilding(g2, t.getMarker());
+//					Rectangle2D.Double marker = new Rectangle2D.Double(t
+//							.getMarker().getScreenLocation().x - 25, t
+//							.getMarker().getScreenLocation().y - 25, 50, 50);
+//					g2.setColor(Color.ORANGE);
+//					g2.draw(marker);
 				}
 			}
 		}
 		// System.out.println("Player drawn at " + (this.location.x - 25) + ", "
 		// + (this.location.y - 25));
 
+	}
+
+	private void drawBuilding(Graphics2D g2, Marker marker) {
+		String filename = "src/buildings/" + marker.getMarkerName() + ".png";
+		System.out.println(marker.getMarkerName());
+		System.out.println(filename);
+		try{
+			BufferedImage buildingImage = ImageIO.read(new File(filename));
+			g2.drawImage(buildingImage, (int)marker.getScreenLocation().x - 42, (int)marker.getScreenLocation().y - 42, null);
+		}
+		catch (IOException e){
+			System.out.println("did not load building image correctly");
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void drawPanels(Graphics2D g2) {
@@ -1419,6 +1441,10 @@ public class Board extends JPanel {
 			buildBuilding();
 		}
 		repaint();
+	}
+	
+	public ArrayList<Player> getPlayers(){
+		return this.players;
 	}
 
 }

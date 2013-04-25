@@ -83,5 +83,21 @@ public class Player {
 	public int getSpeed() {
 		return this.speed;
 	}
+	
+	public ArrayList<Tile.Resource> getPlayerResources(){
+		return this.resources;
+	}
+	
+	public int getPlayerGold(){
+		return this.gold;
+	}
+	
+	public int getPlayerTrade(){
+		return this.trade;
+	}
+	
+	public int getPlayerCulture(){
+		return this.culture;
+	}
 
 }

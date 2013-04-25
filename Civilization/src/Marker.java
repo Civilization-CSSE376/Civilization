@@ -48,5 +48,9 @@ public abstract class Marker {
 	public int getCost() {
 		return this.cost;
 	}
+	
+	public String getMarkerName(){
+		return this.name;
+	}
 
 }
