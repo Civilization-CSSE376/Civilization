@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,9 +36,9 @@ public class Building extends Marker {
 	private boolean isItUpgraded(String name) {
 		return this.upgradedBuildings.contains(name);
 	}
-	
-	private void translateName(String name){
-		switch (name){
+
+	private void translateName(String name) {
+		switch (name) {
 		case "Bank":
 			this.name = "Market";
 			break;
@@ -60,7 +63,7 @@ public class Building extends Marker {
 	}
 
 	private void createBuilding(String name) {
-		
+
 		switch (name) {
 		case "Market":
 			this.culture = 1;
@@ -155,6 +158,11 @@ public class Building extends Marker {
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		super.draw(g2, c);
 	}
 
 }

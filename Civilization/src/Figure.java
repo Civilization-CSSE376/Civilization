@@ -1,7 +1,10 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-public abstract class Figure {
+public abstract class Figure implements Drawable {
 	protected Tile location;
 	private Player owner;
 	private Point2D.Double screenLocation;
@@ -108,5 +111,15 @@ public abstract class Figure {
 			return new Settler(p, tile);
 		else
 			return null;
+	}
+	
+	@Override
+	public void draw(Graphics2D g2, Color c){
+		Ellipse2D.Double player1 = new Ellipse2D.Double(
+				this.getLocation().x - 25, this.getLocation().y - 25,
+				50, 50);
+		g2.setColor(c);
+		g2.fill(player1);
+		g2.setColor(Color.black);
 	}
 }

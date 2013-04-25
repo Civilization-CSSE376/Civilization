@@ -240,7 +240,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	public Boolean makeNewCityWindow(final Figure figure) {
+	public Boolean makeNewCityWindow() {
 		int answer = JOptionPane.showConfirmDialog(null,
 				"Do you want to create a new city using this unit?",
 				"Create New City", JOptionPane.YES_NO_OPTION);
@@ -261,7 +261,7 @@ public class Board extends JPanel {
 		if (newCity == null) {
 			return;
 		}
-		if (makeNewCityWindow(newCity)) {
+		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
 			tryToBuildCity(tile, newCity, city);
 		}
@@ -284,15 +284,15 @@ public class Board extends JPanel {
 	static Tile currentTile = null;
 	public static Point currentClick = null;
 	public static Boolean currentFigure = false;
-	public static Boolean currentMarker = false;
+	public static String currentMarker = null;
 	static City currentCity = null;
 	private static boolean goingForResource = false;
 
 	public City cityManagement(Tile tile, City city, Boolean figure,
-			Boolean marker) {
+			String marker) {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
-			currentFigure = null;
+			currentFigure = false;
 			city = tile.getCity();
 			String[] choices = { "Build Something", "Collect Resource",
 					"Devote to the Arts" };
@@ -308,9 +308,9 @@ public class Board extends JPanel {
 					city.setHasAction(false);
 					city = null;
 				}
-			} else if (marker && !checkSpaceForEnemyFigures(tile)) {
-				if (addMarker(tile, city, currentChoice)) {
-					currentMarker = false;
+			} else if (marker != null && !checkSpaceForEnemyFigures(tile)) {
+				if (addMarker(tile, city, currentMarker, currentChoice)) {
+					currentMarker = null;
 					city.setHasAction(false);
 					city = null;
 				}
@@ -345,8 +345,9 @@ public class Board extends JPanel {
 		return city;
 	}
 
-	public boolean addMarker(Tile tile, City city, String markerString) {
-		Marker marker = Marker.makeMarker(markerString);
+	public boolean addMarker(Tile tile, City city, String type,
+			String markerString) {
+		Marker marker = Marker.makeMarker(type, markerString);
 		if (marker.isValid(tile, city)) {
 			if (city.getOutskirts().contains(tile)) {
 				marker.setTileLocal(tile);
@@ -359,9 +360,7 @@ public class Board extends JPanel {
 		return false;
 	}
 
-	public String makeChoice(String[] choices, ActionListener handler,
-			Point point) {
-		String choice = "";
+	public void makeChoice(String[] choices, ActionListener handler, Point point) {
 		JPopupMenu menu = new JPopupMenu();
 		ButtonGroup group = new ButtonGroup();
 		items = new JRadioButtonMenuItem[choices.length + 1];
@@ -382,7 +381,6 @@ public class Board extends JPanel {
 			}
 		});
 		menu.show(this, point.x, point.y);
-		return choice;
 	}
 
 	public void buildSomething() {
@@ -419,9 +417,9 @@ public class Board extends JPanel {
 	public void makeBuilding(String type, City city) {
 		Building newBuilding = new Building(type);
 		if (city.getProduction() < newBuilding.getCost())
-			Board.currentMarker = false;
+			Board.currentMarker = null;
 		else
-			Board.currentMarker = true;
+			Board.currentMarker = "Building";
 
 	}
 
@@ -1048,81 +1046,33 @@ public class Board extends JPanel {
 		}
 
 		for (City cities : player1.cities) {
-			Rectangle2D.Double p1City = new Rectangle2D.Double(
-					cities.getLocation().x - 25, cities.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.RED);
-			g2.fill(p1City);
-			g2.setColor(Color.black);
-			g2.drawString("" + cities.getProduction(),
-					(float) cities.getLocation().x,
-					(float) cities.getLocation().y);
-
+			cities.draw(g2, Color.red);
 		}
 
 		for (City cities : player2.cities) {
-			Rectangle2D.Double p2City = new Rectangle2D.Double(
-					cities.getLocation().x - 25, cities.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.ORANGE);
-			g2.fill(p2City);
-			g2.setColor(Color.black);
-			g2.drawString("" + cities.getProduction(),
-					(float) cities.getLocation().x,
-					(float) cities.getLocation().y);
+			cities.draw(g2, Color.orange);
 		}
 
 		for (Figure figure : player1.figures) {
-			Ellipse2D.Double player1 = new Ellipse2D.Double(
-					figure.getLocation().x - 25, figure.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.RED);
-			g2.fill(player1);
-			g2.setColor(Color.black);
-			if (figure instanceof Settler)
-				g2.drawString("S", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
-			else
-				g2.drawString("A", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
+			figure.draw(g2, Color.red);
 		}
 
 		for (Figure figure : player2.figures) {
-			Ellipse2D.Double player2 = new Ellipse2D.Double(
-					figure.getLocation().x - 25, figure.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.ORANGE);
-			g2.fill(player2);
-			g2.setColor(Color.black);
-			if (figure instanceof Settler)
-				g2.drawString("S", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
-			else
-				g2.drawString("A", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
+			figure.draw(g2, Color.orange);
 		}
 
 		for (City c : player1.cities) {
 			for (Tile t : c.getOutskirts()) {
 				if (t.getMarker() != null) {
-					Rectangle2D.Double marker = new Rectangle2D.Double(t
-							.getMarker().getScreenLocation().x - 25, t
-							.getMarker().getScreenLocation().y - 25, 50, 50);
-					g2.setColor(Color.RED);
-					g2.draw(marker);
+					t.getMarker().draw(g2, Color.red);
 				}
 			}
 		}
 
 		for (City c : player2.cities) {
 			for (Tile t : c.getOutskirts()) {
-				if (t.getMarker() != null) {
-					Rectangle2D.Double marker = new Rectangle2D.Double(t
-							.getMarker().getScreenLocation().x - 25, t
-							.getMarker().getScreenLocation().y - 25, 50, 50);
-					g2.setColor(Color.ORANGE);
-					g2.draw(marker);
-				}
+				if (t.getMarker() != null)
+					t.getMarker().draw(g2, Color.orange);
 			}
 		}
 	}

@@ -1,3 +1,7 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
+
 public class Scout extends Figure {
 
 	public Scout(Player player, Tile tile) {
@@ -21,6 +25,11 @@ public class Scout extends Figure {
 	public void takeHut() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		super.draw(g2, c);
 	}
 
 }
