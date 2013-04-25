@@ -1,11 +1,14 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 
-public class City {
+public class City implements Drawable{
 
 	private ArrayList<Tile> outskirts;
 	private Tile location;
@@ -527,6 +530,20 @@ public class City {
 
 	public void setProduction(int i) {
 		this.production = i;
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		Rectangle2D.Double p1City = new Rectangle2D.Double(
+				this.getLocation().x - 25, this.getLocation().y - 25,
+				50, 50);
+		g2.setColor(c);
+		g2.fill(p1City);
+		g2.setColor(Color.black);
+		g2.drawString("" + this.getProduction(),
+				(float) this.getLocation().x,
+				(float) this.getLocation().y);
+		
 	}
 
 }

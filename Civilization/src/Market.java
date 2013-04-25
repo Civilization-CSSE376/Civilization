@@ -23,7 +23,7 @@ public class Market {
 	private static List<String> modernWonders =
 			Arrays.asList("StatueOfLiberty", "SydneyOperaHouse", "UnitedNations", "PanamaCanal");
 	
-	private Stack<String> wonderDeck;
+	private Stack<String> wonderDeck = new Stack<String>();
 	
 	/*
 	 * 0 = start
@@ -44,18 +44,22 @@ public class Market {
 	}
 	
 	private void buildWonderDeck(){
-		Collections.shuffle(this.ancientWonders);
-		Collections.shuffle(this.medievalWonders);
-		Collections.shuffle(this.modernWonders);
-		for(String s : this.modernWonders){
-			this.wonderDeck.add(s);
+		Collections.shuffle(Market.ancientWonders);
+		Collections.shuffle(Market.medievalWonders);
+		Collections.shuffle(Market.modernWonders);
+		for(String s : Market.modernWonders){
+			this.wonderDeck.push(s);
 		}
-		for(String s : this.medievalWonders){
-			this.wonderDeck.add(s);
+		for(String s : Market.medievalWonders){
+			this.wonderDeck.push(s);
 		}
-		for(String s : this.ancientWonders){
-			this.wonderDeck.add(s);
+		for(String s : Market.ancientWonders){
+			this.wonderDeck.push(s);
 		}
+	}
+	
+	public Stack<String> getWonderDeck(){
+		return this.wonderDeck;
 	}
 	
 }

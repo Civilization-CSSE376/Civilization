@@ -1,3 +1,7 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
+
 public class Army extends Figure {
 
 	public Army(Player player, Tile tile) {
@@ -21,6 +25,14 @@ public class Army extends Figure {
 	public void takeHut() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		super.draw(g2, c);
+		g2.drawString("A", (float) this.getLocation().x,
+				(float) this.getLocation().y);
+		
 	}
 
 }
