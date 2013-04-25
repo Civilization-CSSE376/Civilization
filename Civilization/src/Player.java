@@ -19,7 +19,7 @@ public class Player {
 	public int cityLimit = 2;
 	private int culture = 0;
 	private int gold = 0;
-	private int speed = 2;
+	private int speed = 22;
 	private int handSize = 2;
 	private int stackSize = 2;
 	int trade = 0;

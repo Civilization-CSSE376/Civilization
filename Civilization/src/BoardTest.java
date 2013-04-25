@@ -824,11 +824,22 @@ public class BoardTest {
 		city.isValid = true;
 		Figure newCity = new Settler(board.getCurrentPlayer(), tile);
 		board.getCurrentPlayer().figures.add(newCity);
-		board.tryToBuildCity(tile, newCity, city);
+		newCity.tryToBuildCity(tile, board.getCurrentPlayer(), city);
 		city.setScreenLocation(tile.getScreenLocation());
 		assertEquals(tile.getCity(), city);
 		assertTrue(board.getCurrentPlayer().cities.contains(city));
 		assertFalse(board.getCurrentPlayer().figures.contains(newCity));
 	}
+	
+//	@Test
+//	public void testStartTurn(){
+//		Board board = new TestBoard("America", "China");
+//		Tile tile = board.map.get(0).getTiles()[]
+//		Settler newCity = new Settler(board.getCurrentPlayer(), tile);
+//		tile.getFigures().add(newCity);
+//		board.getCurrentPlayer().figures.add(newCity);
+//		board.startOfTurn(tile);
+//		
+//	}
 
 }

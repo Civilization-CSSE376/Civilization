@@ -250,7 +250,7 @@ public class Board extends JPanel {
 			return false;
 	}
 
-	private void startOfTurn(Tile tile) {
+	public void startOfTurn(Tile tile) {
 		Figure newCity = null;
 		for (Figure f : tile.getFigures()) {
 			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
@@ -263,22 +263,13 @@ public class Board extends JPanel {
 		}
 		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
-			tryToBuildCity(tile, newCity, city);
+			if(newCity.tryToBuildCity(tile, currentPlayer, city))
+				repaint();
 		}
 		return;
 	}
 
-	public void tryToBuildCity(Tile tile, Figure newCity, City city) {
-		if (city.isValid
-				&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
-			city.setScreenLocation(tile.getScreenLocation());
-			currentPlayer.cities.add(city);
-			tile.setCity(city);
-			currentPlayer.figures.remove(newCity);
-			tile.getFigure().remove(newCity);
-			repaint();
-		}
-	}
+
 
 	JRadioButtonMenuItem items[];
 	static Tile currentTile = null;
