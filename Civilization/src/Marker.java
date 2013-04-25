@@ -1,8 +1,11 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
-public abstract class Marker {
+public abstract class Marker implements Drawable {
 
 	protected boolean hasStar = false;
 	protected int cost = 0;
@@ -20,7 +23,7 @@ public abstract class Marker {
 		this.name = name;
 	}
 
-	public boolean isValid(Tile tile) {
+	public boolean isValid(Tile tile, City city) {
 		if (this.allowedTerrain == Terrain.NotWater) {
 			return tile.getTerrain() != Terrain.Water;
 		} else {
@@ -48,9 +51,26 @@ public abstract class Marker {
 	public int getCost() {
 		return this.cost;
 	}
-	
-	public String getMarkerName(){
-		return this.name;
+
+	public static Marker makeMarker(String markerType, String marker) {
+		if (markerType.equals("Building"))
+			return new Building(marker);
+		else if (markerType.equals("Wonder"))
+			return new Wonder(marker);
+		else if (markerType.equals("GreatPerson"))
+			return new GreatPerson(marker);
+		else
+			return null;
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		Rectangle2D.Double marker = new Rectangle2D.Double(
+				this.getScreenLocation().x - 25,
+				this.getScreenLocation().y - 25, 50, 50);
+		g2.setColor(c);
+		g2.draw(marker);
+
 	}
 
 }

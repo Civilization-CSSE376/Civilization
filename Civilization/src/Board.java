@@ -41,6 +41,7 @@ public class Board extends JPanel {
 	final String MOVEMENT = "Movement";
 	final String RESEARCH = "Research";
 	private String currentPhase;
+	public String currentChoice;
 
 	private File file = new File("src/1stEight.txt");
 
@@ -127,66 +128,66 @@ public class Board extends JPanel {
 		// panel 0
 		HashMap<String, Panel> neighbors = new HashMap<String, Panel>();
 		neighbors.put("North", null);
-		neighbors.put("South", this.map.get(4));
-		neighbors.put("East", this.map.get(1));
+		neighbors.put("South", Board.map.get(4));
+		neighbors.put("East", Board.map.get(1));
 		neighbors.put("West", null);
-		this.map.get(0).setNeighbors(neighbors);
+		Board.map.get(0).setNeighbors(neighbors);
 
 		// panel 1
 		neighbors = new HashMap<String, Panel>();
 		neighbors.put("North", null);
-		neighbors.put("South", this.map.get(5));
-		neighbors.put("East", this.map.get(2));
-		neighbors.put("West", this.map.get(0));
-		this.map.get(1).setNeighbors(neighbors);
+		neighbors.put("South", Board.map.get(5));
+		neighbors.put("East", Board.map.get(2));
+		neighbors.put("West", Board.map.get(0));
+		Board.map.get(1).setNeighbors(neighbors);
 
 		// panel 2
 		neighbors = new HashMap<String, Panel>();
 		neighbors.put("North", null);
-		neighbors.put("South", this.map.get(6));
-		neighbors.put("East", this.map.get(3));
-		neighbors.put("West", this.map.get(1));
-		this.map.get(2).setNeighbors(neighbors);
+		neighbors.put("South", Board.map.get(6));
+		neighbors.put("East", Board.map.get(3));
+		neighbors.put("West", Board.map.get(1));
+		Board.map.get(2).setNeighbors(neighbors);
 
 		// panel 3
 		neighbors = new HashMap<String, Panel>();
 		neighbors.put("North", null);
-		neighbors.put("South", this.map.get(7));
+		neighbors.put("South", Board.map.get(7));
 		neighbors.put("East", null);
-		neighbors.put("West", this.map.get(2));
-		this.map.get(3).setNeighbors(neighbors);
+		neighbors.put("West", Board.map.get(2));
+		Board.map.get(3).setNeighbors(neighbors);
 
 		// panel 4
 		neighbors = new HashMap<String, Panel>();
-		neighbors.put("North", this.map.get(0));
+		neighbors.put("North", Board.map.get(0));
 		neighbors.put("South", null);
-		neighbors.put("East", this.map.get(5));
+		neighbors.put("East", Board.map.get(5));
 		neighbors.put("West", null);
-		this.map.get(4).setNeighbors(neighbors);
+		Board.map.get(4).setNeighbors(neighbors);
 
 		// panel 5
 		neighbors = new HashMap<String, Panel>();
-		neighbors.put("North", this.map.get(1));
+		neighbors.put("North", Board.map.get(1));
 		neighbors.put("South", null);
-		neighbors.put("East", this.map.get(6));
-		neighbors.put("West", this.map.get(4));
-		this.map.get(5).setNeighbors(neighbors);
+		neighbors.put("East", Board.map.get(6));
+		neighbors.put("West", Board.map.get(4));
+		Board.map.get(5).setNeighbors(neighbors);
 
 		// panel 6
 		neighbors = new HashMap<String, Panel>();
-		neighbors.put("North", this.map.get(2));
+		neighbors.put("North", Board.map.get(2));
 		neighbors.put("South", null);
-		neighbors.put("East", this.map.get(7));
-		neighbors.put("West", this.map.get(5));
-		this.map.get(6).setNeighbors(neighbors);
+		neighbors.put("East", Board.map.get(7));
+		neighbors.put("West", Board.map.get(5));
+		Board.map.get(6).setNeighbors(neighbors);
 
 		// panel 7
 		neighbors = new HashMap<String, Panel>();
-		neighbors.put("North", this.map.get(3));
+		neighbors.put("North", Board.map.get(3));
 		neighbors.put("South", null);
 		neighbors.put("East", null);
-		neighbors.put("West", this.map.get(6));
-		this.map.get(5).setNeighbors(neighbors);
+		neighbors.put("West", Board.map.get(6));
+		Board.map.get(5).setNeighbors(neighbors);
 
 	}
 
@@ -230,8 +231,8 @@ public class Board extends JPanel {
 			return;
 		}
 		int answer = JOptionPane.showConfirmDialog(null,
-				"Do you want move this unit? Unit has"
-						+ figures.get(0).getNumberOfMoves() + "moves left.",
+				"Do you want move this unit? Unit has "
+						+ figures.get(0).getNumberOfMoves() + " moves left.",
 				"Movement", JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
@@ -242,7 +243,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	public Boolean makeNewCityWindow(final Figure figure) {
+	public Boolean makeNewCityWindow() {
 		int answer = JOptionPane.showConfirmDialog(null,
 				"Do you want to create a new city using this unit?",
 				"Create New City", JOptionPane.YES_NO_OPTION);
@@ -263,89 +264,94 @@ public class Board extends JPanel {
 		if (newCity == null) {
 			return;
 		}
-		if (makeNewCityWindow(newCity)) {
-
+		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
-			if (city.isValid
-					&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
-				city.setScreenLocation(tile.getScreenLocation());
-				// city.setLocation(tile.getScreenLocation().x,
-				// tile.getScreenLocation().y);
-				currentPlayer.cities.add(city);
-				tile.setCity(city);
-				currentPlayer.figures.remove(newCity);
-				tile.getFigure().remove(newCity);
-				repaint();
-			}
-
+			tryToBuildCity(tile, newCity, city);
 		}
 		return;
+	}
+
+	public void tryToBuildCity(Tile tile, Figure newCity, City city) {
+		if (city.isValid
+				&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
+			city.setScreenLocation(tile.getScreenLocation());
+			currentPlayer.cities.add(city);
+			tile.setCity(city);
+			currentPlayer.figures.remove(newCity);
+			tile.getFigure().remove(newCity);
+			repaint();
+		}
 	}
 
 	JRadioButtonMenuItem items[];
 	static Tile currentTile = null;
 	public static Point currentClick = null;
-	public static Figure currentFigure = null;
-	public static Marker currentMarker = null;
+	public static Boolean currentFigure = false;
+	public static String currentMarker = null;
 	static City currentCity = null;
 	private static boolean goingForResource = false;
 
-	private City cityManagement(Tile tile, City city, Figure figure,
-			Marker marker) {
+	public City cityManagement(Tile tile, City city, Boolean figure,
+			String marker) {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
-			currentFigure = null;
+			currentFigure = false;
 			city = tile.getCity();
-			JPopupMenu menu = new JPopupMenu();
-			InitialHandler handler = new InitialHandler();
-			ButtonGroup group = new ButtonGroup();
-			items = new JRadioButtonMenuItem[3];
-
-			items[0] = new JRadioButtonMenuItem("Build Something");
-			items[1] = new JRadioButtonMenuItem("Collect Resource");
-			// items[2] = new JRadioButtonMenuItem("Devote to the Arts");
-			items[2] = new JRadioButtonMenuItem("Cancel");
-
-			for (int i = 0; i < items.length; i++) {
-				menu.add(items[i]);
-				group.add(items[i]);
-				items[i].addActionListener(handler);
-			}
-
-			menu.show(this, (int) tile.getScreenLocation().x,
-					(int) tile.getScreenLocation().y);
+			String[] choices = { "Build Something", "Collect Resource",
+					"Devote to the Arts" };
+			makeChoice(
+					choices,
+					new InitialHandler(),
+					new Point((int) tile.getScreenLocation().x, (int) tile
+							.getScreenLocation().y));
 		} else {
-			if (figure != null && !checkSpaceForEnemyFigures(tile)) {
-				if (addFigure(tile, city, figure)) {
-					currentFigure = null;
+			if (figure && !checkSpaceForEnemyFigures(tile)) {
+				if (addFigure(tile, city, currentChoice)) {
+					currentFigure = false;
 					city.setHasAction(false);
 					city = null;
 				}
 			} else if (marker != null && !checkSpaceForEnemyFigures(tile)) {
-				if (addMarker(tile, city, marker)) {
+				if (addMarker(tile, city, currentMarker, currentChoice)) {
 					currentMarker = null;
 					city.setHasAction(false);
 					city = null;
 				}
-			} else if (goingForResource) {
-				if ((tile.getResource() != null && !tile.getResource().toString().equals("None"))
-						&& city.getOutskirts().contains(tile)) {
-					currentPlayer.resources.add(tile.getResource());
-					// check that there is enough of that resource left
-					city.setHasAction(false);
-					city = null;
-					goingForResource = false;
+			} else if (isGoingForResource()) {
+				city = goForResource(tile, city);
+				if (city == null) {
 					JOptionPane.showConfirmDialog(null,
-							"You got a new resource: " + tile.getResource().toString(), "Collect Resource",
-							JOptionPane.PLAIN_MESSAGE);
+							"You got a new resource: "
+									+ tile.getResource().toString(),
+							"Collect Resource", JOptionPane.PLAIN_MESSAGE);
+				} else {
+					JOptionPane.showConfirmDialog(null,
+							"This is not a valid resource location.",
+							"Collect Resource", JOptionPane.PLAIN_MESSAGE);
 				}
+
 			}
 		}
 		return city;
 	}
 
-	private boolean addMarker(Tile tile, City city, Marker marker) {
-		if (marker.isValid(tile)) {
+	public City goForResource(Tile tile, City city) {
+		if ((tile.getResource() != null && !tile.getResource().toString()
+				.equals("None"))
+				&& city.getOutskirts().contains(tile)) {
+			currentPlayer.resources.add(tile.getResource());
+			// check that there is enough of that resource left
+			city.setHasAction(false);
+			city = null;
+			setGoingForResource(false);
+		}
+		return city;
+	}
+
+	public boolean addMarker(Tile tile, City city, String type,
+			String markerString) {
+		Marker marker = Marker.makeMarker(type, markerString);
+		if (marker.isValid(tile, city)) {
 			if (city.getOutskirts().contains(tile)) {
 				marker.setTileLocal(tile);
 				marker.setScreenLocation(tile.getScreenLocation());
@@ -357,59 +363,32 @@ public class Board extends JPanel {
 		return false;
 	}
 
-	public void buildSomething() {
+	public void makeChoice(String[] choices, ActionListener handler, Point point) {
 		JPopupMenu menu = new JPopupMenu();
-		BuilderHandler handler = new BuilderHandler();
 		ButtonGroup group = new ButtonGroup();
-		items = new JRadioButtonMenuItem[5];
-
-		items[0] = new JRadioButtonMenuItem("Building");
-		items[1] = new JRadioButtonMenuItem("Settler");
-		items[2] = new JRadioButtonMenuItem("Army");
-		items[3] = new JRadioButtonMenuItem("Wonder");
-		// items[4] = new JRadioButtonMenuItem("Units");
-		items[4] = new JRadioButtonMenuItem("Cancel");
-
-		for (int i = 0; i < items.length; i++) {
+		items = new JRadioButtonMenuItem[choices.length + 1];
+		for (int i = 0; i < choices.length; i++) {
+			items[i] = new JRadioButtonMenuItem(choices[i]);
 			menu.add(items[i]);
 			group.add(items[i]);
 			items[i].addActionListener(handler);
 		}
+		items[items.length - 1] = new JRadioButtonMenuItem("Cancel");
+		menu.add(items[items.length - 1]);
+		group.add(items[items.length - 1]);
+		items[items.length - 1].addActionListener(new ActionListener() {
 
-		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				return;
+			}
+		});
+		menu.show(this, point.x, point.y);
 	}
 
-	public void buildBuilding() {
-		JPopupMenu menu = new JPopupMenu();
-		BuildingHandler handler = new BuildingHandler();
-		ButtonGroup group = new ButtonGroup();
-		items = new JRadioButtonMenuItem[15];
-		String[] buildings = {"Market", "Bank", "Temple", "Cathedral", "Granary", "Aqueduct", "Library", "University", "Barracks", "Academy", "Workshop", "Iron Mine", "Trading Post", "Harbor", "Cancel"};
-		
-//		for(int i = 0; i < 15; i++) items[i] = new JRadioButtonMenuItem(buildings[i]);
-		items[0] = new JRadioButtonMenuItem("Market");
-		items[1] = new JRadioButtonMenuItem("Bank");
-		items[2] = new JRadioButtonMenuItem("Temple");
-		items[3] = new JRadioButtonMenuItem("Cathedral");
-		items[4] = new JRadioButtonMenuItem("Granary");
-		items[5] = new JRadioButtonMenuItem("Aqueduct");
-		items[6] = new JRadioButtonMenuItem("Library");
-		items[7] = new JRadioButtonMenuItem("University");
-		items[8] = new JRadioButtonMenuItem("Barracks");
-		items[9] = new JRadioButtonMenuItem("Academy");
-		items[10] = new JRadioButtonMenuItem("Workshop");
-		items[11] = new JRadioButtonMenuItem("Iron Mine");
-		items[12] = new JRadioButtonMenuItem("Trading Post");
-		items[13] = new JRadioButtonMenuItem("Harbor");
-		items[14] = new JRadioButtonMenuItem("Cancel");
-
-		for (int i = 0; i < items.length; i++) {
-			menu.add(items[i]);
-			group.add(items[i]);
-			items[i].addActionListener(handler);
-		}
-
-		menu.show(this, Board.currentClick.x, Board.currentClick.y);
+	public void buildSomething() {
+		String[] choices = { "Building", "Settler", "Army", "Wonder", "Units" };
+		makeChoice(choices, new BuilderHandler(), currentClick);
 	}
 
 	private class BuildingHandler implements ActionListener {
@@ -417,6 +396,7 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
+					currentChoice = items[i].getText();
 					makeBuilding(items[i].getText(), Board.currentCity);
 					return;
 				}
@@ -442,7 +422,7 @@ public class Board extends JPanel {
 		if (city.getProduction() < newBuilding.getCost())
 			Board.currentMarker = null;
 		else
-			Board.currentMarker = newBuilding;
+			Board.currentMarker = "Building";
 
 	}
 
@@ -451,7 +431,7 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					handleBuild(i, Board.currentTile, Board.currentCity);
+					handleBuild(i, Board.currentCity);
 					return;
 				}
 		}
@@ -465,7 +445,7 @@ public class Board extends JPanel {
 					if (items[i].getText().equals("Build Something")) {
 						buildSomething();
 					} else if (items[i].getText().equals("Collect Resource")) {
-						goingForResource = true;
+						setGoingForResource(true);
 					}
 					repaint();
 					return;
@@ -784,11 +764,11 @@ public class Board extends JPanel {
 
 	// for testing purposes
 	public Board(Hashtable<String, Panel> map, ArrayList<Player> player) {
-		this.map = new ArrayList<Panel>();
-		this.map.add(map.get("topLeft"));
-		this.map.add(map.get("topRight"));
-		this.map.add(map.get("bottomLeft"));
-		this.map.add(map.get("bottomRight"));
+		Board.map = new ArrayList<Panel>();
+		Board.map.add(map.get("topLeft"));
+		Board.map.add(map.get("topRight"));
+		Board.map.add(map.get("bottomLeft"));
+		Board.map.add(map.get("bottomRight"));
 
 		Board.players = player;
 	}
@@ -1069,103 +1049,35 @@ public class Board extends JPanel {
 		}
 
 		for (City cities : player1.cities) {
-			Rectangle2D.Double p1City = new Rectangle2D.Double(
-					cities.getLocation().x - 25, cities.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.RED);
-			g2.fill(p1City);
-			g2.setColor(Color.black);
-			g2.drawString("" + cities.getProduction(),
-					(float) cities.getLocation().x,
-					(float) cities.getLocation().y);
-
+			cities.draw(g2, Color.red);
 		}
 
 		for (City cities : player2.cities) {
-			Rectangle2D.Double p2City = new Rectangle2D.Double(
-					cities.getLocation().x - 25, cities.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.ORANGE);
-			g2.fill(p2City);
-			g2.setColor(Color.black);
-			g2.drawString("" + cities.getProduction(),
-					(float) cities.getLocation().x,
-					(float) cities.getLocation().y);
+			cities.draw(g2, Color.orange);
 		}
 
 		for (Figure figure : player1.figures) {
-			Ellipse2D.Double player1 = new Ellipse2D.Double(
-					figure.getLocation().x - 25, figure.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.RED);
-			g2.fill(player1);
-			g2.setColor(Color.black);
-			if (figure instanceof Settler)
-				g2.drawString("S", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
-			else
-				g2.drawString("A", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
+			figure.draw(g2, Color.red);
 		}
 
 		for (Figure figure : player2.figures) {
-			Ellipse2D.Double player2 = new Ellipse2D.Double(
-					figure.getLocation().x - 25, figure.getLocation().y - 25,
-					50, 50);
-			g2.setColor(Color.ORANGE);
-			g2.fill(player2);
-			g2.setColor(Color.black);
-			if (figure instanceof Settler)
-				g2.drawString("S", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
-			else
-				g2.drawString("A", (float) figure.getLocation().x,
-						(float) figure.getLocation().y);
+			figure.draw(g2, Color.orange);
 		}
 
 		for (City c : player1.cities) {
 			for (Tile t : c.getOutskirts()) {
 				if (t.getMarker() != null) {
-					drawBuilding(g2, t.getMarker());
-//					Rectangle2D.Double marker = new Rectangle2D.Double(t
-//							.getMarker().getScreenLocation().x - 25, t
-//							.getMarker().getScreenLocation().y - 25, 50, 50);
-//					g2.setColor(Color.RED);
-//					g2.draw(marker);
+					t.getMarker().draw(g2, Color.red);
 				}
 			}
 		}
 
 		for (City c : player2.cities) {
 			for (Tile t : c.getOutskirts()) {
-				if (t.getMarker() != null) {
-					drawBuilding(g2, t.getMarker());
-//					Rectangle2D.Double marker = new Rectangle2D.Double(t
-//							.getMarker().getScreenLocation().x - 25, t
-//							.getMarker().getScreenLocation().y - 25, 50, 50);
-//					g2.setColor(Color.ORANGE);
-//					g2.draw(marker);
-				}
+				if (t.getMarker() != null)
+					t.getMarker().draw(g2, Color.orange);
 			}
 		}
-		// System.out.println("Player drawn at " + (this.location.x - 25) + ", "
-		// + (this.location.y - 25));
-
-	}
-
-	private void drawBuilding(Graphics2D g2, Marker marker) {
-		String filename = "src/buildings/" + marker.getMarkerName() + ".png";
-		System.out.println(marker.getMarkerName());
-		System.out.println(filename);
-		try{
-			BufferedImage buildingImage = ImageIO.read(new File(filename));
-			g2.drawImage(buildingImage, (int)marker.getScreenLocation().x - 42, (int)marker.getScreenLocation().y - 42, null);
-		}
-		catch (IOException e){
-			System.out.println("did not load building image correctly");
-			e.printStackTrace();
-		}
-		
 	}
 
 	private void drawPanels(Graphics2D g2) {
@@ -1343,39 +1255,24 @@ public class Board extends JPanel {
 				this.currentPhase = START_OF_TURN;
 			}
 		}
-
-		// if (this.currentPlayer != this.firstPlayer) {
-		// if (this.phase < 5) {
-		// if (this.currentPlayer.equals(this.player1)) {
-		// this.currentPlayer = player2;
-		// } else {
-		// this.currentPlayer = player1;
-		// }
-		// phase++;
-		// } else {
-		// phase = 1;
-		// this.firstPlayer = this.currentPlayer;
-		// }
-		// } else {
-		// if (this.currentPlayer.equals(this.player1)) {
-		// this.currentPlayer = player2;
-		// } else {
-		// this.currentPlayer = player1;
-		// }
-		// }
 		this.repaint();
-
 	}
 
-	public boolean addFigure(Tile tile, City city, Figure figure) {
+	public boolean addFigure(Tile tile, City city, String figureName) {
 		if (tile.getTerrain() != Terrain.Water) {
 			if (city.getOutskirts().contains(tile)) {
+				Figure figure = Figure.getFigure(currentPlayer, figureName,
+						tile);
+				figure.setScreenLocation(tile.getScreenLocation());
+				figure.resetMoves(currentPlayer.getSpeed());
 				figure.setTileLocal(tile);
 				figure.setScreenLocation(tile.getScreenLocation());
 				ArrayList<Figure> figures = tile.getFigures();
 				figures.add(figure);
 				currentPlayer.figures.add(figure);
 				repaint();
+				currentChoice = "";
+				currentFigure = false;
 				return true;
 			}
 		}
@@ -1402,12 +1299,11 @@ public class Board extends JPanel {
 		this.validTiles.clear();
 	}
 
-	void handleBuild(int i, Tile tile, City city) {
+	void handleBuild(int i, City city) {
 		if (items[i].getText().equals("Settler")
 				|| items[i].getText().equals("Army")) {
 			if (items[i].getText().equals("Settler")
 					|| items[i].getText().equals("Army")) {
-				Figure figure;
 				if (items[i].getText().equals("Settler")) {
 					if (city.getProduction() < 6)
 						return;
@@ -1419,7 +1315,6 @@ public class Board extends JPanel {
 					if (settlers >= 2) {
 						return;
 					}
-					figure = new Settler(currentPlayer, tile);
 				} else {
 					if (city.getProduction() < 4)
 						return;
@@ -1431,20 +1326,30 @@ public class Board extends JPanel {
 					if (armies >= 6) {
 						return;
 					}
-					figure = new Army(currentPlayer, tile);
 				}
-				figure.setScreenLocation(tile.getScreenLocation());
-				figure.resetMoves(currentPlayer.getSpeed());
-				Board.currentFigure = figure;
+				Board.currentFigure = true;
+				currentChoice = items[i].getText();
 			}
 		} else if (items[i].getText().equals("Building")) {
-			buildBuilding();
+			String[] Choiceitems = { "Market", "Bank", "Temple", "Cathedral",
+					"Granary", "Aqueduct", "Library", "University", "Barracks",
+					"Academy", "Workshop", "Iron Mine", "Trading Post",
+					"Harbor" };
+			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
 		}
 		repaint();
 	}
+
+	public static boolean isGoingForResource() {
+		return goingForResource;
+	}
+
+	public static void setGoingForResource(boolean goingForResource) {
+		Board.goingForResource = goingForResource;
+	}
 	
 	public ArrayList<Player> getPlayers(){
-		return this.players;
+		return Board.players;
 	}
 
 }

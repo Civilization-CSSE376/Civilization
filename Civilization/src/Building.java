@@ -1,5 +1,13 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 public class Building extends Marker {
 
@@ -11,16 +19,15 @@ public class Building extends Marker {
 	public Building(String name) {
 		super(name);
 		this.isUpgraded = isItUpgraded(name);
-		this.createBuilding(name);
+		this.translateName(name);
+		this.createBuilding(this.name);
 	}
 
-	public boolean isValid(Tile tile, int production) {
-		if (production < this.cost) {
-			return false;
-		}
-		for (Tile t : tile.getCity().getOutskirts()) {
+	public boolean isValid(Tile tile, City city) {
+		for (Tile t : city.getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
-				return false;
+				if (this.hasStar)
+					return false;
 			}
 		}
 
@@ -35,7 +42,33 @@ public class Building extends Marker {
 		return this.upgradedBuildings.contains(name);
 	}
 
+	private void translateName(String name) {
+		switch (name) {
+		case "Bank":
+			this.name = "Market";
+			break;
+		case "Cathedral":
+			this.name = "Temple";
+			break;
+		case "Aqueduct":
+			this.name = "Granary";
+			break;
+		case "University":
+			this.name = "Library";
+			break;
+		case "Academy":
+			this.name = "Barracks";
+			break;
+		case "IronMine":
+			this.name = "Workshop";
+			break;
+		default:
+			break;
+		}
+	}
+
 	private void createBuilding(String name) {
+
 		switch (name) {
 		case "Market":
 			this.culture = 1;
@@ -93,7 +126,7 @@ public class Building extends Marker {
 			break;
 		case "Barracks":
 			this.combatAdvantage = 2;
-			this.trade = 1;
+			this.trade = 2;
 			this.hasStar = true;
 			this.cost = 7;
 			this.allowedTerrain = Terrain.NotWater;
@@ -129,6 +162,19 @@ public class Building extends Marker {
 			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		String filename = "src/buildings/" + this.name + ".png";
+		try{
+			BufferedImage buildingImage = ImageIO.read(new File(filename));
+			g2.drawImage(buildingImage, (int)this.getScreenLocation().x - 42, (int)this.getScreenLocation().y - 42, null);
+		}
+		catch (IOException e){
+			System.out.println("did not load building image correctly");
+			e.printStackTrace();
 		}
 	}
 

@@ -1,10 +1,14 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
+
 public class Settler extends Figure {
 
-	/*public Settler(Tile tile) {
-		this.location = tile;
-	}*/
-	
-	public Settler(Player player, Tile local){
+	/*
+	 * public Settler(Tile tile) { this.location = tile; }
+	 */
+
+	public Settler(Player player, Tile local) {
 		super(player, local);
 	}
 
@@ -24,6 +28,13 @@ public class Settler extends Figure {
 	public void takeHut() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		super.draw(g2, c);
+		g2.drawString("S", (float) this.getLocation().x,
+				(float) this.getLocation().y);
 	}
 
 }

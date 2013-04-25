@@ -226,8 +226,8 @@ public class MainWindow extends JFrame {
 		culture.setForeground(Color.WHITE);
 		
 		String resourceString = "";
-		if(windowName.equals("Player 1 Details")) resourceString = getResourceString(1);
-		else resourceString = getResourceString(2);
+//		if(windowName.equals("Player 1 Details")) resourceString = getResourceString(1);
+//		else resourceString = getResourceString(2);
 		JLabel resources = new JLabel("Resources: " + resourceString);
 		resources.setForeground(Color.WHITE);
 		

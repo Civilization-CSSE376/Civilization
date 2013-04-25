@@ -169,4 +169,8 @@ public class Tile {
 		return this.screenLocation;
 	}
 
+	public void setResource(Resource r) {
+		this.resource = r;
+	}
+
 }

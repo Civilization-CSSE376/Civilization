@@ -1,16 +1,22 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
 
 public class GreatPerson extends Marker {
-	
-	public boolean isInReserve = false; //I don't know if we need this but this keeps
-										//track of if the GP is on the board or not
+
+	public boolean isInReserve = false; // I don't know if we need this but this
+										// keeps
+										// track of if the GP is on the board or
+										// not
 
 	public GreatPerson(String name) {
 		super(name);
 		this.createGreatPerson(name);
+		this.allowedTerrain = Terrain.NotWater;
 	}
-	
-	private void createGreatPerson(String name){
-		switch(name){
+
+	private void createGreatPerson(String name) {
+		switch (name) {
 		case "Poet":
 			this.trade = 1;
 			this.culture = 2;
@@ -39,6 +45,11 @@ public class GreatPerson extends Marker {
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void draw(Graphics2D g2, Color c) {
+		super.draw(g2, c);
 	}
 
 }
