@@ -12,7 +12,7 @@ public class Player {
 	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
 	public ArrayList<Figure> figures = new ArrayList<Figure>();
 	public ArrayList<City> cities = new ArrayList<City>();
-	 private ArrayList<Unit> units;
+	public ArrayList<Unit> units = new ArrayList<Unit>();
 	// private ArrayList<CultureCard> cultureCards;
 	// private ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
@@ -27,6 +27,9 @@ public class Player {
 
 	public Player() {
 		this.location = new Point2D.Double(55, 55);
+		this.units.add(new Unit("Infantry", 1));
+		this.units.add(new Unit("Cavalry", 1));
+		this.units.add(new Unit("Artillery", 1));
 
 	}
 
@@ -98,6 +101,16 @@ public class Player {
 	
 	public int getPlayerCulture(){
 		return this.culture;
+	}
+	
+	public int getPlayerCombatAdvantage(){
+		int temp = 0;
+		for(City c : this.cities){
+			for(Tile t : c.getOutskirts()){
+				temp += t.getCombatAdvantage();
+			}
+		}
+		return temp;
 	}
 
 }
