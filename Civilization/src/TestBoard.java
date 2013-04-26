@@ -2,6 +2,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -12,8 +14,8 @@ public class TestBoard extends Board {
 
 	public String choice = null;
 
-	public TestBoard(String p1Civ, String p2Civ) {
-		super(p1Civ, p2Civ);
+	public TestBoard(String p1Civ, String p2Civ, ResourceBundle messages) {
+		super(p1Civ, p2Civ, messages);
 	}
 
 	@Override

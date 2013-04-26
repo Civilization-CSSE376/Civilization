@@ -57,19 +57,18 @@ public class Combat extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		System.out.println("Made it here");
+//		System.out.println("Made it here");
 		if (inbetween) {
 			if (this.currentPlayer == attacker) {
-				g2.setColor(Color.RED);
+				g2.setColor(Color.green);
 				g2.drawString("Attacker's turn.", 100, 300);
 			} else {
-				g2.setColor(Color.ORANGE);
+				g2.setColor(Color.blue);
 				g2.drawString("Defender's turn.", 100, 300);
 			}
 		} else {
 			if (ownUnit != null)
 				;
-			// ownHandGetter();
 		}
 	}
 
@@ -159,15 +158,16 @@ public class Combat extends JPanel {
 	}
 
 	private void chooseEnemy() {
-		ArrayList<Unit> otherPlayersHand;
+		ArrayList<Unit> otherPlayersFront;
 		if (currentPlayer.equals(attacker))
-			otherPlayersHand = attackerHand;
+			otherPlayersFront = defenderFront;
 		else
-			otherPlayersHand = defenderHand;
-		String[] choices = new String[otherPlayersHand.size()];
+			otherPlayersFront = attackerFront;
+		String[] choices = new String[otherPlayersFront.size()];
 		int i = 0;
-		for (Unit unit : otherPlayersHand) {
+		for (Unit unit : otherPlayersFront) {
 			choices[i] = "Unit: " + unit.type + " " + unit.attack;
+			i++;
 		}
 		makeChoice(choices, new chooseEnemyUnit(), new Point(100, 100));
 	}
@@ -225,13 +225,16 @@ public class Combat extends JPanel {
 				defending.health -= attacking.attack;
 				if (!this.checkDeath(defending)) {
 					attacking.health -= defending.attack;
-					this.checkDeath(attacking);
+					if(!this.checkDeath(attacking)){
+						this.currentPlayerFront.add(attacking);
+					}
 				}
 			} else {
 				attacking.health -= defending.attack;
 				if (!this.checkDeath(attacking)) {
 					defending.health -= attacking.attack;
 					this.checkDeath(defending);
+					this.currentPlayerFront.add(attacking);
 				}
 			}
 		}
@@ -250,13 +253,13 @@ public class Combat extends JPanel {
 	private Unit determineTrump(Unit attacking, Unit defending) {
 		switch (attacking.type) {
 		case "Infantry":
-			if (defending.type.equals("Calvary")) {
+			if (defending.type.equals("Cavalry")) {
 				return attacking;
 			} else if (defending.type.equals("Artillery")) {
 				return defending;
 			}
 			break;
-		case "Calvary":
+		case "Cavalry":
 			if (defending.type.equals("Artillery")) {
 				return attacking;
 			} else if (defending.type.equals("Infantry")) {
@@ -266,7 +269,7 @@ public class Combat extends JPanel {
 		case "Artillery":
 			if (defending.type.equals("Infantry")) {
 				return attacking;
-			} else if (defending.type.equals("Calvary")) {
+			} else if (defending.type.equals("Cavalry")) {
 				return defending;
 			}
 			break;
@@ -277,18 +280,20 @@ public class Combat extends JPanel {
 		return null;
 
 	}
-
-	public boolean successfulAttack() {
+	
+	public boolean successfulAttack(){
 		int attackingStrength = this.attacker.getPlayerCombatAdvantage();
 		int defendingStrength = this.defender.getPlayerCombatAdvantage();
 		defendingStrength += this.defenderBonus;
 
 		for (Unit u : this.attackerFront) {
 			attackingStrength += u.attack;
+			//this.attacker.units.add(u);
 		}
 
 		for (Unit u : this.defenderFront) {
 			defendingStrength += u.attack;
+			//this.defender.units.add(u);
 		}
 
 		return attackingStrength > defendingStrength ? true : false;

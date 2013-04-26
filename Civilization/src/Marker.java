@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public abstract class Marker implements Drawable {
 
@@ -18,9 +19,11 @@ public abstract class Marker implements Drawable {
 	protected Terrain allowedTerrain = null;
 	protected Tile location;
 	private Point2D.Double screenLocation;
+	private ResourceBundle messages;
 
-	public Marker(String name) {
+	public Marker(String name, ResourceBundle messages) {
 		this.name = name;
+		this.messages = messages;
 	}
 
 	public boolean isValid(Tile tile, City city) {
@@ -52,13 +55,13 @@ public abstract class Marker implements Drawable {
 		return this.cost;
 	}
 
-	public static Marker makeMarker(String markerType, String marker) {
+	public static Marker makeMarker(String markerType, String marker, ResourceBundle messages) {
 		if (markerType.equals("Building"))
-			return new Building(marker);
+			return new Building(marker, messages);
 		else if (markerType.equals("Wonder"))
-			return new Wonder(marker);
+			return new Wonder(marker, messages);
 		else if (markerType.equals("GreatPerson"))
-			return new GreatPerson(marker);
+			return new GreatPerson(marker, messages);
 		else
 			return null;
 	}

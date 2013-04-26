@@ -6,21 +6,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
 public class Building extends Marker {
 
-	private List<String> upgradedBuildings = Arrays.asList("Bank", "Cathedral",
-			"Aqueduct", "University", "Academy", "IronMine");
+	private List<String> upgradedBuildings;
 
 	public boolean isUpgraded = false;
+	
+	private ResourceBundle messages;
 
-	public Building(String name) {
-		super(name);
+	public Building(String name, ResourceBundle messages) {
+		super(name, messages);
+		this.messages = messages;
+		this.upgradedBuildings = Arrays.asList(messages.getString("bank"), messages.getString("cathedral"), messages.getString("aqueduct"), messages.getString("university"), messages.getString("academy"), messages.getString("ironMine"));
 		this.isUpgraded = isItUpgraded(name);
 		this.translateName(name);
-		this.createBuilding(this.name);
+		this.createBuilding(this.name, this.messages);
 	}
 
 	public boolean isValid(Tile tile, City city) {
@@ -59,7 +63,7 @@ public class Building extends Marker {
 		case "Academy":
 			this.name = "Barracks";
 			break;
-		case "IronMine":
+		case "Iron Mine":
 			this.name = "Workshop";
 			break;
 		default:
@@ -67,7 +71,7 @@ public class Building extends Marker {
 		}
 	}
 
-	private void createBuilding(String name) {
+	private void createBuilding(String name, ResourceBundle messages) {
 
 		switch (name) {
 		case "Market":
@@ -148,7 +152,7 @@ public class Building extends Marker {
 			}
 
 			break;
-		case "TradingPost":
+		case "Trading Post":
 			this.culture = 1;
 			this.trade = 2;
 			this.cost = 7;

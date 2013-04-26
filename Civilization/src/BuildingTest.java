@@ -1,29 +1,33 @@
 import static org.junit.Assert.*;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.junit.Test;
 
 
 public class BuildingTest {
-	
+	private static final Locale currentLocale = new Locale("en", "US");
+	private static final ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	
 	@Test
 	public void constructorTest(){
-		Building target = new Building("Temple");
+		Building target = new Building("Temple", messages);
 		assertNotNull(target);
 	}
 	
 	@Test
 	public void isUpgradedTest(){
-		Building target = new Building ("Cathedral");
+		Building target = new Building ("Cathedral", messages);
 		assertTrue(target.isUpgraded);
 		
-		target = new Building ("Market");
+		target = new Building ("Market", messages);
 		assertFalse(target.isUpgraded);
 	}
 
 	@Test
 	public void marketCreationTest() {
-		Building target = new Building("Market");
+		Building target = new Building("Market", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -41,7 +45,7 @@ public class BuildingTest {
 	
 	@Test
 	public void bankCreationTest() {
-		Building target = new Building("Bank");
+		Building target = new Building("Bank", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -59,7 +63,7 @@ public class BuildingTest {
 	
 	@Test
 	public void templeCreationTest() {
-		Building target = new Building("Temple");
+		Building target = new Building("Temple", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -77,7 +81,7 @@ public class BuildingTest {
 	
 	@Test
 	public void cathedralCreationTest() {
-		Building target = new Building("Cathedral");
+		Building target = new Building("Cathedral", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -95,7 +99,7 @@ public class BuildingTest {
 	
 	@Test
 	public void granaryCreationTest() {
-		Building target = new Building("Granary");
+		Building target = new Building("Granary", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -113,7 +117,7 @@ public class BuildingTest {
 	
 	@Test
 	public void aqueductCreationTest() {
-		Building target = new Building("Aqueduct");
+		Building target = new Building("Aqueduct", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -131,7 +135,7 @@ public class BuildingTest {
 	
 	@Test
 	public void libraryCreationTest() {
-		Building target = new Building("Library");
+		Building target = new Building("Library", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -149,7 +153,7 @@ public class BuildingTest {
 	
 	@Test
 	public void universityCreationTest() {
-		Building target = new Building("University");
+		Building target = new Building("University", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -167,7 +171,7 @@ public class BuildingTest {
 	
 	@Test
 	public void barracksCreationTest() {
-		Building target = new Building("Barracks");
+		Building target = new Building("Barracks", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -185,7 +189,7 @@ public class BuildingTest {
 	
 	@Test
 	public void academyCreationTest() {
-		Building target = new Building("Academy");
+		Building target = new Building("Academy", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertTrue(target.hasStar);
@@ -203,7 +207,7 @@ public class BuildingTest {
 	
 	@Test
 	public void workshopCreationTest() {
-		Building target = new Building("Workshop");
+		Building target = new Building("Workshop", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -221,7 +225,7 @@ public class BuildingTest {
 	
 	@Test
 	public void ironMineCreationTest() {
-		Building target = new Building("IronMine");
+		Building target = new Building("Iron Mine", messages);
 		
 		assertTrue(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -239,7 +243,7 @@ public class BuildingTest {
 	
 	@Test
 	public void tradingPostCreationTest() {
-		Building target = new Building("TradingPost");
+		Building target = new Building("Trading Post", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertFalse(target.hasStar);
@@ -250,14 +254,14 @@ public class BuildingTest {
 		assertEquals(1, target.culture);
 		assertEquals(0, target.coin);
 		assertEquals(0, target.combatAdvantage);
-		assertEquals("TradingPost", target.name);
+		assertEquals("Trading Post", target.name);
 		assertEquals(Terrain.Desert, target.allowedTerrain);
 		
 	}
 	
 	@Test
 	public void harborCreationTest() {
-		Building target = new Building("Harbor");
+		Building target = new Building("Harbor", messages);
 		
 		assertFalse(target.isUpgraded);
 		assertFalse(target.hasStar);

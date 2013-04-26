@@ -201,8 +201,8 @@ public class City implements Drawable{
 
 			Panel southEastPanel = new Panel();
 			try {
-				southEastPanel = neighbors.get("West").getNeighbors()
-						.get("South");
+				southEastPanel = neighbors.get("East").getNeighbors()
+						.get("North");
 			} catch (NullPointerException e) {
 				southEastPanel = null;
 			}
@@ -241,8 +241,8 @@ public class City implements Drawable{
 
 			Panel northWestPanel = new Panel();
 			try {
-				northWestPanel = neighbors.get("East").getNeighbors()
-						.get("North");
+				northWestPanel = neighbors.get("West").getNeighbors()
+						.get("South");
 			} catch (NullPointerException e) {
 				northWestPanel = null;
 			}
