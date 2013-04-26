@@ -1,8 +1,13 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D.Double;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 public class Building extends Marker {
 
@@ -162,7 +167,15 @@ public class Building extends Marker {
 
 	@Override
 	public void draw(Graphics2D g2, Color c) {
-		super.draw(g2, c);
+		String filename = "src/buildings/" + this.name + ".png";
+		try{
+			BufferedImage buildingImage = ImageIO.read(new File(filename));
+			g2.drawImage(buildingImage, (int)this.getScreenLocation().x - 42, (int)this.getScreenLocation().y - 42, null);
+		}
+		catch (IOException e){
+			System.out.println("did not load building image correctly");
+			e.printStackTrace();
+		}
 	}
 
 }
