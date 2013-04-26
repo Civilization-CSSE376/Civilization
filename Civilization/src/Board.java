@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -61,8 +62,11 @@ public class Board extends JPanel {
 	private String player2Civilization;
 
 	private ArrayList<Tile> validTiles = new ArrayList<Tile>();
+	private ResourceBundle messages;
 
-	public Board(String p1Civ, String p2Civ) {
+	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
+		this.messages = messages;
+		
 		map = new ArrayList<Panel>();
 		readFromFile(this.file);
 		setTileLocations();
@@ -231,8 +235,8 @@ public class Board extends JPanel {
 			return;
 		}
 		int answer = JOptionPane.showConfirmDialog(null,
-				"Do you want move this unit? Unit has "
-						+ figures.get(0).getNumberOfMoves() + " moves left.",
+				messages.getString("askToMoveUnit")
+						+ figures.get(0).getNumberOfMoves() + messages.getString("numMovesLeft"),
 				"Movement", JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
@@ -245,7 +249,7 @@ public class Board extends JPanel {
 
 	public Boolean makeNewCityWindow() {
 		int answer = JOptionPane.showConfirmDialog(null,
-				"Do you want to create a new city using this unit?",
+				messages.getString("askToCreateCity"),
 				"Create New City", JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION)
 			return true;
@@ -297,8 +301,8 @@ public class Board extends JPanel {
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = false;
 			city = tile.getCity();
-			String[] choices = { "Build Something", "Collect Resource",
-					"Devote to the Arts" };
+			String[] choices = { messages.getString("buildSomethingOption"), messages.getString("collectResourceOption"),
+					messages.getString("devoteArtsOption") };
 			makeChoice(
 					choices,
 					new InitialHandler(),
@@ -321,12 +325,12 @@ public class Board extends JPanel {
 				city = goForResource(tile, city);
 				if (city == null) {
 					JOptionPane.showConfirmDialog(null,
-							"You got a new resource: "
+							messages.getString("resourceObtained")
 									+ tile.getResource().toString(),
 							"Collect Resource", JOptionPane.PLAIN_MESSAGE);
 				} else {
 					JOptionPane.showConfirmDialog(null,
-							"This is not a valid resource location.",
+							messages.getString("invalidResourceLocation"),
 							"Collect Resource", JOptionPane.PLAIN_MESSAGE);
 				}
 
@@ -350,7 +354,7 @@ public class Board extends JPanel {
 
 	public boolean addMarker(Tile tile, City city, String type,
 			String markerString) {
-		Marker marker = Marker.makeMarker(type, markerString);
+		Marker marker = Marker.makeMarker(type, markerString, messages);
 		if (marker.isValid(tile, city)) {
 			if (city.getOutskirts().contains(tile)) {
 				marker.setTileLocal(tile);
@@ -387,7 +391,7 @@ public class Board extends JPanel {
 	}
 
 	public void buildSomething() {
-		String[] choices = { "Building", "Settler", "Army", "Wonder", "Units" };
+		String[] choices = { messages.getString("building"), messages.getString("settler"), messages.getString("army"), messages.getString("wonder"), messages.getString("units") };
 		makeChoice(choices, new BuilderHandler(), currentClick);
 	}
 
@@ -418,7 +422,7 @@ public class Board extends JPanel {
 	}
 
 	public void makeBuilding(String type, City city) {
-		Building newBuilding = new Building(type);
+		Building newBuilding = new Building(type, messages);
 		if (city.getProduction() < newBuilding.getCost())
 			Board.currentMarker = null;
 		else
@@ -442,9 +446,9 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					if (items[i].getText().equals("Build Something")) {
+					if (items[i].getText().equals(messages.getString("buildSomethingOption"))) {
 						buildSomething();
-					} else if (items[i].getText().equals("Collect Resource")) {
+					} else if (items[i].getText().equals(messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
 					}
 					repaint();
@@ -1038,14 +1042,14 @@ public class Board extends JPanel {
 
 		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
-		g2.drawString("Current Phase: " + this.currentPhase, 50, 900);
+		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50, 900);
 
 		if (this.currentPlayer == this.player1) {
 			g2.setColor(Color.RED);
-			g2.drawString("Player 1's turn.", 500, 900);
+			g2.drawString(messages.getString("player1Turn"), 500, 900);
 		} else {
 			g2.setColor(Color.ORANGE);
-			g2.drawString("Player 2's turn.", 500, 900);
+			g2.drawString(messages.getString("player2Turn"), 500, 900);
 		}
 
 		for (City cities : player1.cities) {
@@ -1078,6 +1082,28 @@ public class Board extends JPanel {
 					t.getMarker().draw(g2, Color.orange);
 			}
 		}
+	}
+
+	private String getPhaseText() {
+		String phase = "";
+		switch (this.currentPhase){
+		case START_OF_TURN:
+			phase = messages.getString("startOfTurn");
+			break;
+		case TRADE:
+			phase =  messages.getString("trade2");
+			break;
+		case CITY_MANAGEMENT:
+			phase = messages.getString("cityManagement");
+			break;
+		case MOVEMENT:
+			phase = messages.getString("movement");
+			break;
+		case RESEARCH:
+			phase = messages.getString("research");
+			break;
+		}
+		return phase;
 	}
 
 	private void drawPanels(Graphics2D g2) {
@@ -1300,11 +1326,11 @@ public class Board extends JPanel {
 	}
 
 	void handleBuild(int i, City city) {
-		if (items[i].getText().equals("Settler")
-				|| items[i].getText().equals("Army")) {
-			if (items[i].getText().equals("Settler")
-					|| items[i].getText().equals("Army")) {
-				if (items[i].getText().equals("Settler")) {
+		if (items[i].getText().equals(messages.getString("settler"))
+				|| items[i].getText().equals(messages.getString("army"))) {
+			if (items[i].getText().equals(messages.getString("settler"))
+					|| items[i].getText().equals(messages.getString("army"))) {
+				if (items[i].getText().equals(messages.getString("settler"))) {
 					if (city.getProduction() < 6)
 						return;
 					int settlers = 0;
@@ -1330,10 +1356,10 @@ public class Board extends JPanel {
 				Board.currentFigure = true;
 				currentChoice = items[i].getText();
 			}
-		} else if (items[i].getText().equals("Building")) {
-			String[] Choiceitems = { "Market", "Bank", "Temple", "Cathedral",
-					"Granary", "Aqueduct", "Library", "University", "Barracks",
-					"Academy", "Workshop", "Iron Mine", "Trading Post",
+		} else if (items[i].getText().equals(messages.getString("building"))) {
+			String[] Choiceitems = { messages.getString("market"), messages.getString("bank"), messages.getString("temple"), messages.getString("cathedral"),
+					messages.getString("granary"), messages.getString("aqueduct"), messages.getString("library"), messages.getString("university"), messages.getString("barracks"),
+					messages.getString("academy"), messages.getString("workshop"), messages.getString("ironMine"), messages.getString("tradingPost"),
 					"Harbor" };
 			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
 		}

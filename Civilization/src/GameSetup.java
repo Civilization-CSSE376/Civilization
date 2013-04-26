@@ -33,12 +33,12 @@ public class GameSetup extends JFrame {
 
 		this.setLayout(new GridLayout(7, 1));
 
-		JLabel languageSelection = new JLabel("Choose a language.",
+		JLabel languageSelection = new JLabel("Language (Idioma) :",
 				JLabel.CENTER);
 		JLabel player1CivilizationSelection = new JLabel(
-				"Player 1, Choose your civilization.", JLabel.CENTER);
+				"Player 1, Choose your civilization. (Jugador 1, Elige tu civilización", JLabel.CENTER);
 		JLabel player2CivilizationSelection = new JLabel(
-				"Player 2, Choose your civilization.", JLabel.CENTER);
+				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización", JLabel.CENTER);
 
 		JButton done = new JButton("Play!");
 
@@ -48,14 +48,14 @@ public class GameSetup extends JFrame {
 		chooseEnglish.setSelected(true);
 		this.language = chooseEnglish.getText();
 
-		JRadioButton chooseSpanish = new JRadioButton("Spanish");
+		JRadioButton chooseSpanish = new JRadioButton("Español");
 		chooseSpanish.addActionListener(new LanguageRadioListener());
 
 		ButtonGroup languageChoices = new ButtonGroup();
 		languageChoices.add(chooseEnglish);
 		languageChoices.add(chooseSpanish);
 		
-		String[] civs = { "Russia", "Germany", "Egypt", "Rome", "America", "China"};
+		String[] civs = { "Russia/Rusia", "Germany/Alemania", "Egypt/Egipto", "Rome/Roma", "America/América", "China/China"};
 		ButtonGroup player1CivilizationChoices = new ButtonGroup();
 		ButtonGroup player2CivilizationChoices = new ButtonGroup();
 
@@ -119,10 +119,10 @@ public class GameSetup extends JFrame {
 	private void makeWarningWindow() {
 		final JFrame warningWindow = new JFrame();
 		JPanel text = new JPanel();
-		JLabel warning = new JLabel("Player 1 and player 2 cannot choose the same civilization.");
+		JLabel warning = new JLabel("Player 1 and player 2 cannot choose the same civilization. (Jugador 1 y 2 no pueden elegir la misma civilización.)");
 		text.add(warning);
 		
-		JButton button = new JButton("Ok");
+		JButton button = new JButton("Ok / Bueno");
 		
 		button.addActionListener(new ActionListener(){
 
@@ -166,7 +166,7 @@ public class GameSetup extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GameSetup.this.player1Civilization = e.getActionCommand();
+			GameSetup.this.player1Civilization = e.getActionCommand().split("/")[0];
 		}
 
 	}
@@ -175,7 +175,7 @@ public class GameSetup extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GameSetup.this.player2Civilization = e.getActionCommand();
+			GameSetup.this.player2Civilization = e.getActionCommand().split("/")[0];
 
 		}
 

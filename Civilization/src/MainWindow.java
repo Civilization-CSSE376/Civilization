@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -26,18 +28,26 @@ public class MainWindow extends JFrame {
 	private JPanel buttons = new JPanel();
 	private JPanel board = new JPanel();
 	private JPanel content = new JPanel();
-	private JButton rules = new JButton("Rules");
-	private JButton player1Details = new JButton("Player 1 Details");
-	private JButton player2Details = new JButton("Player 2 Details");
-	private JButton marketDetails = new JButton("Market Details");
-	private JButton endPhase = new JButton("EndPhase");
-	private JButton quit = new JButton("Quit");
+	private JButton rules = new JButton();
+	private JButton player1Details = new JButton();
+	private JButton player2Details = new JButton();
+	private JButton marketDetails = new JButton();
+	private JButton endPhase = new JButton();
+	private JButton quit = new JButton();
 	private String language;
 	private String p1Civilization;
 	private String p2Civilization;
 
 	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
+		Locale currentLocale;
+		final ResourceBundle messages;
+		if(languageChosen.equals("English")) currentLocale = new Locale("en", "US");
+		else currentLocale = new Locale("sp", "SP");
+		
+		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		
+		
 		this.setLayout(null);
 		System.out.println(languageChosen + " was chosen as the language.");
 		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.\n");
@@ -49,6 +59,13 @@ public class MainWindow extends JFrame {
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
+		
+		this.player1Details.setText(messages.getString("player1Details"));
+		this.player2Details.setText(messages.getString("player2Details"));
+		this.marketDetails.setText(messages.getString("marketDetails"));
+		this.endPhase.setText(messages.getString("endPhase"));
+		this.rules.setText(messages.getString("rules"));
+		this.quit.setText(messages.getString("quit"));
 		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
@@ -78,7 +95,7 @@ public class MainWindow extends JFrame {
 			this.add(borderPanel);
 		}
 
-		final JPanel map = new Board(this.p1Civilization, this.p2Civilization);
+		final JPanel map = new Board(this.p1Civilization, this.p2Civilization, messages);
 		map.setLocation(20, 20);
 		map.setSize(1761, 905);
 		this.add(map);
@@ -124,7 +141,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				makePlayerWindow("Player 1 Details", MainWindow.this.p1Civilization);
+				makePlayerWindow(messages.getString("player1Details"), MainWindow.this.p1Civilization, messages);
 				
 			}
 			
@@ -134,7 +151,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				makePlayerWindow("Player 2 Details", MainWindow.this.p2Civilization);
+				makePlayerWindow(messages.getString("player2Details"), MainWindow.this.p2Civilization, messages);
 			}	
 		});
 		
@@ -142,7 +159,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame marketWindow = new JFrame("Market Details");
+				JFrame marketWindow = new JFrame(messages.getString("marketDetails"));
 				ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 				marketWindow.setIconImage(icon.getImage());
 				marketWindow.setSize(700, 800);
@@ -156,7 +173,7 @@ public class MainWindow extends JFrame {
 	}
 
 
-	protected void makePlayerWindow(String windowName, String playerCivilizationField) {
+	private void makePlayerWindow(String windowName, String playerCivilizationField, ResourceBundle messages) {
 		
 		final JFrame playerWindow = new JFrame(windowName);
 		playerWindow.setResizable(false);
@@ -180,7 +197,7 @@ public class MainWindow extends JFrame {
 		buttonPanel.setBackground(Color.BLACK);
 		buffer.setBackground(Color.BLACK);
 		
-		JButton closeButton = new JButton("Close");
+		JButton closeButton = new JButton(messages.getString("close"));
 		buttonPanel.add(closeButton);
 		
 		buttonPanel.setLocation(550, 500);
@@ -202,33 +219,33 @@ public class MainWindow extends JFrame {
 		info.setSize(295, 500);
 		info.setLayout(new GridLayout(5, 1));
 		String gov = "";
-		if(playerCivilizationField.equals("Rome")) gov = "Republic";
-		else if(playerCivilizationField.equals("Russia")) gov = "Communism";
-		else gov = "Despotism";
+		if(playerCivilizationField.equals("Rome")) gov = messages.getString("republic");
+		else if(playerCivilizationField.equals("Russia")) gov = messages.getString("communism");
+		else gov = messages.getString("despotism");
 		
-		JLabel government = new JLabel("Government: " + gov);
+		JLabel government = new JLabel(messages.getString("government") + gov);
 		government.setForeground(Color.WHITE);
 //		government.setLocation(25, 25);
 //		government.setSize(300, 25);
 		
-		JLabel governmentAbility = new JLabel("Government ability: ");
+		JLabel governmentAbility = new JLabel(messages.getString("ability"));
 		governmentAbility.setForeground(Color.WHITE);
 //		government.setLocation(25, 100);
 //		government.setSize(300, 25);
 		
-		JLabel trade = new JLabel("Trade: ");
+		JLabel trade = new JLabel(messages.getString("trade1"));
 		trade.setForeground(Color.WHITE);
 		
-		JLabel gold = new JLabel("Gold: ");
+		JLabel gold = new JLabel(messages.getString("gold"));
 		gold.setForeground(Color.WHITE);
 		
-		JLabel culture = new JLabel("Culture: ");
+		JLabel culture = new JLabel(messages.getString("culture"));
 		culture.setForeground(Color.WHITE);
 		
 		String resourceString = "";
 //		if(windowName.equals("Player 1 Details")) resourceString = getResourceString(1);
 //		else resourceString = getResourceString(2);
-		JLabel resources = new JLabel("Resources: " + resourceString);
+		JLabel resources = new JLabel(messages.getString("resources") + resourceString);
 		resources.setForeground(Color.WHITE);
 		
 		info.add(government);
