@@ -13,6 +13,7 @@ public class Combat extends JPanel {
 	private Player defender;
 	private Player currentPlayer;
 	private Boolean inbetween;
+	private int defenderBonus;
 	private int attackerHandSize = 3;
 	private int defenderHandSize = 3;
 	private int currentPlayerHandSize = 3;
@@ -23,7 +24,8 @@ public class Combat extends JPanel {
 	private ArrayList<Unit> defenderFront = new ArrayList<Unit>();
 	private ArrayList<Unit> currentPlayerFront = new ArrayList<Unit>();
 
-	public Combat(Player attacker, Player defender) {
+	public Combat(Player attacker, Player defender, int defenderBonus) {
+		this.defenderBonus = defenderBonus;
 		this.attacker = attacker;
 		this.defender = defender;
 		this.currentPlayer = attacker;
@@ -93,6 +95,7 @@ public class Combat extends JPanel {
 	}
 	
 	public void attackFront(Unit attacking, Unit defending){
+		this.currentPlayerHand.remove(attacking);
 		Unit goesFirst = this.determineTrump(attacking, defending);
 		if(goesFirst == null){//no trump
 			attacking.health -= defending.attack;
@@ -158,6 +161,22 @@ public class Combat extends JPanel {
 		
 		return null;
 		
+	}
+	
+	private boolean successfulAttack(){
+		int attackingStrength = this.attacker.getPlayerCombatAdvantage();
+		int defendingStrength = this.defender.getPlayerCombatAdvantage();
+		defendingStrength += this.defenderBonus;
+		
+		for(Unit u : this.attackerFront){
+			attackingStrength += u.attack;
+		}
+		
+		for(Unit u : this.defenderFront){
+			defendingStrength += u.attack;
+		}
+		
+		return attackingStrength > defendingStrength ? true : false;
 	}
 	
 }

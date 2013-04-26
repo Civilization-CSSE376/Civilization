@@ -102,5 +102,15 @@ public class Player {
 	public int getPlayerCulture(){
 		return this.culture;
 	}
+	
+	public int getPlayerCombatAdvantage(){
+		int temp = 0;
+		for(City c : this.cities){
+			for(Tile t : c.getOutskirts()){
+				temp += t.getCombatAdvantage();
+			}
+		}
+		return temp;
+	}
 
 }

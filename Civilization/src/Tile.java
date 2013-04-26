@@ -17,6 +17,7 @@ public class Tile {
 	private int production = 0;
 	private int culture = 0;
 	private int coin = 0;
+	private int combatAdvantage = 0;
 	private Resource resource = Resource.None;
 	private Point2D.Double screenLocation;
 
@@ -151,6 +152,13 @@ public class Tile {
 		if(this.marker != null)
 			return this.marker.production;
 		return this.production;
+	}
+	
+	public int getCombatAdvantage(){
+		if(this.marker != null){
+			return this.marker.combatAdvantage;
+		}
+		return this.combatAdvantage;
 	}
 
 	public ArrayList<Figure> getFigure() {
