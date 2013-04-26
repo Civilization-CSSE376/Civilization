@@ -15,11 +15,11 @@ public class Army extends Figure {
 
 	}
 
-	@Override
-	public void makeCity() {
-		// TODO Auto-generated method stub
-
-	}
+//	@Override
+//	public Boolean tryToBuildCity(Tile tile, Player player, City city)
+//		// TODO Auto-generated method stub
+//
+//	}
 
 	@Override
 	public void takeHut() {

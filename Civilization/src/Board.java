@@ -75,6 +75,9 @@ public class Board extends JPanel {
 
 		this.player1 = new Player();
 		this.player2 = new Player();
+		
+//		players.add(this.player1);
+//		players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
@@ -251,7 +254,7 @@ public class Board extends JPanel {
 			return false;
 	}
 
-	private void startOfTurn(Tile tile) {
+	public void startOfTurn(Tile tile) {
 		Figure newCity = null;
 		for (Figure f : tile.getFigures()) {
 			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
@@ -264,10 +267,12 @@ public class Board extends JPanel {
 		}
 		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
-			tryToBuildCity(tile, newCity, city);
+			if(newCity.tryToBuildCity(tile, currentPlayer, city))
+				repaint();
 		}
 		return;
 	}
+
 
 	public void tryToBuildCity(Tile tile, Figure newCity, City city) {
 		if(city == null){
@@ -288,6 +293,7 @@ public class Board extends JPanel {
 			System.out.println("WTF");
 		}
 	}
+
 
 	JRadioButtonMenuItem items[];
 	static Tile currentTile = null;
@@ -477,6 +483,10 @@ public class Board extends JPanel {
 			if (currentMovementFigure.getNumberOfMoves() > 0) {
 				if (Board.this.validTiles.contains(tile)) {
 					if (panel.getIsExplored()) {
+						if(checkSpaceForEnemyFigures(tile)){
+							Figure enemy = tile.getFigures().get(0);
+							//initiate combat with enemy
+						}
 						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);
@@ -1356,6 +1366,10 @@ public class Board extends JPanel {
 
 	public static void setGoingForResource(boolean goingForResource) {
 		Board.goingForResource = goingForResource;
+	}
+	
+	public ArrayList<Player> getPlayers(){
+		return Board.players;
 	}
 
 }

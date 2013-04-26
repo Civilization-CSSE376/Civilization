@@ -12,14 +12,14 @@ public class Player {
 	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
 	public ArrayList<Figure> figures = new ArrayList<Figure>();
 	public ArrayList<City> cities = new ArrayList<City>();
-	// private ArrayList<Unit> units;
+	public ArrayList<Unit> units = new ArrayList<Unit>();
 	// private ArrayList<CultureCard> cultureCards;
 	// private ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
 	public int cityLimit = 2;
 	private int culture = 0;
 	private int gold = 0;
-	private int speed = 2;
+	private int speed = 22;
 	private int handSize = 2;
 	private int stackSize = 2;
 	int trade = 0;
@@ -27,6 +27,9 @@ public class Player {
 
 	public Player() {
 		this.location = new Point2D.Double(55, 55);
+		this.units.add(new Unit("Infantry", 1));
+		this.units.add(new Unit("Cavalry", 1));
+		this.units.add(new Unit("Artillery", 1));
 
 	}
 
@@ -82,6 +85,22 @@ public class Player {
 
 	public int getSpeed() {
 		return this.speed;
+	}
+	
+	public ArrayList<Tile.Resource> getPlayerResources(){
+		return this.resources;
+	}
+	
+	public int getPlayerGold(){
+		return this.gold;
+	}
+	
+	public int getPlayerTrade(){
+		return this.trade;
+	}
+	
+	public int getPlayerCulture(){
+		return this.culture;
 	}
 
 }

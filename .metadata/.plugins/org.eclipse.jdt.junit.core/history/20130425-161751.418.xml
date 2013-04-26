@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Civilization" project="Civilization" tests="53" started="53" failures="0" errors="0" ignored="0">
+  <testsuite name="BoardTest" time="1.078">
+    <testcase name="testBoardInitializes" classname="BoardTest" time="0.009"/>
+    <testcase name="testLoadFromFile" classname="BoardTest" time="0.0"/>
+    <testcase name="testPhaseChanges" classname="BoardTest" time="0.001"/>
+    <testcase name="findFirstPanel" classname="BoardTest" time="0.0"/>
+    <testcase name="findAllPanels" classname="BoardTest" time="0.0"/>
+    <testcase name="findTileFromClick" classname="BoardTest" time="0.0"/>
+    <testcase name="testGetFirstPlayer" classname="BoardTest" time="0.0"/>
+    <testcase name="testCheckUnexploredPanel" classname="BoardTest" time="0.011"/>
+    <testcase name="testCheckTiles" classname="BoardTest" time="0.003"/>
+    <testcase name="testAddFigure" classname="BoardTest" time="0.012"/>
+    <testcase name="testAddMarker" classname="BoardTest" time="0.011"/>
+    <testcase name="testCheckSpaceForEnemyFigures" classname="BoardTest" time="0.01"/>
+    <testcase name="testGetPhase" classname="BoardTest" time="0.0"/>
+    <testcase name="testmovement" classname="BoardTest" time="1.002"/>
+    <testcase name="handleBuild" classname="BoardTest" time="0.019"/>
+  </testsuite>
+  <testsuite name="PlayerTest" time="0.001">
+    <testcase name="testConstruct" classname="PlayerTest" time="0.0"/>
+    <testcase name="testSetCapital" classname="PlayerTest" time="0.0"/>
+    <testcase name="testGetLocation" classname="PlayerTest" time="0.001"/>
+    <testcase name="testSetLocation" classname="PlayerTest" time="0.0"/>
+    <testcase name="testPlayerInitialSpeed" classname="PlayerTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="SettlerTest" time="0.002">
+    <testcase name="JUnittest" classname="SettlerTest" time="0.002"/>
+  </testsuite>
+  <testsuite name="PanelTest" time="0.001">
+    <testcase name="testPanelInitializes" classname="PanelTest" time="0.0"/>
+    <testcase name="testCanChangeisExplored" classname="PanelTest" time="0.0"/>
+    <testcase name="testTilesAreInitialized" classname="PanelTest" time="0.0"/>
+    <testcase name="testPanelisExploredAtInitialization" classname="PanelTest" time="0.0"/>
+    <testcase name="testJUnit" classname="PanelTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="MarketTest" time="0.0">
+    <testcase name="JUnittest" classname="MarketTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="ArmyTest" time="0.001">
+    <testcase name="JUnittest" classname="ArmyTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="TileTest" time="0.008">
+    <testcase name="testTileInitializes" classname="TileTest" time="0.0"/>
+    <testcase name="testGetXPosandYPos" classname="TileTest" time="0.0"/>
+    <testcase name="testGetMethods" classname="TileTest" time="0.001"/>
+    <testcase name="testWrongTerrainAndResourceInputs" classname="TileTest" time="0.007"/>
+  </testsuite>
+  <testsuite name="CityTest" time="0.04">
+    <testcase name="testConstruct" classname="CityTest" time="0.002"/>
+    <testcase name="testSetCapital" classname="CityTest" time="0.003"/>
+    <testcase name="testGetLocation" classname="CityTest" time="0.002"/>
+    <testcase name="testMulitpleCalcProduction" classname="CityTest" time="0.002"/>
+    <testcase name="testNoCalcProduction" classname="CityTest" time="0.002"/>
+    <testcase name="testCalcCulture" classname="CityTest" time="0.002"/>
+    <testcase name="testEmptyCalcCulture" classname="CityTest" time="0.002"/>
+    <testcase name="testEmptyTradeCalc" classname="CityTest" time="0.001"/>
+    <testcase name="testGetOutskirtsTopLeft" classname="CityTest" time="0.003"/>
+    <testcase name="testGetOutskirtsTopRight" classname="CityTest" time="0.002"/>
+    <testcase name="testGetOutskirtsBottomRight" classname="CityTest" time="0.002"/>
+    <testcase name="testGetOutskirtsBottomLeft" classname="CityTest" time="0.002"/>
+    <testcase name="testGetOutskirtsLeft" classname="CityTest" time="0.001"/>
+    <testcase name="testGetOutskirtsRight" classname="CityTest" time="0.002"/>
+    <testcase name="testGetOutskirtsTop" classname="CityTest" time="0.002"/>
+    <testcase name="testGetOutskirtsBottom" classname="CityTest" time="0.003"/>
+    <testcase name="testGetOutskirtsCenter" classname="CityTest" time="0.003"/>
+    <testcase name="testGetCapital" classname="CityTest" time="0.001"/>
+    <testcase name="testSetHasAction" classname="CityTest" time="0.0"/>
+    <testcase name="testValidOutskirts" classname="CityTest" time="0.002"/>
+    <testcase name="testTrade" classname="CityTest" time="0.001"/>
+  </testsuite>
+</testrun>
