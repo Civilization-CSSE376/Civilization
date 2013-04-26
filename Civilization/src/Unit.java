@@ -8,11 +8,11 @@ public class Unit {
 	private static final double AIR_TIER_TWO_CHANCE = 1/3;
 	private static final double AIR_TIER_THREE_CHANCE = 1/3;
 	
-	private String type;
-	private int level;
-	private int attack;
-	private int health;
-	private int cost;
+	String type;
+	int level;
+	int attack;
+	int health;
+	int cost;
 	
 	public Unit(String type, int level) {
 		this.type = type;
@@ -80,11 +80,11 @@ public class Unit {
 	private double getAirChance(int tier){
 		switch(tier){
 		case 1:
-			return this.AIR_TIER_ONE_CHANCE;
+			return Unit.AIR_TIER_ONE_CHANCE;
 		case 2:
-			return this.AIR_TIER_TWO_CHANCE;
+			return Unit.AIR_TIER_TWO_CHANCE;
 		case 3:
-			return this.AIR_TIER_THREE_CHANCE;
+			return Unit.AIR_TIER_THREE_CHANCE;
 		default:
 			return 0;
 		}
@@ -93,11 +93,11 @@ public class Unit {
 	private double getLandChance(int tier){
 		switch(tier){
 		case 1:
-			return this.LAND_TIER_ONE_CHANCE;
+			return Unit.LAND_TIER_ONE_CHANCE;
 		case 2:
-			return this.LAND_TIER_TWO_CHANCE;
+			return Unit.LAND_TIER_TWO_CHANCE;
 		case 3:
-			return this.LAND_TIER_THREE_CHANCE;
+			return Unit.LAND_TIER_THREE_CHANCE;
 		default:
 			return 0;
 		}

@@ -32,8 +32,11 @@ public class City implements Drawable{
 	public City(Tile location, Player player) {
 		this.location = location;
 		this.outskirts = this.getOutskirts(location);
-		if (this.outskirts != null)
+		if (this.outskirts != null){
 			this.isValid = this.validOutskirts(player);
+		}else{
+			System.out.println("ITS OUTSKIRTS ARE NULL");
+		}
 	}
 
 	public int getProduction() {
@@ -111,16 +114,12 @@ public class City implements Drawable{
 	 * @return the 8 tiles of the outskirts in a hashset structure. returns null
 	 *         if the outskirts contain a null tile
 	 */
-	private ArrayList<Tile> getOutskirts(Tile startTile) {// written assuming
-															// typical plot
-															// (x,y) rather than
-															// array (row,
-															// column)
-		Panel startPanel = Board.findPanel(startTile);// so every direction has
-														// to be replaced with
-														// the clockwise
-														// direction
-
+	private ArrayList<Tile> getOutskirts(Tile startTile) {
+		/*
+		 * Written assuming normal math (x,y) plot but needs to be upsidedown computer science (x,y) plot so North and South get switched
+		 */
+		Panel startPanel = Board.findPanel(startTile);
+		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 
@@ -130,22 +129,22 @@ public class City implements Drawable{
 		Panel northPanel = new Panel();
 
 		try {
-			westPanel = neighbors.get("North");
+			westPanel = neighbors.get("West");//was north
 		} catch (NullPointerException e) {
 			westPanel = null;
 		}
 		try {
-			eastPanel = neighbors.get("South");
+			eastPanel = neighbors.get("East");//was south
 		} catch (NullPointerException e) {
 			eastPanel = null;
 		}
 		try {
-			southPanel = neighbors.get("West");
+			southPanel = neighbors.get("North");//was west
 		} catch (NullPointerException e) {
 			southPanel = null;
 		}
 		try {
-			northPanel = neighbors.get("East");
+			northPanel = neighbors.get("South");//was east
 		} catch (NullPointerException e) {
 			northPanel = null;
 		}
@@ -460,6 +459,7 @@ public class City implements Drawable{
 
 		// water test
 		if (this.location.getTerrain().equals(Terrain.Water)) {
+			System.out.println("THERE IS WATER");
 			return false;
 		}
 
@@ -477,6 +477,7 @@ public class City implements Drawable{
 
 			// outskirts test
 			if (enemyOutskirts.contains(t)) {
+				System.out.println("THERE IS AN ENEMY");
 				return false;
 			}
 		}
