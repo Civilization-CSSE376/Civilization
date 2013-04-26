@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,25 +75,37 @@ public class Board extends JPanel {
 
 		this.player1 = new Player();
 		this.player2 = new Player();
-		
-//		players.add(this.player1);
-//		players.add(this.player2);
+
+		// players.add(this.player1);
+		// players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
+		Army army1 = new Army(player1, map.get(0).getTiles()[1][0]);
+		Army army2 = new Army(player2, map.get(0).getTiles()[0][1]);
 
 		settler1.resetMoves(player1.getSpeed());
 		settler2.resetMoves(player2.getSpeed());
+		army1.resetMoves(player1.getSpeed());
+		army2.resetMoves(player2.getSpeed());
 
 		settler1.setLocation(10, 10);
 		settler2.setScreenLocation(map.get(7).getTiles()[3][3]
 				.getScreenLocation());
+		army1.setScreenLocation((map.get(0).getTiles()[1][0]
+				.getScreenLocation()));
+		army2.setScreenLocation((map.get(0).getTiles()[0][1]
+				.getScreenLocation()));
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
+		this.player1.figures.add(army1);
+		this.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
+		map.get(0).getTiles()[1][0].getFigures().add(army1);
+		map.get(0).getTiles()[0][1].getFigures().add(army2);
 
 		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
 		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
@@ -266,13 +279,11 @@ public class Board extends JPanel {
 		}
 		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
-			if(newCity.tryToBuildCity(tile, currentPlayer, city))
+			if (newCity.tryToBuildCity(tile, currentPlayer, city))
 				repaint();
 		}
 		return;
 	}
-
-
 
 	JRadioButtonMenuItem items[];
 	static Tile currentTile = null;
@@ -462,9 +473,30 @@ public class Board extends JPanel {
 			if (currentMovementFigure.getNumberOfMoves() > 0) {
 				if (Board.this.validTiles.contains(tile)) {
 					if (panel.getIsExplored()) {
-						if(checkSpaceForEnemyFigures(tile)){
+						if (checkSpaceForEnemyFigures(tile)) {
 							Figure enemy = tile.getFigures().get(0);
-							//initiate combat with enemy
+
+							final JFrame combatWindow = new JFrame("Combat");
+							combatWindow.setResizable(false);
+							combatWindow.setLayout(null);
+
+							ImageIcon icon = new ImageIcon(
+									"src/civilizationicon.jpg");
+							combatWindow.setIconImage(icon.getImage());
+
+							combatWindow.setSize(900, 565);
+							combatWindow.setAlwaysOnTop(true);
+							combatWindow.setVisible(true);
+							this.setEnabled(false);
+							// playerWindow.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+							Combat combat = new Combat(currentPlayer,
+									enemy.getOwner());
+							combat.repaint();
+							combatWindow.add(combat);
+							// initiate combat with enemy
+							combat.repaint();
+							combatWindow.setVisible(true);
 						}
 						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
@@ -1342,8 +1374,8 @@ public class Board extends JPanel {
 	public static void setGoingForResource(boolean goingForResource) {
 		Board.goingForResource = goingForResource;
 	}
-	
-	public ArrayList<Player> getPlayers(){
+
+	public ArrayList<Player> getPlayers() {
 		return Board.players;
 	}
 

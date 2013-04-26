@@ -12,7 +12,7 @@ public class Player {
 	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
 	public ArrayList<Figure> figures = new ArrayList<Figure>();
 	public ArrayList<City> cities = new ArrayList<City>();
-	// private ArrayList<Unit> units;
+	 private ArrayList<Unit> units;
 	// private ArrayList<CultureCard> cultureCards;
 	// private ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
