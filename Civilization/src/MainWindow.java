@@ -280,9 +280,9 @@ public class MainWindow extends JFrame {
 		String resources = "";
 		int[] numberOfEachResource;
 		String[] resourceNames = {"Iron", "Wheat", "Incense", "Silk"};
-		if(playerNumber == 1) numberOfEachResource = getNumberOfEachResource(Board.players.get(0).getPlayerResources());
-		else numberOfEachResource = getNumberOfEachResource(Board.players.get(1).getPlayerResources());
-		for(int i = 0; i < 4; i++) resources = resources + resourceNames[i] + ": " + numberOfEachResource[i] + "  ";
+//		if(playerNumber == 1) numberOfEachResource = getNumberOfEachResource(Board.players.get(0).getPlayerResources());
+//		else numberOfEachResource = getNumberOfEachResource(Board.players.get(1).getPlayerResources());
+//		for(int i = 0; i < 4; i++) resources = resources + resourceNames[i] + ": " + numberOfEachResource[i] + "  ";
 		
 		System.out.println(resources);
 		return resources;

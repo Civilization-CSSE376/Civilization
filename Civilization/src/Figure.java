@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 public abstract class Figure implements Drawable {
 	protected Tile location;
 	private Player owner;
-	private Point2D.Double screenLocation;
+	protected Point2D.Double screenLocation;
 	private boolean usedThisTurn = false;
 	private int moves = 0;
 
@@ -89,8 +89,8 @@ public abstract class Figure implements Drawable {
 
 	public abstract void move();
 
-	public void makeCity() {
-
+	public Boolean tryToBuildCity(Tile tile, Player player, City city) {
+		return false;
 	}
 
 	public abstract void takeHut();

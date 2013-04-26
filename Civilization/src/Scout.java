@@ -15,11 +15,11 @@ public class Scout extends Figure {
 
 	}
 
-	@Override
-	public void makeCity() {
-		// TODO Auto-generated method stub
-
-	}
+//	@Override
+//	public void makeCity() {
+//		// TODO Auto-generated method stub
+//
+//	}
 
 	@Override
 	public void takeHut() {

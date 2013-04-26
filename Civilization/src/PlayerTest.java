@@ -66,7 +66,7 @@ public class PlayerTest {
 	@Test
 	public void testPlayerInitialSpeed(){
 		Player target = new Player();
-		assertEquals(2, target.getSpeed());
+		assertEquals(22, target.getSpeed());
 	}
 
 }

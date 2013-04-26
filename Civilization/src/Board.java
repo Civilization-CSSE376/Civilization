@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingUtilities;
 
 import java.util.Hashtable;
 
@@ -257,7 +258,7 @@ public class Board extends JPanel {
 			return false;
 	}
 
-	private void startOfTurn(Tile tile) {
+	public void startOfTurn(Tile tile) {
 		Figure newCity = null;
 		for (Figure f : tile.getFigures()) {
 			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
@@ -270,12 +271,20 @@ public class Board extends JPanel {
 		}
 		if (makeNewCityWindow()) {
 			City city = new City(tile, currentPlayer);
-			tryToBuildCity(tile, newCity, city);
+			if(newCity.tryToBuildCity(tile, currentPlayer, city))
+				repaint();
 		}
 		return;
 	}
 
+
 	public void tryToBuildCity(Tile tile, Figure newCity, City city) {
+		if(city == null){
+			System.out.println("IT IS NULL");
+		}
+		if(!city.isValid){
+			System.out.println("ITS NOT VALID");
+		}
 		if (city.isValid
 				&& currentPlayer.cities.size() + 1 <= currentPlayer.cityLimit) {
 			city.setScreenLocation(tile.getScreenLocation());
@@ -284,8 +293,11 @@ public class Board extends JPanel {
 			currentPlayer.figures.remove(newCity);
 			tile.getFigure().remove(newCity);
 			repaint();
+		}else{
+			System.out.println("WTF");
 		}
 	}
+
 
 	JRadioButtonMenuItem items[];
 	static Tile currentTile = null;
@@ -475,6 +487,10 @@ public class Board extends JPanel {
 			if (currentMovementFigure.getNumberOfMoves() > 0) {
 				if (Board.this.validTiles.contains(tile)) {
 					if (panel.getIsExplored()) {
+						if(checkSpaceForEnemyFigures(tile)){
+							Figure enemy = tile.getFigures().get(0);
+							//initiate combat with enemy
+						}
 						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);
@@ -680,7 +696,11 @@ public class Board extends JPanel {
 			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
 			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
 
-			// displayTileInfoWindow(tile);
+			
+			if(SwingUtilities.isRightMouseButton(e)){
+				displayTileInfoWindow(tile);	
+			}
+			 
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
 				startOfTurn(tile);
@@ -694,28 +714,28 @@ public class Board extends JPanel {
 			}
 		}
 
-		// private void displayTileInfoWindow(Tile tile) {
-		// JFrame frame = new JFrame("Tile info");
-		// frame.setLayout(new GridLayout(6, 1));
-		// JLabel terrain = new JLabel("Terrain is "
-		// + tile.getTerrain().toString());
-		// JLabel trade = new JLabel("Trade is " + tile.getTrade());
-		// JLabel production = new JLabel("Production is "
-		// + tile.getProduction());
-		// JLabel resource = new JLabel("Resource is "
-		// + tile.getResource().toString());
-		// JLabel culture = new JLabel("Culture is " + tile.getCulture());
-		// JLabel coin = new JLabel("Coin is " + tile.getCoins());
-		// frame.add(terrain);
-		// frame.add(trade);
-		// frame.add(production);
-		// frame.add(resource);
-		// frame.add(culture);
-		// frame.add(coin);
-		// frame.pack();
-		// frame.setVisible(true);
-		//
-		// }
+		 private void displayTileInfoWindow(Tile tile) {
+		 JFrame frame = new JFrame("Tile info");
+		 frame.setLayout(new GridLayout(6, 1));
+		 JLabel terrain = new JLabel("Terrain is "
+		 + tile.getTerrain().toString());
+		 JLabel trade = new JLabel("Trade is " + tile.getTrade());
+		 JLabel production = new JLabel("Production is "
+		 + tile.getProduction());
+		 JLabel resource = new JLabel("Resource is "
+		 + tile.getResource().toString());
+		 JLabel culture = new JLabel("Culture is " + tile.getCulture());
+		 JLabel coin = new JLabel("Coin is " + tile.getCoins());
+		 frame.add(terrain);
+		 frame.add(trade);
+		 frame.add(production);
+		 frame.add(resource);
+		 frame.add(culture);
+		 frame.add(coin);
+		 frame.pack();
+		 frame.setVisible(true);
+		
+		 }
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
