@@ -3,6 +3,8 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JRadioButtonMenuItem;
 
@@ -16,14 +18,19 @@ public class BoardTest {
 
 	@BeforeClass
 	public static void setupLoadedTiles() {
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		
 		File file = new File("src/Panel1.txt");
-		board = new TestBoard("America", "China");
+		board = new TestBoard("America", "China", messages);
 		board.readFromFile(file);
 	}
 
 	@Test
 	public void testTestBoardInitializes() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		assertNotNull(target);
 	}
 
@@ -226,7 +233,9 @@ public class BoardTest {
 
 	@Test
 	public void testCheckUnexploredPanel() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		assertTrue(TestBoard.map.get(0).getIsExplored());
 		assertFalse(TestBoard.map.get(1).getIsExplored());
 		assertFalse(TestBoard.map.get(2).getIsExplored());
@@ -411,13 +420,13 @@ public class BoardTest {
 		// Test rightmost column middle tile, panel 0
 		testTile = TestBoard.map.get(0).getTiles()[1][3];
 		board.getValidTiles(TestBoard.map.get(0), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(4, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 0
 		testTile = TestBoard.map.get(0).getTiles()[3][3];
 		board.getValidTiles(TestBoard.map.get(0), testTile);
-		assertEquals(3, board.getValidTileList().size());
+		assertEquals(4, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom row middle tile, panel 0
@@ -429,13 +438,13 @@ public class BoardTest {
 		// Test bottom left corner tile, panel 0
 		testTile = TestBoard.map.get(0).getTiles()[3][0];
 		board.getValidTiles(TestBoard.map.get(0), testTile);
-		assertEquals(1, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test leftmost column middle tile, panel 0
 		testTile = TestBoard.map.get(0).getTiles()[1][0];
 		board.getValidTiles(TestBoard.map.get(0), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top left corner tile, panel 5
@@ -447,13 +456,13 @@ public class BoardTest {
 		// Test bottom left corner tile, panel 1
 		testTile = TestBoard.map.get(1).getTiles()[3][0];
 		board.getValidTiles(TestBoard.map.get(1), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test top right corner tile, panel 4
 		testTile = TestBoard.map.get(4).getTiles()[0][3];
 		board.getValidTiles(TestBoard.map.get(4), testTile);
-		assertEquals(1, board.getValidTileList().size());
+		assertEquals(2, board.getValidTileList().size());
 		board.resetValidTileList();
 
 		// Test bottom right corner tile, panel 4
@@ -477,14 +486,16 @@ public class BoardTest {
 		// Test top right corner tile, panel 7
 		testTile = TestBoard.map.get(7).getTiles()[0][3];
 		board.getValidTiles(TestBoard.map.get(7), testTile);
-		assertEquals(2, board.getValidTileList().size());
+		assertEquals(3, board.getValidTileList().size());
 		board.resetValidTileList();
 
 	}
 
 	@Test
 	public void testCheckSpaceForEnemyFigures() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		assertFalse(target.checkSpaceForEnemyFigures(TestBoard.map.get(0)
 				.getTiles()[0][0]));
 		assertTrue(target.checkSpaceForEnemyFigures(TestBoard.map.get(7)
@@ -498,7 +509,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddFigure() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		String figure = "Settler";// (target.getCurrentPlayer(), new Tile());
 		TestBoard.currentClick = new Point(50, 50);
 		City city = TestBoard.map.get(0).getTiles()[1][1].getCity();
@@ -518,7 +531,9 @@ public class BoardTest {
 
 	@Test
 	public void testmovement() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		target.currentMovementFigure = TestBoard.map.get(0).getTiles()[0][0]
 				.getFigures().get(0);
 		target.getValidTiles(TestBoard.map.get(0), TestBoard.map.get(0)
@@ -541,7 +556,9 @@ public class BoardTest {
 
 	@Test
 	public void handleBuild() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		TestBoard.currentCity = TestBoard.map.get(0).getTiles()[1][1].getCity();
 		TestBoard.currentCity.calcProduction();
 		TestBoard.currentTile = TestBoard.map.get(0).getTiles()[0][1];
@@ -563,7 +580,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerWonder() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -577,7 +596,9 @@ public class BoardTest {
 
 	@Test
 	public void testMakeBuilding() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		TestBoard.currentCity = TestBoard.map.get(0).getTiles()[1][1].getCity();
 		TestBoard.currentCity.calcProduction();
 
@@ -592,7 +613,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidWonder() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -604,7 +627,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodBuilding() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -618,7 +643,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainBuilding() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -631,7 +658,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainNotWater() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "F", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -644,7 +673,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainNotWaterMarket() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -657,7 +688,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidNotOutskirts() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -669,7 +702,9 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodNotWaterBuilding() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
@@ -682,12 +717,14 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testAddMarkerInvalidHasStar() {
-		TestBoard target = new TestBoard("America", "China");
+	public void testAddMarkerInvalidHasStar() {		
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
 		Tile starTile = new Tile(0, 0, "M", 0, 0, "NONE", 0, "NONE", 0);
-		starTile.setMarker(new Building("Temple"));
+		starTile.setMarker(new Building("Temple", messages));
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 		outskirts.add(tile);
 		outskirts.add(starTile);
@@ -699,11 +736,13 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodHasStarBuilding() {
-		TestBoard target = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
 		Tile starTile = new Tile(0, 0, "M", 0, 0, "NONE", 0, "NONE", 0);
-		starTile.setMarker(new Building("Temple"));
+		starTile.setMarker(new Building("Temple", messages));
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 		outskirts.add(tile);
 		outskirts.add(starTile);
@@ -716,7 +755,9 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewSettler() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
 		tile.setScreenLocation(0, 0);
@@ -738,7 +779,9 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewArmy() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
 		tile.setScreenLocation(0, 0);
@@ -760,7 +803,9 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewBuilding() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
 		City city = new City(new Tile());
@@ -782,7 +827,9 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementBadResource() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setResource(Tile.Resource.None);
 		City city = new City(new Tile());
@@ -799,7 +846,9 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementGoodResource() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setResource(Tile.Resource.Iron);
 		City city = new City(new Tile());
@@ -817,7 +866,9 @@ public class BoardTest {
 
 	@Test
 	public void testStartTurnTryToBuildCityGood() {
-		TestBoard board = new TestBoard("America", "China");
+		Locale currentLocale = new Locale("en", "US");
+		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setScreenLocation(0, 0);
 		City city = new City(new Tile());

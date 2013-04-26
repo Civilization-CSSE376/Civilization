@@ -3,7 +3,7 @@ import javax.swing.JFrame;
 
 public class Main {
 	private static final int WINDOW_WIDTH = 500;
-	private static final int WINDOW_HEIGHT = 400;
+	private static final int WINDOW_HEIGHT = 500;
 
 	/**
 	 * @param args

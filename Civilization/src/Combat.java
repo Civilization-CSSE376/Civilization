@@ -163,7 +163,7 @@ public class Combat extends JPanel {
 		
 	}
 	
-	private boolean successfulAttack(){
+	public boolean successfulAttack(){
 		int attackingStrength = this.attacker.getPlayerCombatAdvantage();
 		int defendingStrength = this.defender.getPlayerCombatAdvantage();
 		defendingStrength += this.defenderBonus;

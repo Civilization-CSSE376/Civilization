@@ -1,19 +1,24 @@
 import static org.junit.Assert.*;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.junit.Test;
 
 
 public class WonderTest {
-
+	private static final Locale currentLocale = new Locale("en", "US");
+	private static final ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+	
 	@Test
 	public void construtorTest() {
-		Wonder target = new Wonder("Stonehenge");
+		Wonder target = new Wonder("Stonehenge", messages);
 		assertNotNull(target);
 	}
 	
 	@Test
 	public void stoneHengeCreationTest() {
-		Wonder target = new Wonder("Stonehenge");
+		Wonder target = new Wonder("Stonehenge", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -31,7 +36,7 @@ public class WonderTest {
 	
 	@Test
 	public void theOracleCreationTest() {
-		Wonder target = new Wonder("TheOracle");
+		Wonder target = new Wonder("TheOracle", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -49,7 +54,7 @@ public class WonderTest {
 	
 	@Test
 	public void theHangingGardensCreationTest() {
-		Wonder target = new Wonder("TheHangingGardens");
+		Wonder target = new Wonder("TheHangingGardens", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -67,7 +72,7 @@ public class WonderTest {
 	
 	@Test
 	public void theColossusCreationTest() {
-		Wonder target = new Wonder("TheColossus");
+		Wonder target = new Wonder("TheColossus", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -85,7 +90,7 @@ public class WonderTest {
 	
 	@Test
 	public void theLouvreCreationTest() {
-		Wonder target = new Wonder("TheLouvre");
+		Wonder target = new Wonder("TheLouvre", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -103,7 +108,7 @@ public class WonderTest {
 	
 	@Test
 	public void angkorWatCreationTest() {
-		Wonder target = new Wonder("AngkorWat");
+		Wonder target = new Wonder("AngkorWat", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -121,7 +126,7 @@ public class WonderTest {
 	
 	@Test
 	public void himejiSamuraiCastleCreationTest() {
-		Wonder target = new Wonder("HimejiSamuraiCastle");
+		Wonder target = new Wonder("HimejiSamuraiCastle", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -139,7 +144,7 @@ public class WonderTest {
 	
 	@Test
 	public void PorcelainTowerCreationTest() {
-		Wonder target = new Wonder("PorcelainTower");
+		Wonder target = new Wonder("PorcelainTower", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -157,7 +162,7 @@ public class WonderTest {
 	
 	@Test
 	public void statueOfLibertyCreationTest() {
-		Wonder target = new Wonder("StatueOfLiberty");
+		Wonder target = new Wonder("StatueOfLiberty", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -175,7 +180,7 @@ public class WonderTest {
 	
 	@Test
 	public void sydneyOperaHouseCreationTest() {
-		Wonder target = new Wonder("SydneyOperaHouse");
+		Wonder target = new Wonder("SydneyOperaHouse", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -193,7 +198,7 @@ public class WonderTest {
 	
 	@Test
 	public void unitedNationsCreationTest() {
-		Wonder target = new Wonder("UnitedNations");
+		Wonder target = new Wonder("UnitedNations", messages);
 		
 		assertFalse(target.hasStar);
 		
@@ -211,7 +216,7 @@ public class WonderTest {
 	
 	@Test
 	public void panamaCanalCreationTest() {
-		Wonder target = new Wonder("PanamaCanal");
+		Wonder target = new Wonder("PanamaCanal", messages);
 		
 		assertFalse(target.hasStar);
 		

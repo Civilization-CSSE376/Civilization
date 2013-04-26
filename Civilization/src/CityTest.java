@@ -227,7 +227,7 @@ public class CityTest {
 		
 		assertEquals(0, output);
 	}
-	
+
 	@Test //need to test "not explored" panels
 	public void testGetOutskirtsTopLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		Tile tileToTest = this.bottomRight.getTiles()[0][0];

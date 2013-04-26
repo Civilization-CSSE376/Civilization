@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D.Double;
+import java.util.ResourceBundle;
 
 public class GreatPerson extends Marker {
 
@@ -9,8 +10,8 @@ public class GreatPerson extends Marker {
 										// track of if the GP is on the board or
 										// not
 
-	public GreatPerson(String name) {
-		super(name);
+	public GreatPerson(String name, ResourceBundle messages) {
+		super(name, messages);
 		this.createGreatPerson(name);
 		this.allowedTerrain = Terrain.NotWater;
 	}
