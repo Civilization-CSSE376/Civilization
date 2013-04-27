@@ -15,21 +15,21 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 public class Combat extends JPanel {
-	private Player attacker;
-	private Player defender;
-	private Player currentPlayer;
-	private Boolean inbetween = true;
-	private int defenderBonus;
-	private int attackerHandSize = 3;
-	private int defenderHandSize = 3;
-	private int currentPlayerHandSize = 3;
-	private Unit ownUnit = null;
-	private ArrayList<Unit> attackerHand = new ArrayList<Unit>();
-	private ArrayList<Unit> defenderHand = new ArrayList<Unit>();
-	private ArrayList<Unit> currentPlayerHand = new ArrayList<Unit>();
-	private ArrayList<Unit> attackerFront = new ArrayList<Unit>();
-	private ArrayList<Unit> defenderFront = new ArrayList<Unit>();
-	private ArrayList<Unit> currentPlayerFront = new ArrayList<Unit>();
+	public Player attacker;
+	public Player defender;
+	public Player currentPlayer;
+	public Boolean inbetween = true;
+	public int defenderBonus;
+	public int attackerHandSize = 3;
+	public int defenderHandSize = 3;
+	public int currentPlayerHandSize = 3;
+	public Unit ownUnit = null;
+	public ArrayList<Unit> attackerHand = new ArrayList<Unit>();
+	public ArrayList<Unit> defenderHand = new ArrayList<Unit>();
+	public ArrayList<Unit> currentPlayerHand = new ArrayList<Unit>();
+	public ArrayList<Unit> attackerFront = new ArrayList<Unit>();
+	public ArrayList<Unit> defenderFront = new ArrayList<Unit>();
+	public ArrayList<Unit> currentPlayerFront = new ArrayList<Unit>();
 	private JRadioButtonMenuItem[] items;
 
 	public Combat(Player attacker, Player defender, int defenderBonus) {
@@ -51,13 +51,16 @@ public class Combat extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 	}
+	
+	public Player getCurrentPlayer(){
+		return this.currentPlayer;
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-//		System.out.println("Made it here");
 		if (inbetween) {
 			if (this.currentPlayer == attacker) {
 				g2.setColor(Color.green);
@@ -172,7 +175,7 @@ public class Combat extends JPanel {
 		makeChoice(choices, new chooseEnemyUnit(), new Point(100, 100));
 	}
 
-	private void switchCurrentPlayer() {
+	public void switchCurrentPlayer() {
 		if (this.currentPlayer.equals(this.attacker)) {
 			this.currentPlayer = this.defender;
 			this.currentPlayerHand = this.defenderHand;
@@ -240,7 +243,7 @@ public class Combat extends JPanel {
 		}
 	}
 
-	private boolean checkDeath(Unit unit) {
+	public boolean checkDeath(Unit unit) {
 		if (unit.health <= 0) {
 			this.currentPlayer.units.remove(unit);
 			this.currentPlayerFront.remove(unit);
@@ -250,7 +253,7 @@ public class Combat extends JPanel {
 		return false;
 	}
 
-	private Unit determineTrump(Unit attacking, Unit defending) {
+	public Unit determineTrump(Unit attacking, Unit defending) {
 		switch (attacking.type) {
 		case "Infantry":
 			if (defending.type.equals("Cavalry")) {
