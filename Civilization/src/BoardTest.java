@@ -21,9 +21,10 @@ public class BoardTest {
 		Locale currentLocale = new Locale("en", "US");
 		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		
-		File file = new File("src/Panel1.txt");
+//		File file = new File("src/Panel1.txt");
 		board = new TestBoard("America", "China", messages);
-		board.readFromFile(file);
+//		board.readFromFile(file);
+		board.readFromFile();
 	}
 
 	@Test
@@ -40,20 +41,20 @@ public class BoardTest {
 		assertNotNull(tile);
 	}
 
-//	 @Test
-//	 public void testLoadResources() {
-//	 Tile wheatTile = board.map.get(0).getTiles()[0][0];
-//	 Tile silkTile = board.map.get(0).getTiles()[1][0];
-//	 Tile ironTile = board.map.get(0).getTiles()[2][0];
-//	 Tile incenseTile = board.map.get(0).getTiles()[3][0];
-//	 Tile emptyTile = board.map.get(0).getTiles()[0][1];
-//	
-//	 assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
-//	 assertEquals(Tile.Resource.Silk, silkTile.getResource());
-//	 assertEquals(Tile.Resource.Iron, ironTile.getResource());
-//	 assertEquals(Tile.Resource.Incense, incenseTile.getResource());
-//	 assertEquals(Tile.Resource.None, emptyTile.getResource());
-//	 }
+	 @Test
+	 public void testLoadResources() {
+	 Tile wheatTile = board.map.get(0).getTiles()[3][3];
+	 Tile silkTile = board.map.get(0).getTiles()[1][1];
+	 Tile ironTile = board.map.get(0).getTiles()[0][0];
+	 Tile incenseTile = board.map.get(0).getTiles()[2][2];
+	 Tile emptyTile = board.map.get(0).getTiles()[0][1];
+	
+	 assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
+	 assertEquals(Tile.Resource.Silk, silkTile.getResource());
+	 assertEquals(Tile.Resource.Iron, ironTile.getResource());
+	 assertEquals(Tile.Resource.Incense, incenseTile.getResource());
+	 assertEquals(Tile.Resource.None, emptyTile.getResource());
+	 }
 //	
 //	 @Test
 //	 public void testLoadTerrain() {

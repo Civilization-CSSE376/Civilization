@@ -36,9 +36,9 @@ public class GameSetup extends JFrame {
 		JLabel languageSelection = new JLabel("Language (Idioma) :",
 				JLabel.CENTER);
 		JLabel player1CivilizationSelection = new JLabel(
-				"Player 1, Choose your civilization. (Jugador 1, Elige tu civilización", JLabel.CENTER);
+				"Player 1, Choose your civilization. (Jugador 1, Elige tu civilización)", JLabel.CENTER);
 		JLabel player2CivilizationSelection = new JLabel(
-				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización", JLabel.CENTER);
+				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización)", JLabel.CENTER);
 
 		JButton done = new JButton("Play!");
 
@@ -143,8 +143,8 @@ public class GameSetup extends JFrame {
 
 	private void CreateMainWindow(String language, String p1Civilization,
 			String p2Civilization) {
-		JFrame mainWindow = new MainWindow(language, p1Civilization,
-				p2Civilization);
+		JFrame mainWindow = new MainWindow(language, p1Civilization.split("/")[0],
+				p2Civilization.split("/")[0]);
 
 		mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setResizable(false);
@@ -166,7 +166,7 @@ public class GameSetup extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GameSetup.this.player1Civilization = e.getActionCommand().split("/")[0];
+			GameSetup.this.player1Civilization = e.getActionCommand();
 		}
 
 	}
@@ -175,7 +175,7 @@ public class GameSetup extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GameSetup.this.player2Civilization = e.getActionCommand().split("/")[0];
+			GameSetup.this.player2Civilization = e.getActionCommand();
 
 		}
 

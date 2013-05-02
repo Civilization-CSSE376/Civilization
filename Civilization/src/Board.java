@@ -50,15 +50,15 @@ public class Board extends JPanel {
 
 	private File file = new File("src/1stEight.txt");
 
-	private Player player1;
-	private Player player2;
+	private static Player player1;
+	private static Player player2;
 	Figure currentMovementFigure = null;
 
 	public static ArrayList<Panel> map;
 	public static ArrayList<Player> players = new ArrayList<Player>();
 	// private Market market;
-	private Player firstPlayer;
-	private Player currentPlayer;
+	private static Player firstPlayer;
+	private static Player currentPlayer;
 
 	private int phase;
 	public JPanel p;
@@ -71,21 +71,20 @@ public class Board extends JPanel {
 
 	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
 		this.messages = messages;
+		this.player1Civilization = p1Civ;
+		this.player2Civilization = p2Civ;
 		
 		map = new ArrayList<Panel>();
-		readFromFile(this.file);
+		readFromFile();
 		setTileLocations();
 
 		setPanelNeighbors();
 
-		this.player1Civilization = p1Civ;
-		this.player2Civilization = p2Civ;
-
 		this.player1 = new Player();
 		this.player2 = new Player();
 
-		// players.add(this.player1);
-		// players.add(this.player2);
+//		 players.add(this.player1);
+//		 players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
@@ -143,6 +142,7 @@ public class Board extends JPanel {
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
+
 	}
 
 	private void setPanelNeighbors() {
@@ -940,6 +940,18 @@ public class Board extends JPanel {
 
 		return p.getTiles()[tileX][tileY];
 	}
+	
+	public void readFromFile() {
+		
+		readFromFile(new File("src/civPanelDetails/" + this.player1Civilization));
+		for(int i = 0; i < 6; i++){
+			readFromFile(new File("src/panelDetails/Panel" + (i+1)));
+		}
+		readFromFile(new File("src/civPanelDetails/" + this.player2Civilization));
+		
+		map.get(0).changeIsExplored(); // Player 1's initial location.
+		map.get(7).changeIsExplored(); // Player 2's initial location.
+	}
 
 	public void readFromFile(File file) {
 		BufferedReader reader = null;
@@ -991,8 +1003,8 @@ public class Board extends JPanel {
 
 		}
 
-		map.get(0).changeIsExplored(); // Player 1's initial location
-		map.get(7).changeIsExplored(); // Player 2's initial location
+//		map.get(0).changeIsExplored(); // Player 1's initial location
+//		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
 
 	private void setTileLocations() {
@@ -1432,9 +1444,10 @@ public class Board extends JPanel {
 	public static void setGoingForResource(boolean goingForResource) {
 		Board.goingForResource = goingForResource;
 	}
-
-	public ArrayList<Player> getPlayers() {
-		return Board.players;
+	
+	public static Player getPlayer(int playerNumber){
+		if(playerNumber == 1) return player1;
+		return player2;
 	}
 
 }

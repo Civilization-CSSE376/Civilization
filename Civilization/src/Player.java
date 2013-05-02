@@ -17,12 +17,12 @@ public class Player {
 	// private ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
 	public int cityLimit = 2;
-	private int culture = 0;
-	private int gold = 0;
+	public int culture = 0;
+	public int gold = 0;
 	private int speed = 22;
 	private int handSize = 2;
 	private int stackSize = 2;
-	int trade = 0;
+	public int trade = 0;
 	private int combatAdvantage = 0;
 
 	public Player() {
