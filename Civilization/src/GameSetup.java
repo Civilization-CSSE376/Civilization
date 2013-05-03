@@ -27,7 +27,7 @@ public class GameSetup extends JFrame {
 
 	public GameSetup() {
 		this.setLayout(null);
-		this.setTitle("Civilization Setup");
+		this.setTitle("Civilization Setup / Configuración de la Civilización");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
 
@@ -40,7 +40,7 @@ public class GameSetup extends JFrame {
 		JLabel player2CivilizationSelection = new JLabel(
 				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización)", JLabel.CENTER);
 
-		JButton done = new JButton("Play!");
+		JButton done = new JButton("Play! / Jugar!");
 
 		// Language Selection
 		JRadioButton chooseEnglish = new JRadioButton("English");
@@ -117,7 +117,9 @@ public class GameSetup extends JFrame {
 	}
 
 	private void makeWarningWindow() {
+		GameSetup.this.setEnabled(false);
 		final JFrame warningWindow = new JFrame();
+		warningWindow.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		JPanel text = new JPanel();
 		JLabel warning = new JLabel("Player 1 and player 2 cannot choose the same civilization. (Jugador 1 y 2 no pueden elegir la misma civilización.)");
 		text.add(warning);
@@ -128,6 +130,7 @@ public class GameSetup extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				GameSetup.this.setEnabled(true);
 				warningWindow.setVisible(false);
 				warningWindow.dispose();
 				

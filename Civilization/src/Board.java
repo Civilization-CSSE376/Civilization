@@ -2,16 +2,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -25,13 +20,10 @@ import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingUtilities;
 
 import java.util.Hashtable;
 
@@ -734,12 +726,6 @@ public class Board extends JPanel {
 					+ tile.getScreenLocation().x + " , "
 					+ tile.getScreenLocation().y);
 			Board.currentTile = tile;
-			// System.out.printf("Tile clicked was: Panel: %d, i: %d j: %d\n",
-			// map.indexOf(panel), tile.getxPos(), tile.getyPos());
-
-//			if (SwingUtilities.isRightMouseButton(e)) {
-//				displayTileInfoWindow(tile);
-//			}
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
 				startOfTurn(tile);
@@ -752,29 +738,6 @@ public class Board extends JPanel {
 				// TODO: ask if want to trade
 			}
 		}
-
-//		private void displayTileInfoWindow(Tile tile) {
-//			JFrame frame = new JFrame("Tile info");
-//			frame.setLayout(new GridLayout(6, 1));
-//			JLabel terrain = new JLabel("Terrain is "
-//					+ tile.getTerrain().toString());
-//			JLabel trade = new JLabel("Trade is " + tile.getTrade());
-//			JLabel production = new JLabel("Production is "
-//					+ tile.getProduction());
-//			JLabel resource = new JLabel("Resource is "
-//					+ tile.getResource().toString());
-//			JLabel culture = new JLabel("Culture is " + tile.getCulture());
-//			JLabel coin = new JLabel("Coin is " + tile.getCoins());
-//			frame.add(terrain);
-//			frame.add(trade);
-//			frame.add(production);
-//			frame.add(resource);
-//			frame.add(culture);
-//			frame.add(coin);
-//			frame.pack();
-//			frame.setVisible(true);
-//
-//		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
@@ -1002,9 +965,6 @@ public class Board extends JPanel {
 			}
 
 		}
-
-//		map.get(0).changeIsExplored(); // Player 1's initial location
-//		map.get(7).changeIsExplored(); // Player 2's initial location
 	}
 
 	private void setTileLocations() {
@@ -1029,75 +989,6 @@ public class Board extends JPanel {
 		}
 	}
 
-	// public void drawTerrain(Graphics2D g2) {
-	// for (int i = 0; i < 8; i++) {
-	// for (int j = 0; j < 4; j++) {
-	// for (int k = 0; k < 4; k++) {
-	// Color rectColor = Color.RED;
-	// if (map.get(i).getIsExplored()) {
-	// switch (map.get(i).getTiles()[j][k].getTerrain()
-	// .toString()) {
-	// case "Desert":
-	// rectColor = Color.YELLOW;
-	// break;
-	// case "Mountain":
-	// rectColor = Color.DARK_GRAY;
-	// break;
-	// case "Forest":
-	// rectColor = Color.WHITE;
-	// break;
-	// case "Grassland":
-	// rectColor = Color.GREEN;
-	// break;
-	// case "Water":
-	// rectColor = Color.BLUE;
-	// break;
-	// }
-	// if (i > 3) {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * (i - 4)) + (110 * j),
-	// 440 + (110 * k), 110, 110);
-	// g2.setColor(rectColor);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// } else {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * i) + (110 * j), (110 * k), 110, 110);
-	// g2.setColor(rectColor);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// }
-	// // System.out.println("Tile[" + j + "][" + k +
-	// // "] created at location " + (20 + (440 * i) + (110 *
-	// // j)) +
-	// // " " + (20 + nextRow + (110 * k)));
-	// } else {
-	// if (i > 3) {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * (i - 4)) + (110 * j),
-	// 440 + (110 * k), 110, 110);
-	// g2.setColor(Color.BLACK);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// } else {
-	// Rectangle2D.Double rect = new Rectangle2D.Double(
-	// (440 * i) + (110 * j), (110 * k), 110, 110);
-	// g2.setColor(Color.BLACK);
-	// g2.fill(rect);
-	// g2.setColor(Color.WHITE);
-	// g2.draw(rect);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-
-	// TODO: make this more efficient? instead of drawing the entire game board
-	// every stinkin' time...
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;

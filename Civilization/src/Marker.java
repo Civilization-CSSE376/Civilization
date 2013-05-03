@@ -3,7 +3,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public abstract class Marker implements Drawable {

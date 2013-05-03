@@ -31,7 +31,6 @@ public class MainWindow extends JFrame {
 	private JButton quit = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
-
 	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
 		Locale currentLocale;
@@ -40,11 +39,7 @@ public class MainWindow extends JFrame {
 		else currentLocale = new Locale("sp", "SP");
 		
 		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
-		
-		
 		this.setLayout(null);
-		System.out.println(languageChosen + " was chosen as the language.");
-		System.out.printf("Player 1 chose " + player1CivilizationChosen + " as his/her civilization and player 2 chose " + player2CivilizationChosen + " as his/her civilization.\n");
 		
 		this.p1Civilization = player1CivilizationChosen;
 		this.p2Civilization = player2CivilizationChosen;
