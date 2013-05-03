@@ -37,11 +37,11 @@ public abstract class Marker implements Drawable {
 		else if(name.equals("Acueducto")) return "Aqueduct";
 		else if(name.equals("Biblioteca")) return "Library";
 		else if(name.equals("Universidad")) return "University";
-		else if(name.equals("Cuartel")) return "Barraks";
+		else if(name.equals("Cuartel")) return "Barracks";
 		else if(name.equals("Academia")) return "Academy";
 		else if(name.equals("Taller")) return "Workshop";
 		else if(name.equals("Mina de Hierro")) return "Iron Mine";
-		else if(name.equals("Factoria")) return "Trading Post";
+		else if(name.equals("Factoria")) return "TradingPost";
 		else if(name.equals("Puerto")) return "Harbor";
 		else return name;
 	}

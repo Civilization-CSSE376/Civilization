@@ -134,4 +134,19 @@ public class CombatTest {
 		assertEquals(-1, combat.attackerHand.indexOf(attacking));
 		assertEquals(0, combat.defenderFront.indexOf(defending));
 	}
+	
+	@Test
+	public void testSuccessfulAttack(){
+		this.combat.attackerFront.add(this.combat.attackerHand.get(0));
+		this.combat.attackerFront.add(this.combat.attackerHand.get(1));
+		this.combat.defenderFront.add(this.combat.defenderHand.get(0));
+		
+		assertTrue(this.combat.successfulAttack());
+		
+		this.combat.defenderFront.add(this.combat.defenderHand.get(1));
+		this.combat.defenderFront.add(this.combat.defenderHand.get(2));
+		
+		assertFalse(this.combat.successfulAttack());
+	}
+	
 }
