@@ -248,13 +248,9 @@ public class MainWindow extends JFrame {
 		
 		JLabel government = new JLabel(messages.getString("government") + gov);
 		government.setForeground(Color.WHITE);
-//		government.setLocation(25, 25);
-//		government.setSize(300, 25);
 		
 		JLabel governmentAbility = new JLabel(messages.getString("ability"));
 		governmentAbility.setForeground(Color.WHITE);
-//		government.setLocation(25, 100);
-//		government.setSize(300, 25);
 		
 		JLabel trade = new JLabel(messages.getString("trade1") + Board.getPlayer(playerNum).trade);
 		trade.setForeground(Color.WHITE);

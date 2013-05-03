@@ -22,8 +22,27 @@ public abstract class Marker implements Drawable {
 	private ResourceBundle messages;
 
 	public Marker(String name, ResourceBundle messages) {
+		name = translateNameToEnglish(name);
 		this.name = name;
 		this.messages = messages;
+	}
+	
+	public String translateNameToEnglish(String name){
+		if(name.equals("Mercado")) return "Market";
+		else if(name.equals("Banco")) return "Bank";
+		else if(name.equals("Templo")) return "Temple";
+		else if(name.equals("Catedral")) return "Cathedral";
+		else if(name.equals("Granero")) return "Granary";
+		else if(name.equals("Acueducto")) return "Aqueduct";
+		else if(name.equals("Biblioteca")) return "Library";
+		else if(name.equals("Universidad")) return "University";
+		else if(name.equals("Cuartel")) return "Barraks";
+		else if(name.equals("Academia")) return "Academy";
+		else if(name.equals("Taller")) return "Workshop";
+		else if(name.equals("Mina de Hierro")) return "Iron Mine";
+		else if(name.equals("Factoria")) return "Trading Post";
+		else if(name.equals("Puerto")) return "Harbor";
+		else return name;
 	}
 
 	public boolean isValid(Tile tile, City city) {

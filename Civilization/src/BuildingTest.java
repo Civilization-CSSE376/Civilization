@@ -276,5 +276,21 @@ public class BuildingTest {
 		assertEquals(Terrain.Water, target.allowedTerrain);
 		
 	}
+//	
+//	@Test
+//	public void testNameTranslation() {
+//		String[] englishNames = {"Market", "Bank", "Temple", "Cathedral", "Granary", "Aqueduct", "Library", "University", "Barracks", "Academy", "Workshop", "Iron Mine", "Trading Post", "Harbor"};
+//		String[] spanishNames = {"Mercado", "Banco", "Templo", "Catedral", "Granero", "Acueducto", "Biblioteca", "Universidad", "Cuartel", "Academia", "Taller", "Mina de Hierro", "Factoria", "Puerto"};
+//		Building target;
+//		for(int i = 0; i < englishNames.length; i++){
+//			target = new Building(englishNames[i], messages);
+//			System.out.println(target.name + " ... " + englishNames[i]);
+//			assertTrue(target.name.equals(englishNames[i]));
+//			target = new Building(spanishNames[i], messages);
+//			assertTrue(target.name.equals(englishNames[i]));
+//		}
+//	}
+	
+	
 
 }
