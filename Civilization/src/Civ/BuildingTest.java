@@ -293,6 +293,41 @@ public class BuildingTest {
 //		}
 //	}
 	
+	@Test
+	public void nameTranslationTest(){
+		Building target;
+		
+		target = new Building("Mercado", messages);
+		assertEquals("Market", target.name);
+		target = new Building("Banco", messages);
+		assertEquals("Market", target.name);
+		target = new Building("Templo", messages);
+		assertEquals("Temple", target.name);
+		target = new Building("Catedral", messages);
+		assertEquals("Temple", target.name);
+		target = new Building("Granero", messages);
+		assertEquals("Granary", target.name);
+		target = new Building("Acueducto", messages);
+		assertEquals("Granary", target.name);
+		target = new Building("Biblioteca", messages);
+		assertEquals("Library", target.name);
+		target = new Building("Universidad", messages);
+		assertEquals("Library", target.name);
+		target = new Building("Cuartel", messages);
+		assertEquals("Barracks", target.name);
+		target = new Building("Academia", messages);
+		assertEquals("Barracks", target.name);
+		target = new Building("Taller", messages);
+		assertEquals("Workshop", target.name);
+		target = new Building("Mina de Hierro", messages);
+		assertEquals("Workshop", target.name);
+		target = new Building("Factoria", messages);
+		assertEquals("TradingPost", target.name);
+		target = new Building("Puerto", messages);
+		assertEquals("Harbor", target.name);
+		
+	}
+	
 	
 
 }
