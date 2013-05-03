@@ -150,6 +150,9 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int[] cultureLocations = { 25, 70, 125, 180, 235, 290, 345, 400, 455, 510, 565, 620, 675, 730, 790, 845, 905, 960, 1015, 1070, 1125, 1180};
+				
 				final JFrame marketWindow = makeNewWindow(1225, 685, messages.getString("marketDetails"));
 				
 				JPanel marketBoard = makePicturePanel(0, -5, 1220, 625, "src/marketBoard.png");
@@ -160,6 +163,17 @@ public class MainWindow extends JFrame {
 				buttonPanel.setLocation(0, 620);
 				buttonPanel.setSize(1235, 40);
 				
+				JPanel player1CultureLocation = new JPanel();
+				player1CultureLocation.setBackground(Color.RED);
+				player1CultureLocation.setLocation(cultureLocations[Board.getPlayer(1).culture], 540);
+				player1CultureLocation.setSize(15, 25);
+				JPanel player2CultureLocation = new JPanel();
+				player2CultureLocation.setBackground(Color.YELLOW);
+				player2CultureLocation.setLocation(cultureLocations[Board.getPlayer(2).culture], 570);
+				player2CultureLocation.setSize(15, 25);
+				
+				marketWindow.add(player1CultureLocation);
+				marketWindow.add(player2CultureLocation);
 				marketWindow.add(marketBoard);
 				marketWindow.add(buttonPanel);
 				marketWindow.setVisible(true);
@@ -191,7 +205,6 @@ public class MainWindow extends JFrame {
 		
 		window.setSize(width, height);
 		window.setAlwaysOnTop(true);
-		window.setVisible(true);
 		window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		MainWindow.this.setEnabled(false);
@@ -281,6 +294,8 @@ public class MainWindow extends JFrame {
 		playerWindow.add(civPic);
 		playerWindow.add(info);
 		playerWindow.add(buffer);
+		
+		playerWindow.setVisible(true);
 		
 		closeButton.addActionListener(new ActionListener(){
 
