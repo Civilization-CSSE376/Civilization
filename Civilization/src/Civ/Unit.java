@@ -1,5 +1,6 @@
 package Civ;
 
+
 public class Unit {
 
 	private static final double LAND_TIER_ONE_CHANCE = 1/5;

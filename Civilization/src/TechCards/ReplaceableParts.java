@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class ReplaceableParts extends TechCard {
 
-	public ReplaceableParts(String name) {
-		super(name);
+	public ReplaceableParts() {
+		super("ReplaceableParts");
 		this.tier = 4;
 	}
 

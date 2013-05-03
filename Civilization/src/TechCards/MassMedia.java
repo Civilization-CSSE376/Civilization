@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class MassMedia extends TechCard {
 
-	public MassMedia(String name) {
-		super(name);
+	public MassMedia() {
+		super("MassMedia");
 		this.tier = 4;
 	}
 

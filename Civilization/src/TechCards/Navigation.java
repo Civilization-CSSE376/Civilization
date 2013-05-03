@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Navigation extends TechCard {
 
-	public Navigation(String name) {
-		super(name);
+	public Navigation() {
+		super("Navigation");
 		this.tier = 1;
 	}
 

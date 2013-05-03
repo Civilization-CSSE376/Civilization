@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class PrintingPress extends TechCard {
 
-	public PrintingPress(String name) {
-		super(name);
+	public PrintingPress() {
+		super("PrintingPress");
 		this.tier = 2;
 	}
 

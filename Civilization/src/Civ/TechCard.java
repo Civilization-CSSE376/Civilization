@@ -2,10 +2,12 @@ package Civ;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class TechCard {
+import Civ.Player;
 
-	protected String name;
-	protected int tier;
+public class TechCard {
+
+	public String name;
+	public int tier;
 
 	public TechCard(String name) {
 		
@@ -38,7 +40,10 @@ public abstract class TechCard {
 		}
 
 	}
+
+	public void takeEffect(Player player) {
+		System.out.println("This should have been overridden");
+	}
 	
-	public abstract void takeEffect(Civ.Player player);
 
 }

@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class HorsebackRiding extends TechCard {
 
-	public HorsebackRiding(String name) {
-		super(name);
+	public HorsebackRiding() {
+		super("HorsebackRiding");
 		this.tier = 1;
 	}
 

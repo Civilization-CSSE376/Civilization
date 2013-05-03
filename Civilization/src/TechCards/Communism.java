@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Communism extends TechCard {
 
-	public Communism(String name) {
-		super(name);
+	public Communism() {
+		super("Communism");
 		this.tier = 3;
 	}
 

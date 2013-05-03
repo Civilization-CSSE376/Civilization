@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Writing extends TechCard {
 
-	public Writing(String name) {
-		super(name);
+	public Writing() {
+		super("Writing");
 		this.tier = 1;
 	}
 

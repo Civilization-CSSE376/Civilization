@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Philosophy extends TechCard {
 
-	public Philosophy(String name) {
-		super(name);
+	public Philosophy() {
+		super("Philosophy");
 		this.tier = 1;
 		
 	}

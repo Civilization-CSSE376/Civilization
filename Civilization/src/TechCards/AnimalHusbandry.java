@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class AnimalHusbandry extends TechCard {
 
-	public AnimalHusbandry(String name) {
-		super(name);
+	public AnimalHusbandry() {
+		super("AnimalHusbandry");
 		this.tier = 1;
 	}
 

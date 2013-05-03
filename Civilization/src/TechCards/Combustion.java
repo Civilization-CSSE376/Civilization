@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Combustion extends TechCard {
 
-	public Combustion(String name) {
-		super(name);
+	public Combustion() {
+		super("Combustion");
 		this.tier = 4;
 	}
 

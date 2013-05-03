@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Currency extends TechCard {
 
-	public Currency(String name) {
-		super(name);
+	public Currency() {
+		super("Currency");
 		this.tier = 1;
 	}
 

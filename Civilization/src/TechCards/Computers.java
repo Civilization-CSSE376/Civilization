@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Computers extends TechCard {
 
-	public Computers(String name) {
-		super(name);
+	public Computers() {
+		super("Computers");
 		this.tier = 4;
 	}
 
@@ -15,7 +15,7 @@ public class Computers extends TechCard {
 		player.gold += 1;
 		
 		/*
-		 * your batt and culture hand sizes are increased
+		 * your battle and culture hand sizes are increased
 		 * by 1 for every 5 coins you possess
 		 */
 

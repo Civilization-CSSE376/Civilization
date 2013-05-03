@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Irrigation extends TechCard {
 
-	public Irrigation(String name) {
-		super(name);
+	public Irrigation() {
+		super("Irrigation");
 		this.tier = 2;
 	}
 

@@ -1,7 +1,7 @@
 package Civ;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class Building extends Marker {
 		this.messages = messages;
 		this.upgradedBuildings = Arrays.asList(messages.getString("bank"), messages.getString("cathedral"), messages.getString("aqueduct"), messages.getString("university"), messages.getString("academy"), messages.getString("ironMine"));
 		this.isUpgraded = isItUpgraded(name);
-		this.translateName(name);
+		this.translateName(this.name);
 		this.createBuilding(this.name, this.messages);
 	}
 
@@ -71,9 +71,9 @@ public class Building extends Marker {
 			break;
 		}
 	}
-
+	
 	private void createBuilding(String name, ResourceBundle messages) {
-
+		
 		switch (name) {
 		case "Market":
 			this.culture = 1;
@@ -87,7 +87,6 @@ public class Building extends Marker {
 				this.coin = 1;
 				this.cost = 10;
 			}
-
 			break;
 		case "Temple":
 			this.culture = 2;
@@ -99,7 +98,6 @@ public class Building extends Marker {
 				this.culture = 3;
 				this.cost = 10;
 			}
-
 			break;
 		case "Granary":
 			this.production = 1;
@@ -113,7 +111,6 @@ public class Building extends Marker {
 				this.trade = 2;
 				this.cost = 8;
 			}
-
 			break;
 		case "Library":
 			this.culture = 1;
@@ -127,7 +124,6 @@ public class Building extends Marker {
 				this.trade = 2;
 				this.cost = 8;
 			}
-
 			break;
 		case "Barracks":
 			this.combatAdvantage = 2;

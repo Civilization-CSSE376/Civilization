@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Pottery extends TechCard {
 
-	public Pottery(String name) {
-		super(name);
+	public Pottery() {
+		super("Pottery");
 		this.tier = 1;
 	}
 

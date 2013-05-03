@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class AtomicTheory extends TechCard {
 
-	public AtomicTheory(String name) {
-		super(name);
+	public AtomicTheory() {
+		super("AtomicTheory");
 		this.tier = 4;
 	}
 

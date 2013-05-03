@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class Gunpowder extends TechCard {
 
-	public Gunpowder(String name) {
-		super(name);
+	public Gunpowder() {
+		super("Gunpowder");
 		this.tier = 3;
 	}
 

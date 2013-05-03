@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class CodeOfLaws extends TechCard {
 
-	public CodeOfLaws(String name) {
-		super(name);
+	public CodeOfLaws() {
+		super("CodeOfLaws");
 		this.tier = 1;
 	}
 

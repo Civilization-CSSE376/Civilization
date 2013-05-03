@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class MetalWorking extends TechCard {
 
-	public MetalWorking(String name) {
-		super(name);
+	public MetalWorking() {
+		super("MetalWorking");
 		this.tier = 1;
 	}
 

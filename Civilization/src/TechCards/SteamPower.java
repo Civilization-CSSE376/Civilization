@@ -5,8 +5,8 @@ import Civ.TechCard;
 
 public class SteamPower extends TechCard {
 
-	public SteamPower(String name) {
-		super(name);
+	public SteamPower() {
+		super("SteamPower");
 		this.tier = 3;
 	}
 
