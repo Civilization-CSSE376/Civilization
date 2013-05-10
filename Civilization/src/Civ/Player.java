@@ -16,7 +16,7 @@ public class Player {
 	public ArrayList<City> cities = new ArrayList<City>();
 	public ArrayList<Unit> units = new ArrayList<Unit>();
 	// private ArrayList<CultureCard> cultureCards;
-	private ArrayList<TechCard> techCards;
+	public ArrayList<TechCard> techCards;
 	// private ArrayList<WonderCard> wonderCards;
 	public int cityLimit = 2;
 	public int culture = 0;
