@@ -2,12 +2,12 @@ package Civ;
 
 public class Unit {
 
-	private static final double LAND_TIER_ONE_CHANCE = 1 / 5;
-	private static final double LAND_TIER_TWO_CHANCE = 3 / 5;
-	private static final double LAND_TIER_THREE_CHANCE = 1 / 5;
-	private static final double AIR_TIER_ONE_CHANCE = 1 / 3;
-	private static final double AIR_TIER_TWO_CHANCE = 1 / 3;
-	private static final double AIR_TIER_THREE_CHANCE = 1 / 3;
+	private static final double LAND_TIER_ONE_CHANCE = 20;
+	private static final double LAND_TIER_TWO_CHANCE = 60;
+	private static final double LAND_TIER_THREE_CHANCE = 20;
+	private static final double AIR_TIER_ONE_CHANCE = 33;
+	private static final double AIR_TIER_TWO_CHANCE = 33;
+	private static final double AIR_TIER_THREE_CHANCE = 33;
 
 	String type;
 	int level;
@@ -55,7 +55,7 @@ public class Unit {
 			}
 		}
 
-		return attack[randomIndex];
+		return attack[randomIndex - 1];
 	}
 
 	private int randomLandAttackBase() {
@@ -76,7 +76,7 @@ public class Unit {
 			}
 		}
 
-		return attack[randomIndex];
+		return attack[randomIndex - 1];
 	}
 
 	private double getAirChance(int tier) {
