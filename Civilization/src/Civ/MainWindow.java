@@ -183,7 +183,7 @@ public class MainWindow extends JFrame {
 							getsGreatPerson = true;
 						}
 						if(canBuy && getsGreatPerson){
-							Board.currentPlayer.greatPeople.add(new GreatPerson("Doesn't Matter", messages));
+							Board.currentPlayer.greatPeople.add(new GreatPerson(messages));
 							tradeCultureWindow.dispose();
 							MainWindow.this.tradeCulture.doClick();
 						}else if(canBuy){
