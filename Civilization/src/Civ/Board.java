@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,15 +19,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import java.util.Hashtable;
 
@@ -36,6 +45,65 @@ import Civ.Tile.Resource;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
+
+	public static final Map<String, String> cardDescriptions = new HashMap<String, String>() {
+		{
+			put("Ballistics",
+					"If the player's artillery level is less than, 4 then the player's new artillery level is 4");
+			put("Banking", "Unlock the ability to build a bank");
+			put("Biology",
+					"If the player's stacksize is less than 5, then the player's new stacksize is 5");
+			put("Chivalry",
+					"Unlock the Feudalism type of government, and if the player's calvary level is less than 2, then the player's new calvary level is 2");
+			put("CivilServices",
+					"Increase the player's handsize by 1 and the player's gold by 1");
+			put("CodeOfLaws",
+					"Unlock the republic type of government and unlock the ability to build a trading post");
+			put("Combustion",
+					"If the player's calvary level is less than 4, then the player's new calvary level is 4");
+			put("Communism", "Unlock the communism type of government");
+			put("Computers", "Increase the player's gold by 1");
+			put("Construction", "Unlock the ability to build a workshop");
+			put("Currency", "Unlock the ability to build a market");
+			put("Democracy",
+					"Unlock the democracy type of government, and if the player's infantry level is less than 2, the player's new infrantry level is 2");
+			put("Engineering", "Unlock the ability to build an aqueduct");
+			put("Flight",
+					"If the player's speed is less than 6, then the player's new speed is 6");
+			put("Gunpowder",
+					"If the player's infantry level is less than 3, then the player's new infantry level is 3");
+			put("HorsebackRiding",
+					"If the player's speed is less than 3, then the player's new speed is 3");
+			put("Irrigation",
+					"If the player's city limit is less than 3, then the player's new city limit is 3");
+			put("Masonry",
+					"If the player's stacksize is less than 3, then the player's new stacksize is 3");
+			put("Mathematics",
+					"If the player's artillery level is less than 2, then the player's new artillery level is 2");
+			put("MetalCasting",
+					"Increase the player's gold by 1, and if the player's artillery level is less than 3, then the player's new artillery level is 3");
+			put("MetalWorking", "Unlock the ability to build a barracks");
+			put("MilitaryScience", "Unlock the ability to build an academy");
+			put("Monarchy", "Unlock the monarchy type of government");
+			put("Navigation", "Unlock the ability to build a harbor");
+			put("Philosophy", "Unlock the ability to build a temple");
+			put("Pottery", "Unlock the ability to build a granary");
+			put("PrintingPress",
+					"Unlock the ability to build a university, and if the player's stacksize is less than 4, then the player's new stacksize is 4");
+			put("Railroad",
+					"Unlock the ability to build an iron mine and if the player's calvary level is less than 3, then the player's new calvary level is 3");
+			put("ReplaceableParts",
+					"If the player's stacksize is less than 6, then the player's new stacksize is 6, and if the player's infantry level is less than 4, then the player's new infantry level is 4");
+			put("Sailing",
+					"If the player's speed is less than 4, then the player's new speed is 4");
+			put("SteamPower",
+					"If the player's speed is less than 5, then the player's new speed is 5");
+			put("Theology",
+					"Increase the player's handsize by 1, unlock the fundamentalism type of government, and unlock the ability to build a cathedral");
+			put("Writing", "Unlock the ability to build a library");
+			put("SpaceFlight", "You win the game");
+		}
+	};
 
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
@@ -763,6 +831,7 @@ public class Board extends JPanel {
 				// TODO: ask if want to trade
 			} else if (Board.this.currentPhase.equals(RESEARCH)) {
 				research(); // TODO: techwindow
+
 			}
 		}
 
@@ -792,6 +861,306 @@ public class Board extends JPanel {
 	}
 
 	public void research() {
+
+		final JFrame researchWindow = new JFrame("Research");
+		researchWindow.setSize(505, 380);
+		researchWindow.setLayout(null);
+
+		JPanel tierOptions = new JPanel();
+		JPanel cardOptions = new JPanel();
+		JPanel description = new JPanel();
+		JPanel warningMessage = new JPanel();
+		JPanel buttons = new JPanel();
+
+		String[] tiers = { "1", "2", "3", "4", "5" };
+		tierOptions.setLocation(0, 0);
+		tierOptions.setSize(250, 50);
+		JLabel tierLabel = new JLabel("Tier: ");
+		final JComboBox<String> tierDropDown = new JComboBox<String>(tiers);
+		tierDropDown.setSelectedIndex(0);
+		tierOptions.add(tierLabel);
+		tierOptions.add(tierDropDown);
+
+		cardOptions.setLocation(250, 0);
+		cardOptions.setSize(250, 50);
+		JLabel cardLabel = new JLabel("Card: ");
+		final JComboBox<String> techCards = new JComboBox<String>();
+		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
+		tierCards[0] = new DefaultComboBoxModel<String>(new String[] {
+				"CodeOfLaws", "Currency", "HorsebackRiding", "Masonry",
+				"MetalWorking", "Navigation", "Philosophy", "Pottery",
+				"Writing" });
+		tierCards[1] = new DefaultComboBoxModel<String>(new String[] {
+				"Chivalry", "CivilServices", "Construction", "Democracy",
+				"Engineering", "Irrigation", "Mathematics", "Monarchy",
+				"PrintingPress", "Sailing" });
+		tierCards[2] = new DefaultComboBoxModel<String>(new String[] {
+				"Banking", "Biology", "Communism", "Gunpowder", "MetalCasting",
+				"MilitaryScience", "Railroad", "SteamPower", "Theology" });
+		tierCards[3] = new DefaultComboBoxModel<String>(new String[] {
+				"Ballistics", "Combustion", "Computers", "Flight",
+				"ReplaceableParts" });
+		tierCards[4] = new DefaultComboBoxModel<String>(
+				new String[] { "SpaceFlight" });
+		techCards.setModel(tierCards[0]);
+		cardOptions.add(cardLabel);
+		cardOptions.add(techCards);
+
+		description.setLocation(0, 50);
+		description.setSize(500, 200);
+		description.setLayout(new GridLayout(2, 1));
+		final JLabel cardName = new JLabel("     Card name:    "
+				+ techCards.getItemAt(techCards.getSelectedIndex()));
+		final JTextArea cardDescription = new JTextArea(
+				"     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
+		cardDescription.setBackground(getBackground());
+		cardDescription.setLineWrap(true);
+		description.add(cardName);
+		description.add(cardDescription);
+
+		warningMessage.setLocation(0, 250);
+		warningMessage.setSize(500, 50);
+		final JLabel message = new JLabel("");
+		message.setForeground(Color.RED);
+		warningMessage.add(message);
+
+		buttons.setLocation(0, 300);
+		buttons.setSize(500, 50);
+		final JButton buy = new JButton("Buy");
+		JButton cancel = new JButton("Cancel");
+		JButton tree = new JButton("Tech Card Tree");
+		buttons.add(tree);
+		buttons.add(buy);
+		buttons.add(cancel);
+
+		researchWindow.add(tierOptions);
+		researchWindow.add(cardOptions);
+		researchWindow.add(description);
+		researchWindow.add(warningMessage);
+		researchWindow.add(buttons);
+
+		researchWindow.setVisible(true);
+
+		tree.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final JFrame treeWindow = new JFrame("Player tech card tree");
+				treeWindow.setLayout(null);
+				treeWindow.setSize(525, 370);
+
+				treeWindow.add(drawTechCardTree(currentPlayer));
+
+				JPanel button = new JPanel();
+				button.setLocation(0, 290);
+				button.setSize(525, 50);
+				JButton close = new JButton("Close");
+				button.add(close);
+				treeWindow.add(button);
+
+				treeWindow.setAlwaysOnTop(true);
+				treeWindow.setVisible(true);
+
+				close.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						treeWindow.dispose();
+					}
+
+				});
+			}
+		});
+
+		techCards.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				cardName.setText("     Card name:    "
+						+ techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
+				System.out.println(message.getText());
+				System.out.println(message.getText().equals(
+						"You cannot buy a card from this tier level."));
+				if (!message.getText().equals(
+						"You cannot buy a card from this tier level.")) {
+					if (currentPlayer.techCards.contains(techCards
+							.getItemAt(techCards.getSelectedIndex()))) {
+						message.setText("You already have this card.");
+						buy.setEnabled(false);
+					} else if (!checkPlayerHasEnoughTrade(tierDropDown
+							.getSelectedIndex() + 1)) {
+						message.setText("You do not have enough trade to buy this card.");
+						buy.setEnabled(false);
+					} else {
+						buy.setEnabled(true);
+						message.setText("");
+					}
+				}
+			}
+
+		});
+
+		tierDropDown.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
+				cardName.setText("     Card name:    "
+						+ techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
+				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
+					message.setText("You cannot buy a card from this tier level.");
+					buy.setEnabled(false);
+				} else if (currentPlayer.techCards.contains(techCards
+						.getItemAt(techCards.getSelectedIndex()))) {
+					message.setText("You already have this card.");
+					buy.setEnabled(false);
+				} else if (!checkPlayerHasEnoughTrade(tierDropDown
+						.getSelectedIndex() + 1)) {
+					message.setText("You do not have enough trade to buy this card.");
+					buy.setEnabled(false);
+				} else {
+					buy.setEnabled(true);
+					message.setText("");
+				}
+
+			}
+		});
+
+		buy.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(techCards.getItemAt(techCards
+						.getSelectedIndex()));
+				currentPlayer.techCards.add(new TechCard(techCards
+						.getItemAt(techCards.getSelectedIndex())));
+				currentPlayer.trade = 0;
+				updateValidTiers(tierDropDown.getSelectedIndex() + 1);
+				researchWindow.dispose();
+			}
+
+		});
+
+		cancel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				researchWindow.dispose();
+			}
+
+		});
+	}
+
+	public void updateValidTiers(int tier) {
+		if (tier == 1) {
+			if ((currentPlayer.tier1Cards - currentPlayer.tier2Cards) >= 2)
+				currentPlayer.canBuyTier2TechCard = true;
+			else
+				currentPlayer.canBuyTier2TechCard = false;
+		} else if (tier == 2) {
+			if ((currentPlayer.tier2Cards - currentPlayer.tier3Cards) >= 2)
+				currentPlayer.canBuyTier3TechCard = true;
+			else
+				currentPlayer.canBuyTier3TechCard = false;
+		} else if (tier == 3) {
+			if ((currentPlayer.tier3Cards - currentPlayer.tier4Cards) >= 2)
+				currentPlayer.canBuyTier4TechCard = true;
+			else
+				currentPlayer.canBuyTier4TechCard = false;
+		} else {
+			if (currentPlayer.tier4Cards >= 2)
+				currentPlayer.canBuyTier5TechCard = true;
+			else
+				currentPlayer.canBuyTier5TechCard = false;
+		}
+	}
+
+	public boolean checkPlayerHasEnoughTrade(int tier) {
+		if (tier == 1 && currentPlayer.trade >= 6)
+			return true;
+		else if (tier == 2 && currentPlayer.trade >= 11)
+			return true;
+		else if (tier == 3 && currentPlayer.trade >= 16)
+			return true;
+		else if (tier == 4 && currentPlayer.trade >= 21)
+			return true;
+		else if (tier == 5 && currentPlayer.trade >= 26)
+			return true;
+		else
+			return false;
+	}
+
+	public boolean checkValidTier(int tier) {
+		if (tier == 1)
+			return true;
+		else if (tier == 2 && currentPlayer.canBuyTier2TechCard)
+			return true;
+		else if (tier == 3 && currentPlayer.canBuyTier3TechCard)
+			return true;
+		else if (tier == 4 && currentPlayer.canBuyTier4TechCard)
+			return true;
+		else if (tier == 5 && currentPlayer.canBuyTier5TechCard)
+			return true;
+		else
+			return false;
+	}
+
+	public static JPanel drawTechCardTree(Player player) {
+		JPanel tree = new JPanel();
+		tree.setLocation(0, 0);
+		tree.setSize(510, 290);
+		tree.setLayout(null);
+		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
+				+ player.tier4Cards == 0) {
+			System.out.println("No cards!");
+			JLabel label = new JLabel(
+					"Player has not bought any tech cards yet.");
+			label.setLocation(100, 145);
+			label.setSize(300, 20);
+			tree.add(label);
+		} else {
+			int xCoord = 10;
+			for (int i = 0; i < player.tier1Cards; i++) {
+
+				tree.add(makeCard(xCoord, 230));
+				xCoord += 55;
+			}
+
+			xCoord = 37;
+			for (int i = 0; i < player.tier2Cards; i++) {
+				tree.add(makeCard(xCoord, 175));
+				xCoord += 55;
+			}
+
+			xCoord = 65;
+			for (int i = 0; i < player.tier3Cards; i++) {
+				tree.add(makeCard(xCoord, 120));
+				xCoord += 55;
+			}
+
+			xCoord = 92;
+			for (int i = 0; i < player.tier4Cards; i++) {
+				tree.add(makeCard(xCoord, 65));
+				xCoord += 55;
+			}
+		}
+		return tree;
+	}
+
+	public static JPanel makeCard(int x, int y) {
+		JPanel card = new JPanel();
+		card.setLocation(x, y);
+		card.setSize(50, 50);
+		card.setBackground(Color.BLACK);
+		return card;
 
 	}
 
@@ -1256,6 +1625,7 @@ public class Board extends JPanel {
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = RESEARCH;
+				research();
 			}
 
 			for (Figure p1Figs : player1.figures)
@@ -1265,9 +1635,10 @@ public class Board extends JPanel {
 
 			this.validTiles.clear();
 		} else {
-			if (this.currentPlayer == this.firstPlayer)
+			if (this.currentPlayer == this.firstPlayer) {
 				this.changePlayerTurn();
-			else {
+				research();
+			} else {
 				if (this.firstPlayer == this.player1)
 					this.firstPlayer = this.player2;
 				else

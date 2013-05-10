@@ -16,7 +16,7 @@ public class Player {
 	public ArrayList<City> cities = new ArrayList<City>();
 	public ArrayList<Unit> units = new ArrayList<Unit>();
 	// private ArrayList<CultureCard> cultureCards;
-	private ArrayList<TechCard> techCards;
+	public ArrayList<TechCard> techCards = new ArrayList<TechCard>();
 	// private ArrayList<WonderCard> wonderCards;
 	public int cityLimit = 2;
 	public int culture = 0;
@@ -26,6 +26,14 @@ public class Player {
 	public int stackSize = 2;
 	public int trade = 0;
 	private int combatAdvantage = 0;
+	public boolean canBuyTier2TechCard = false;
+	public boolean canBuyTier3TechCard = false;
+	public boolean canBuyTier4TechCard = false;
+	public boolean canBuyTier5TechCard = false;
+	public int tier1Cards = 0;
+	public int tier2Cards = 0;
+	public int tier3Cards = 0;
+	public int tier4Cards = 0;
 
 	public int artilleryLevel = 1;
 	public int infantryLevel = 1;
