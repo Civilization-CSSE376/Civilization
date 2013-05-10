@@ -31,6 +31,7 @@ public class MainWindow extends JFrame {
 	private JButton marketDetails = new JButton();
 	private JButton endPhase = new JButton();
 	private JButton quit = new JButton();
+	private JButton tradeCulture = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
 	
@@ -56,11 +57,13 @@ public class MainWindow extends JFrame {
 		this.endPhase.setText(messages.getString("endPhase"));
 		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
+		this.tradeCulture.setText(messages.getString("tradeCulture"));
 		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
 		this.buttons.add(this.endPhase);
+		this.buttons.add(this.tradeCulture);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
@@ -141,6 +144,14 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				makePlayerWindow(messages.getString("player2Details"), MainWindow.this.p2Civilization, messages);
 			}	
+		});
+		
+		this.tradeCulture.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				final JFrame tradeCultureWindow = makeNewWindow(500,500, messages.getString("tradeCulture"));
+			}
 		});
 		
 		this.marketDetails.addActionListener(new ActionListener() {

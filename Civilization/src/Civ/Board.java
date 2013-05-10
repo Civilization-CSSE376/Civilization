@@ -742,6 +742,8 @@ public class Board extends JPanel {
 				movement(tile, panel);
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
+			} else if (Board.this.currentPhase.equals(RESEARCH)){
+				research(); // TODO: techwindow
 			}
 		}
 
@@ -768,6 +770,10 @@ public class Board extends JPanel {
 			// Do nothing.
 
 		}
+	}
+	
+	public void research() {
+		
 	}
 
 	public Player getPlayer1() {

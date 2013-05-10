@@ -25,7 +25,8 @@ public class Player {
 	public int handSize = 2;
 	public int stackSize = 2;
 	public int trade = 0;
-	private int combatAdvantage = 0;
+	public int combatAdvantage = 0;
+	public int cultureTrackProgress = 0; 
 
 	public int artilleryLevel = 1;
 	public int infantryLevel = 1;
