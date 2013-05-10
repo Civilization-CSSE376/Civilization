@@ -2,6 +2,10 @@ package Civ;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Test;
 
 
@@ -156,8 +160,14 @@ public class UnitTest {
 	}
 	
 	@Test
-	public void randomAirAttackBaseTest(){
-		
+	public void randomnessTest(){
+		List<String> possibleUnits = 
+				Arrays.asList("Infantry", "Cavalry", "Artillery", "Airplane");
+		for(int i = 0; i < 20; i++){
+		Collections.shuffle(possibleUnits);
+		Unit target = new Unit(possibleUnits.get(0), 1);
+		System.out.println(target.type + " - " + target.attack);
+		}
 	}
 	
 }
