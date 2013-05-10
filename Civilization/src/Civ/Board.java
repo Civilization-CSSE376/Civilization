@@ -173,13 +173,13 @@ public class Board extends JPanel {
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
-		this.player1.figures.add(army1);
-		this.player2.figures.add(army2);
+		// this.player1.figures.add(army1);
+		// this.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		map.get(0).getTiles()[1][0].getFigures().add(army1);
-		map.get(0).getTiles()[0][1].getFigures().add(army2);
+		// map.get(0).getTiles()[1][0].getFigures().add(army1);
+		// map.get(0).getTiles()[0][1].getFigures().add(army2);
 
 		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
 		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
@@ -605,17 +605,28 @@ public class Board extends JPanel {
 								p.setLocation(10, 10);
 								this.setEnabled(false);
 							}
-							Tile oldTile = currentMovementFigure.location;
-							oldTile.getFigures().remove(currentMovementFigure);
-							Board.this.currentMovementFigure
-									.setScreenLocation(tile.getScreenLocation());
-							currentMovementFigure.setTileLocal(tile);
-							tile.getFigures().add(currentMovementFigure);
-							Board.this.validTiles.clear();
-							currentMovementFigure.setUsedThisTurn(true);
-							Board.this.repaint();
+							finishCombat(tile);
 							return;
 
+						} else if (tile.getCity() != null) {
+							City attackingCity = null;
+							for (City c : currentPlayer.cities) {
+								if (tile.getCity().equals(c)) {
+									attackingCity = c;
+									break;
+								}
+							}
+							if (attackingCity == null) {
+								if (currentPlayer == player1) {
+									p = new Combat(currentPlayer, player2, 5);
+								} else {
+									p = new Combat(currentPlayer, player1, 5);
+								}
+								p.setLocation(10, 10);
+								this.setEnabled(false);
+								finishCombat(tile);
+
+							}
 						}
 						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
@@ -642,6 +653,18 @@ public class Board extends JPanel {
 				// "Movement", JOptionPane.PLAIN_MESSAGE);
 			}
 		}
+	}
+
+	private void finishCombat(Tile tile) {
+		Tile oldTile = currentMovementFigure.location;
+		oldTile.getFigures().remove(currentMovementFigure);
+		Board.this.currentMovementFigure.setScreenLocation(tile
+				.getScreenLocation());
+		currentMovementFigure.setTileLocal(tile);
+		tile.getFigures().add(currentMovementFigure);
+		Board.this.validTiles.clear();
+		currentMovementFigure.setUsedThisTurn(true);
+		Board.this.repaint();
 	}
 
 	public void getValidTiles(Panel panel, Tile tile) {
@@ -1722,18 +1745,20 @@ public class Board extends JPanel {
 				currentChoice = items[i].getText();
 			}
 		} else if (items[i].getText().equals(messages.getString("building"))) {
-			String[] Choiceitems = { messages.getString("market"),
-					messages.getString("bank"), messages.getString("temple"),
-					messages.getString("cathedral"),
-					messages.getString("granary"),
-					messages.getString("aqueduct"),
-					messages.getString("library"),
-					messages.getString("university"),
-					messages.getString("barracks"),
-					messages.getString("academy"),
-					messages.getString("workshop"),
-					messages.getString("ironMine"),
-					messages.getString("tradingPost"), "Harbor" };
+			String[] Choiceitems = currentPlayer.unlockedBuildings
+					.toArray(new String[currentPlayer.unlockedBuildings.size()]);
+			// String[] Choiceitems = { messages.getString("market"),
+			// messages.getString("bank"), messages.getString("temple"),
+			// messages.getString("cathedral"),
+			// messages.getString("granary"),
+			// messages.getString("aqueduct"),
+			// messages.getString("library"),
+			// messages.getString("university"),
+			// messages.getString("barracks"),
+			// messages.getString("academy"),
+			// messages.getString("workshop"),
+			// messages.getString("ironMine"),
+			// messages.getString("tradingPost"), "Harbor" };
 			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
 		}
 		repaint();
