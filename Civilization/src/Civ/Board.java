@@ -41,7 +41,11 @@ import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
+
+import TechCards.*;
+
 import Civ.Tile.Resource;
+
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
@@ -123,7 +127,7 @@ public class Board extends JPanel {
 	public static ArrayList<Player> players = new ArrayList<Player>();
 	// private Market market;
 	private static Player firstPlayer;
-	private static Player currentPlayer;
+	public static Player currentPlayer;
 
 	private int phase;
 	public JFrame p;
@@ -908,7 +912,8 @@ public class Board extends JPanel {
 
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
-		description.setLayout(new GridLayout(2, 1));
+		description.setLayout(new GridLayout(3, 1));
+		final JLabel currentTrade = new JLabel("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 		final JLabel cardName = new JLabel("     Card name:    "
 				+ techCards.getItemAt(techCards.getSelectedIndex()));
 		final JTextArea cardDescription = new JTextArea(
@@ -917,6 +922,7 @@ public class Board extends JPanel {
 								.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
+		description.add(currentTrade);
 		description.add(cardName);
 		description.add(cardDescription);
 
@@ -978,6 +984,7 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1010,6 +1017,7 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
+				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1057,6 +1065,14 @@ public class Board extends JPanel {
 			}
 
 		});
+	}
+	
+	public int getTierCardCost(int tier){
+		if(tier == 1) return 6;
+		else if(tier == 2) return 11;
+		else if(tier == 3) return 16;
+		else if(tier == 4) return 21;
+		else return 25;
 	}
 
 	public void updateValidTiers(int tier) {
@@ -1213,24 +1229,63 @@ public class Board extends JPanel {
 
 	private Player playerConfig(String civ) {
 
+		Player tempPlayer = new Player();
+		
 		switch (civ) {
 		case "Egypt":
+			tempPlayer.techCards.add(new Construction());
+			//free wonder at start of game
+			//one free building each turn as an action
 			break;
 		case "Russia":
+			tempPlayer.techCards.add(new Communism());
+			tempPlayer.government = "Communism";
+			tempPlayer.stackSize = 3;
+			//one extra army
+			/*
+			 * once per turn the russians may move an army or scout into an enemy city and sacrifice that figure
+			 * to research a tech known by that civilization for free. armies sacrificed this way cannot also attack
+			 */
 			break;
 		case "Rome":
+			tempPlayer.techCards.add(new CodeOfLaws());
+			tempPlayer.government = "Republic";
+			/*
+			 * the romans advance one space on the culture track for free each time
+			 * they build a wonder or a city, and each time they conquer a city or village
+			 */
 			break;
 		case "America":
+			tempPlayer.techCards.add(new Currency());
+			//free great person at start of game
+			/*
+			 * each time the americans convert 3 trade into production, they recieve 2 production instead of 1
+			 */
 			break;
 		case "Germany":
+			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.units.add(new Unit("Infantry", 1));
+			tempPlayer.units.add(new Unit("Infantry", 1));
+			/*
+			 * after setup, each time the germans research a tech that upgrades or unlocks a unit, they build
+			 * one of that unit for free and gain one resource of their choice from the market
+			 */
+			
 			break;
 		case "China":
+			tempPlayer.techCards.add(new Writing());
+			/*
+			 * the chinese start with city walls in their capital.
+			 * the chinese gain 3 culture each time they explore a hut or conquer a village.
+			 * the chinese may save one of their killed units after each battle, returning it to
+			 * their staning forces.
+			 */
 			break;
 		default:
 			break;
 		}
 
-		return null;
+		return tempPlayer;
 	}
 
 	static Panel findPanel(Tile location) { // move this somewhere else?

@@ -3,18 +3,23 @@ package Civ;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D.Double;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GreatPerson extends Marker {
-
-	public boolean isInReserve = false; // I don't know if we need this but this
+	private List<String> possibleGreatPeople = 
+			Arrays.asList("Poet", "Prophet", "Explorer", "General", "Scientist", "Merchant");
+	public boolean isInReserve = true; // I don't know if we need this but this
 										// keeps
 										// track of if the GP is on the board or
 										// not
 
 	public GreatPerson(String name, ResourceBundle messages) {
 		super(name, messages);
-		this.createGreatPerson(name);
+		Collections.shuffle(this.possibleGreatPeople);
+		this.createGreatPerson(this.possibleGreatPeople.get(0));
 		this.allowedTerrain = Terrain.NotWater;
 	}
 

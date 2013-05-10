@@ -21,9 +21,9 @@ public class GreatPersonTest {
 	@Test
 	public void isInReverseTest(){
 		GreatPerson target = new GreatPerson("Merchant", messages);
-		assertFalse(target.isInReserve);
-		target.isInReserve = true;
 		assertTrue(target.isInReserve);
+		target.isInReserve = false;
+		assertFalse(target.isInReserve);
 	}
 	
 	@Test
