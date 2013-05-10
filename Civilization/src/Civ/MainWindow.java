@@ -1,5 +1,6 @@
 package Civ;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.GridLayout;
@@ -17,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -31,6 +33,7 @@ public class MainWindow extends JFrame {
 	private JButton marketDetails = new JButton();
 	private JButton endPhase = new JButton();
 	private JButton quit = new JButton();
+	private JButton tradeCulture = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
 	
@@ -56,11 +59,13 @@ public class MainWindow extends JFrame {
 		this.endPhase.setText(messages.getString("endPhase"));
 		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
+		this.tradeCulture.setText(messages.getString("tradeCulture"));
 		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
 		this.buttons.add(this.endPhase);
+		this.buttons.add(this.tradeCulture);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
@@ -143,6 +148,67 @@ public class MainWindow extends JFrame {
 			}	
 		});
 		
+		this.tradeCulture.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				final JFrame tradeCultureWindow = makeNewWindow(250,100, messages.getString("tradeCulture"));
+				tradeCultureWindow.setLayout(new BorderLayout());
+				int[] cost = MainWindow.this.cultureTradeCost();
+				int cultureCost = cost[0];
+				int tradeCost = cost[1];
+				final JLabel text = new JLabel(messages.getString("itWillCost") + " " + messages.getString("culture") + cultureCost + " and " + 
+						messages.getString("trade1") + " " + tradeCost, SwingConstants.CENTER);
+				int progress = Board.currentPlayer.cultureTrackProgress;
+				if(progress == 3 || progress == 7 || progress == 12 || progress == 18){
+					text.setText(text.getText() + " " + messages.getString("getGreatPerson"));
+				}
+				tradeCultureWindow.add(text, BorderLayout.PAGE_START);
+				JPanel buttonPanel = new JPanel();
+				JButton buyButton = new JButton(messages.getString("buy"));
+				JButton closeButton = new JButton(messages.getString("close"));
+				buttonPanel.add(buyButton);
+				buttonPanel.add(closeButton);
+				tradeCultureWindow.add(buttonPanel, BorderLayout.PAGE_END);
+				tradeCultureWindow.setVisible(true);
+				
+				buyButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						boolean canBuy = MainWindow.this.canBuy(MainWindow.this.cultureTradeCost());
+						boolean getsGreatPerson = false;
+						int progress = Board.currentPlayer.cultureTrackProgress;
+						if(progress == 3 || progress == 7 || progress == 12 || progress == 18){
+							getsGreatPerson = true;
+						}
+						if(canBuy && getsGreatPerson){
+							Board.currentPlayer.greatPeople.add(new GreatPerson(messages));
+							tradeCultureWindow.dispose();
+							MainWindow.this.tradeCulture.doClick();
+						}else if(canBuy){
+							tradeCultureWindow.dispose();
+							MainWindow.this.tradeCulture.doClick();
+						}else{
+							text.setText(messages.getString("notEnoughResources"));
+							Board.currentPlayer.cultureTrackProgress = 15;
+						}
+					}
+				});
+				
+				closeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						MainWindow.this.setEnabled(true);
+						tradeCultureWindow.dispose();
+						
+					}
+					
+				});
+			}
+		});
+		
 		this.marketDetails.addActionListener(new ActionListener() {
 
 			@Override
@@ -162,11 +228,11 @@ public class MainWindow extends JFrame {
 				
 				JPanel player1CultureLocation = new JPanel();
 				player1CultureLocation.setBackground(Color.RED);
-				player1CultureLocation.setLocation(cultureLocations[Board.getPlayer(1).culture], 540);
+				player1CultureLocation.setLocation(cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540);
 				player1CultureLocation.setSize(15, 25);
 				JPanel player2CultureLocation = new JPanel();
 				player2CultureLocation.setBackground(Color.YELLOW);
-				player2CultureLocation.setLocation(cultureLocations[Board.getPlayer(2).culture], 570);
+				player2CultureLocation.setLocation(cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570);
 				player2CultureLocation.setSize(15, 25);
 				
 				marketWindow.add(player1CultureLocation);
@@ -375,5 +441,35 @@ public class MainWindow extends JFrame {
 		}
 		
 		return resourceArray;
+	}
+	
+	private int[] cultureTradeCost(){
+		int[] cost = new int[2];
+		int progress = Board.currentPlayer.cultureTrackProgress;
+		if(progress < 8){
+			cost[0] = 3;
+			cost[1] = 0;
+		}else if(progress < 15){
+			cost[0] = 5;
+			cost[1] = 3;
+		}else if(progress < 21){
+			cost[0] = 7;
+			cost[1] = 5;
+		}else{
+			//they just won by culture
+			cost[0] = 7;
+			cost[1] = 5;
+		}
+		return cost;
+	}
+	
+	private boolean canBuy(int[] cost){
+		if(Board.currentPlayer.culture >= cost[0] && Board.currentPlayer.trade >= cost[1]){
+			Board.currentPlayer.culture -= cost[0];
+			Board.currentPlayer.trade -= cost[1];
+			Board.currentPlayer.cultureTrackProgress += 1;
+			return true;
+		}
+		return false;
 	}
 }

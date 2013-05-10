@@ -28,6 +28,10 @@ public abstract class Marker implements Drawable {
 		this.messages = messages;
 	}
 	
+	public Marker(ResourceBundle messages){
+		this.messages = messages;
+	}
+	
 	public String translateNameToEnglish(String name){
 		if(name.equals("Mercado")) return "Market";
 		else if(name.equals("Banco")) return "Bank";

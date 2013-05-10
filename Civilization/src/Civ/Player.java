@@ -18,6 +18,7 @@ public class Player {
 	// private ArrayList<CultureCard> cultureCards;
 	public ArrayList<TechCard> techCards = new ArrayList<TechCard>();
 	// private ArrayList<WonderCard> wonderCards;
+	public ArrayList<GreatPerson> greatPeople = new ArrayList<GreatPerson>();
 	public int cityLimit = 2;
 	public int culture = 0;
 	public int gold = 0;
@@ -25,7 +26,8 @@ public class Player {
 	public int handSize = 2;
 	public int stackSize = 2;
 	public int trade = 0;
-	private int combatAdvantage = 0;
+	public int combatAdvantage = 0;
+	public int cultureTrackProgress = 0; 
 	public boolean canBuyTier2TechCard = false;
 	public boolean canBuyTier3TechCard = false;
 	public boolean canBuyTier4TechCard = false;
