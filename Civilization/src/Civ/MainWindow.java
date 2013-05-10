@@ -227,7 +227,7 @@ public class MainWindow extends JFrame {
 
 
 	private void makePlayerWindow(String windowName, String playerCivilizationField, ResourceBundle messages) {
-		int playerNum;
+		final int playerNum;
 		if(windowName.equals(messages.getString("player1Details"))) playerNum = 1;
 		else playerNum = 2;
 		
@@ -243,7 +243,9 @@ public class MainWindow extends JFrame {
 		buffer.setBackground(Color.BLACK);
 		
 		JButton closeButton = new JButton(messages.getString("close"));
+		JButton techTree = new JButton("Player tech tree"); // TODO Needs internationalized
 		buttonPanel.add(closeButton);
+		buttonPanel.add(techTree);
 		
 		buttonPanel.setLocation(550, 500);
 		buttonPanel.setSize(345, 40);
@@ -300,6 +302,39 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				MainWindow.this.setEnabled(true);
 				playerWindow.dispose();
+			}
+			
+		});
+		
+		techTree.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final JFrame treeWindow = new JFrame("Player tech card tree");
+				treeWindow.setLayout(null);
+				treeWindow.setSize(525, 370);
+				
+				treeWindow.add(Board.drawTechCardTree(Board.getPlayer(playerNum)));
+				
+				JPanel button = new JPanel();
+				button.setLocation(0, 290);
+				button.setSize(525, 50);
+				JButton close = new JButton("Close");
+				button.add(close);
+				treeWindow.add(button);
+				
+				treeWindow.setAlwaysOnTop(true);
+				treeWindow.setVisible(true);
+				
+				close.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						treeWindow.dispose();
+					}
+					
+				});
+				
 			}
 			
 		});
