@@ -1072,7 +1072,7 @@ public class Board extends JPanel {
 		else if(tier == 2) return 11;
 		else if(tier == 3) return 16;
 		else if(tier == 4) return 21;
-		else return 25;
+		else return 26;
 	}
 
 	public void updateValidTiers(int tier) {

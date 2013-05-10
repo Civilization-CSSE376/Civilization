@@ -17,6 +17,8 @@ import org.junit.Test;
 public class BoardTest {
 
 	private static TestBoard board;
+	private static Locale currentLocale = new Locale("en", "US");
+	private static ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 
 	@BeforeClass
 	public static void setupLoadedTiles() {
@@ -895,5 +897,32 @@ public class BoardTest {
 //		board.startOfTurn(tile);
 //		
 //	}
+	
+	@Test
+	public void testGetTierCardCost(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertEquals(6, board.getTierCardCost(1));
+		assertEquals(11, board.getTierCardCost(2));
+		assertEquals(16, board.getTierCardCost(3));
+		assertEquals(21, board.getTierCardCost(4));
+		assertEquals(26, board.getTierCardCost(5));
+	}
+	
+	@Test
+	public void testCheckPlayerHasEnoughTrade(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Board.currentPlayer.trade = 3;
+		assertFalse(board.checkPlayerHasEnoughTrade(1));
+		Board.currentPlayer.trade = 6;
+		assertTrue(board.checkPlayerHasEnoughTrade(1));
+		Board.currentPlayer.trade = 11;
+		assertTrue(board.checkPlayerHasEnoughTrade(2));
+		Board.currentPlayer.trade = 16;
+		assertTrue(board.checkPlayerHasEnoughTrade(3));
+		Board.currentPlayer.trade = 21;
+		assertTrue(board.checkPlayerHasEnoughTrade(4));
+		Board.currentPlayer.trade = 26;
+		assertTrue(board.checkPlayerHasEnoughTrade(5));
+	}
 
 }
