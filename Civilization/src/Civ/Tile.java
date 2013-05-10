@@ -163,10 +163,6 @@ public class Tile {
 		return this.combatAdvantage;
 	}
 
-	public ArrayList<Figure> getFigure() {
-		return this.figures;
-	}
-
 	public ArrayList<Figure> getFigures() {
 		return this.figures;
 	}

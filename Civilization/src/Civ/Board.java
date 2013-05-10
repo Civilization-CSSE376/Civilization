@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
@@ -30,6 +31,8 @@ import javax.swing.JRadioButtonMenuItem;
 import java.util.Hashtable;
 
 import javax.swing.JPanel;
+
+import Civ.Tile.Resource;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
@@ -55,7 +58,7 @@ public class Board extends JPanel {
 	private static Player currentPlayer;
 
 	private int phase;
-	public JPanel p;
+	public JFrame p;
 
 	private String player1Civilization;
 	private String player2Civilization;
@@ -67,9 +70,9 @@ public class Board extends JPanel {
 		this.messages = messages;
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
-		
+
 		players = new ArrayList<Player>();
-		
+
 		map = new ArrayList<Panel>();
 		readFromFile();
 		setTileLocations();
@@ -79,36 +82,36 @@ public class Board extends JPanel {
 		this.player1 = new Player();
 		this.player2 = new Player();
 
-		 players.add(this.player1);
-		 players.add(this.player2);
+		players.add(this.player1);
+		players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
-//		Army army1 = new Army(player1, map.get(0).getTiles()[1][0]);
-//		Army army2 = new Army(player2, map.get(0).getTiles()[0][1]);
+		Army army1 = new Army(player1, map.get(0).getTiles()[1][0]);
+		Army army2 = new Army(player2, map.get(0).getTiles()[0][1]);
 
 		settler1.resetMoves(player1.getSpeed());
 		settler2.resetMoves(player2.getSpeed());
-//		army1.resetMoves(player1.getSpeed());
-//		army2.resetMoves(player2.getSpeed());
+		army1.resetMoves(player1.getSpeed());
+		army2.resetMoves(player2.getSpeed());
 
 		settler1.setLocation(10, 10);
 		settler2.setScreenLocation(map.get(7).getTiles()[3][3]
 				.getScreenLocation());
-//		army1.setScreenLocation((map.get(0).getTiles()[1][0]
-//				.getScreenLocation()));
-//		army2.setScreenLocation((map.get(0).getTiles()[0][1]
-//				.getScreenLocation()));
+		army1.setScreenLocation((map.get(0).getTiles()[1][0]
+				.getScreenLocation()));
+		army2.setScreenLocation((map.get(0).getTiles()[0][1]
+				.getScreenLocation()));
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
-//		this.player1.figures.add(army1);
-//		this.player2.figures.add(army2);
+		this.player1.figures.add(army1);
+		this.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-//		map.get(0).getTiles()[1][0].getFigures().add(army1);
-//		map.get(0).getTiles()[0][1].getFigures().add(army2);
+		map.get(0).getTiles()[1][0].getFigures().add(army1);
+		map.get(0).getTiles()[0][1].getFigures().add(army2);
 
 		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
 		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
@@ -247,10 +250,12 @@ public class Board extends JPanel {
 				|| figures.get(0).getNumberOfMoves() == 0) {
 			return;
 		}
-		int answer = JOptionPane.showConfirmDialog(null,
+		int answer = JOptionPane.showConfirmDialog(
+				null,
 				messages.getString("askToMoveUnit")
-						+ figures.get(0).getNumberOfMoves() + messages.getString("numMovesLeft"),
-				"Movement", JOptionPane.YES_NO_OPTION);
+						+ figures.get(0).getNumberOfMoves()
+						+ messages.getString("numMovesLeft"), "Movement",
+				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
 			return;
@@ -262,8 +267,8 @@ public class Board extends JPanel {
 
 	public Boolean makeNewCityWindow() {
 		int answer = JOptionPane.showConfirmDialog(null,
-				messages.getString("askToCreateCity"),
-				"Create New City", JOptionPane.YES_NO_OPTION);
+				messages.getString("askToCreateCity"), "Create New City",
+				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION)
 			return true;
 		else
@@ -303,7 +308,8 @@ public class Board extends JPanel {
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = false;
 			city = tile.getCity();
-			String[] choices = { messages.getString("buildSomethingOption"), messages.getString("collectResourceOption"),
+			String[] choices = { messages.getString("buildSomethingOption"),
+					messages.getString("collectResourceOption"),
 					messages.getString("devoteArtsOption") };
 			makeChoice(
 					choices,
@@ -393,7 +399,9 @@ public class Board extends JPanel {
 	}
 
 	public void buildSomething() {
-		String[] choices = { messages.getString("building"), messages.getString("settler"), messages.getString("army"), messages.getString("wonder"), messages.getString("units") };
+		String[] choices = { messages.getString("building"),
+				messages.getString("settler"), messages.getString("army"),
+				messages.getString("wonder"), messages.getString("units") };
 		makeChoice(choices, new BuilderHandler(), currentClick);
 	}
 
@@ -417,7 +425,7 @@ public class Board extends JPanel {
 			enemy = player1;
 
 		for (Figure f : tile.getFigures()) {
-			if (f.getOwner().equals(enemy))
+			if (f.getOwner() == null || f.getOwner().equals(enemy))
 				return true;
 		}
 		return false;
@@ -448,9 +456,11 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					if (items[i].getText().equals(messages.getString("buildSomethingOption"))) {
+					if (items[i].getText().equals(
+							messages.getString("buildSomethingOption"))) {
 						buildSomething();
-					} else if (items[i].getText().equals(messages.getString("collectResourceOption"))) {
+					} else if (items[i].getText().equals(
+							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
 					}
 					repaint();
@@ -461,7 +471,7 @@ public class Board extends JPanel {
 
 	public void movement(Tile tile, Panel panel) {
 		if (p != null) {
-			if(currentFigure == null){
+			if (currentFigure == null) {
 				p = null;
 				return;
 			}
@@ -469,13 +479,14 @@ public class Board extends JPanel {
 			Figure fig;
 			if (((Combat) p).successfulAttack()) {
 				fig = conqueredTile.getFigures().get(0);
-				if(player1.equals(currentPlayer)){
+				if (player1.equals(currentPlayer)) {
 					player2.figures.remove(fig);
-				}else{
+				} else {
 					player1.figures.remove(fig);
 				}
 			} else {
-				fig = conqueredTile.getFigures().get(conqueredTile.getFigures().size()-1);
+				fig = conqueredTile.getFigures().get(
+						conqueredTile.getFigures().size() - 1);
 				currentPlayer.figures.remove(fig);
 			}
 			conqueredTile.getFigures().remove(fig);
@@ -500,23 +511,32 @@ public class Board extends JPanel {
 					if (panel.getIsExplored()) {
 						if (checkSpaceForEnemyFigures(tile)) {
 							Figure enemy = tile.getFigures().get(0);
+							Player enemyPlayer = enemy.getOwner();
+							if (enemyPlayer == null) {
+								enemyPlayer = new Player();
+							}
 
-							final JFrame combatWindow = new JFrame("Combat");
-							combatWindow.setResizable(false);
-							combatWindow.setLayout(null);
-
-							ImageIcon icon = new ImageIcon(
-									"src/civilizationicon.jpg");
-							combatWindow.setIconImage(icon.getImage());
-
-							combatWindow.setSize(900, 565);
-							p = new Combat(currentPlayer, enemy.getOwner(), 0);
-							p.setLocation(10, 10);
-							p.setSize(combatWindow.getSize());
-							combatWindow.add(p);
-							combatWindow.setAlwaysOnTop(true);
-							combatWindow.setVisible(true);
-							this.setEnabled(false);
+							if (enemy instanceof Settler) {
+								tile.getFigures().remove(0);
+								enemyPlayer.figures.remove(enemy);
+								if (enemy.getOwner() == null) {
+									Resource resource = Resource.values()[new Random()
+											.nextInt(4)];
+									currentPlayer.resources.add(resource);
+									JOptionPane
+											.showConfirmDialog(
+													null,
+													messages.getString("resourceObtained")
+															+ resource
+																	.toString(),
+													"Collect Resource",
+													JOptionPane.PLAIN_MESSAGE);
+								}
+							} else {
+								p = new Combat(currentPlayer, enemyPlayer, 0);
+								p.setLocation(10, 10);
+								this.setEnabled(false);
+							}
 							Tile oldTile = currentMovementFigure.location;
 							oldTile.getFigures().remove(currentMovementFigure);
 							Board.this.currentMovementFigure
@@ -525,6 +545,7 @@ public class Board extends JPanel {
 							tile.getFigures().add(currentMovementFigure);
 							Board.this.validTiles.clear();
 							currentMovementFigure.setUsedThisTurn(true);
+							Board.this.repaint();
 							return;
 
 						}
@@ -740,7 +761,7 @@ public class Board extends JPanel {
 				movement(tile, panel);
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
-			} else if (Board.this.currentPhase.equals(RESEARCH)){
+			} else if (Board.this.currentPhase.equals(RESEARCH)) {
 				research(); // TODO: techwindow
 			}
 		}
@@ -769,9 +790,9 @@ public class Board extends JPanel {
 
 		}
 	}
-	
+
 	public void research() {
-		
+
 	}
 
 	public Player getPlayer1() {
@@ -913,15 +934,15 @@ public class Board extends JPanel {
 
 		return p.getTiles()[tileX][tileY];
 	}
-	
+
 	public void readFromFile() {
-		
+
 		readFromFile(new File("src/civPanelDetails/" + this.player1Civilization));
-		for(int i = 0; i < 6; i++){
-			readFromFile(new File("src/panelDetails/Panel" + (i+1)));
+		for (int i = 0; i < 6; i++) {
+			readFromFile(new File("src/panelDetails/Panel" + (i + 1)));
 		}
 		readFromFile(new File("src/civPanelDetails/" + this.player2Civilization));
-		
+
 		map.get(0).changeIsExplored(); // Player 1's initial location.
 		map.get(7).changeIsExplored(); // Player 2's initial location.
 	}
@@ -1014,7 +1035,8 @@ public class Board extends JPanel {
 
 		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
-		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50, 900);
+		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50,
+				900);
 
 		if (this.currentPlayer == this.player1) {
 			g2.setColor(Color.RED);
@@ -1058,12 +1080,12 @@ public class Board extends JPanel {
 
 	private String getPhaseText() {
 		String phase = "";
-		switch (this.currentPhase){
+		switch (this.currentPhase) {
 		case START_OF_TURN:
 			phase = messages.getString("startOfTurn");
 			break;
 		case TRADE:
-			phase =  messages.getString("trade2");
+			phase = messages.getString("trade2");
 			break;
 		case CITY_MANAGEMENT:
 			phase = messages.getString("cityManagement");
@@ -1329,10 +1351,18 @@ public class Board extends JPanel {
 				currentChoice = items[i].getText();
 			}
 		} else if (items[i].getText().equals(messages.getString("building"))) {
-			String[] Choiceitems = { messages.getString("market"), messages.getString("bank"), messages.getString("temple"), messages.getString("cathedral"),
-					messages.getString("granary"), messages.getString("aqueduct"), messages.getString("library"), messages.getString("university"), messages.getString("barracks"),
-					messages.getString("academy"), messages.getString("workshop"), messages.getString("ironMine"), messages.getString("tradingPost"),
-					"Harbor" };
+			String[] Choiceitems = { messages.getString("market"),
+					messages.getString("bank"), messages.getString("temple"),
+					messages.getString("cathedral"),
+					messages.getString("granary"),
+					messages.getString("aqueduct"),
+					messages.getString("library"),
+					messages.getString("university"),
+					messages.getString("barracks"),
+					messages.getString("academy"),
+					messages.getString("workshop"),
+					messages.getString("ironMine"),
+					messages.getString("tradingPost"), "Harbor" };
 			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
 		}
 		repaint();
@@ -1345,9 +1375,10 @@ public class Board extends JPanel {
 	public static void setGoingForResource(boolean goingForResource) {
 		Board.goingForResource = goingForResource;
 	}
-	
-	public static Player getPlayer(int playerNumber){
-		if(playerNumber == 1) return player1;
+
+	public static Player getPlayer(int playerNumber) {
+		if (playerNumber == 1)
+			return player1;
 		return player2;
 	}
 

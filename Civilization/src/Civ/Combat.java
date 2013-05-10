@@ -1,22 +1,20 @@
 package Civ;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JRadioButton;
 
-public class Combat extends JPanel {
+public class Combat extends JFrame {
 	public Player attacker;
 	public Player defender;
 	public Player currentPlayer;
@@ -32,7 +30,10 @@ public class Combat extends JPanel {
 	public ArrayList<Unit> attackerFront = new ArrayList<Unit>();
 	public ArrayList<Unit> defenderFront = new ArrayList<Unit>();
 	public ArrayList<Unit> currentPlayerFront = new ArrayList<Unit>();
-	private JRadioButtonMenuItem[] items;
+	public Unit enemy = null;
+	private JPanel enemyFrontManager = new JPanel();
+	private JPanel playerHandManager = new JPanel();
+	private ArrayList<Unit> enemyFront;
 
 	public Combat(Player attacker, Player defender, int defenderBonus) {
 		this.defenderBonus = defenderBonus;
@@ -50,131 +51,138 @@ public class Combat extends JPanel {
 		this.switchCurrentPlayer();
 		this.selectCombatHand();// defender
 
-		EnvironmentHandler mouseHandler = new EnvironmentHandler();
-		this.addMouseListener(mouseHandler);
+		drawCombatWindow(attacker);
+
 	}
-	
-	public Player getCurrentPlayer(){
+
+	private void drawCombatWindow(Player attacker) {
+		this.setLayout(null);
+		this.setTitle("Combat!");
+		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
+		this.setIconImage(icon.getImage());
+
+		this.setLayout(new GridLayout(7, 1));
+
+		JButton attack = new JButton("Attack");
+		attack.addActionListener(new attackButtonListener());
+
+		JButton front = new JButton("Front");
+		front.addActionListener(new frontButtonListener());
+
+		if (this.attacker == attacker) {
+			this.add(new JLabel("Attacker's turn", JLabel.CENTER));
+		} else {
+			this.add(new JLabel("Defender's turn", JLabel.CENTER));
+		}
+		this.add(new JLabel("Player Hand"), JLabel.CENTER);
+		drawHand(this.currentPlayerHand);
+		this.add(this.playerHandManager);
+		this.add(new JLabel("Enemy Front"), JLabel.CENTER);
+		drawFront(this.enemyFront);
+		this.add(this.enemyFrontManager);
+		this.add(front);
+		this.add(attack);
+		this.setSize(1000, 600);
+		this.setAlwaysOnTop(true);
+		this.validate();
+		this.setVisible(true);
+	}
+
+	public class attackButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (enemy != null && ownUnit != null) {
+				Combat.this.attackFront(ownUnit, enemy);
+				ownUnit = null;
+				enemy = null;
+				switchCurrentPlayer();
+				Combat.this.enemyFrontManager.removeAll();
+				Combat.this.playerHandManager.removeAll();
+				Combat.this.getContentPane().removeAll();
+				Combat.this.validate();
+				Combat.this.drawCombatWindow(Combat.this.currentPlayer);
+				Combat.this.repaint();
+				Combat.this.revalidate();
+			}
+		}
+	}
+
+	public class frontButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (Combat.this.ownUnit != null) {
+				Combat.this.makeFront(Combat.this.ownUnit);
+				Combat.this.ownUnit = null;
+				Combat.this.enemyFrontManager.removeAll();
+				Combat.this.playerHandManager.removeAll();
+				Combat.this.getContentPane().removeAll();
+				Combat.this.validate();
+				Combat.this.drawCombatWindow(Combat.this.currentPlayer);
+				Combat.this.repaint();
+				Combat.this.revalidate();
+			}
+		}
+	}
+
+	public Player getCurrentPlayer() {
 		return this.currentPlayer;
 	}
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
+	private void drawFront(ArrayList<Unit> front) {
+		ButtonGroup frontChoices = new ButtonGroup();
 
-		if (inbetween) {
-			if (this.currentPlayer == attacker) {
-				g2.setColor(Color.green);
-				g2.drawString("Attacker's turn.", 100, 300);
-			} else {
-				g2.setColor(Color.blue);
-				g2.drawString("Defender's turn.", 100, 300);
+		for (int i = 0; i < front.size(); i++) {
+			JRadioButton chooseEnemy = new JRadioButton(front.get(i).toString());
+			chooseEnemy.addActionListener(new EnemyFrontRadioListener());
+			if (i == 0) {
+				chooseEnemy.setSelected(true);
+				this.enemy = front.get(i);
 			}
-		} else {
-			if (ownUnit != null)
-				;
+			frontChoices.add(chooseEnemy);
+			this.enemyFrontManager.add(chooseEnemy);
 		}
+
 	}
 
-	private void ownHandGetter() {
-		String[] choices = new String[currentPlayerHand.size()];
-		int i = 0;
-		for (Unit unit : currentPlayerHand) {
-			choices[i] = "Unit: " + unit.type + " " + unit.attack;
-			i++;
-		}
-		makeChoice(choices, new chooseOwnUnit(), new Point(100, 100));
-	}
+	public class EnemyFrontRadioListener implements ActionListener {
 
-	private class chooseOwnUnit implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			// determine which menu item was selected
-			for (int i = 0; i < items.length; i++)
-				if (e.getSource() == items[i]) {
-					String[] choices = { "Make Front", "Attack" };
-					ownUnit = currentPlayerHand.get(i);
-					makeChoice(choices, new choiceHandler(),
-							new Point(100, 100));
-					return;
-				}
-		}
-	}
-
-	private class chooseEnemyUnit implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			// determine which menu item was selected
-			for (int i = 0; i < items.length; i++)
-				if (e.getSource() == items[i]) {
-					ArrayList<Unit> opponentFront;
-					if (currentPlayer.equals(attacker))
-						opponentFront = defenderFront;
-					else
-						opponentFront = attackerFront;
-					Unit enemyUnit = opponentFront.get(i);
-					attackFront(ownUnit, enemyUnit);
-					ownUnit = null;
-					switchCurrentPlayer();
-					return;
-				}
-		}
-	}
-
-	private class choiceHandler implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			for (int i = 0; i < items.length; i++)
-				if (e.getSource() == items[i]) {
-					dealWithChoice(items[i].getText());
+			String s = e.getActionCommand();
+			for (Unit unit : Combat.this.enemyFront) {
+				if (s.equals(unit.toString())) {
+					Combat.this.enemy = unit;
 				}
-		}
-	}
-
-	public void makeChoice(String[] choices, ActionListener handler, Point point) {
-		JPopupMenu menu = new JPopupMenu();
-		ButtonGroup group = new ButtonGroup();
-		items = new JRadioButtonMenuItem[choices.length + 1];
-		for (int i = 0; i < choices.length; i++) {
-			items[i] = new JRadioButtonMenuItem(choices[i]);
-			menu.add(items[i]);
-			group.add(items[i]);
-			items[i].addActionListener(handler);
-		}
-		items[items.length - 1] = new JRadioButtonMenuItem("Cancel");
-		menu.add(items[items.length - 1]);
-		group.add(items[items.length - 1]);
-		items[items.length - 1].addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				return;
 			}
-		});
-		menu.show(this, point.x, point.y);
+		}
+
 	}
 
-	public void dealWithChoice(String text) {
-		if (text.equals("Make Front")) {
-			makeFront(ownUnit);
-			ownUnit = null;
-		} else {
-			chooseEnemy();
+	private void drawHand(ArrayList<Unit> hand) {
+		ButtonGroup frontChoices = new ButtonGroup();
+
+		for (int i = 0; i < hand.size(); i++) {
+			JRadioButton chooseUnit = new JRadioButton(hand.get(i).toString());
+			chooseUnit.addActionListener(new PlayerHandRadioListener());
+			if (i == 0) {
+				chooseUnit.setSelected(true);
+				this.enemy = hand.get(i);
+			}
+			frontChoices.add(chooseUnit);
+			this.playerHandManager.add(chooseUnit);
 		}
 	}
 
-	private void chooseEnemy() {
-		ArrayList<Unit> otherPlayersFront;
-		if (currentPlayer.equals(attacker))
-			otherPlayersFront = defenderFront;
-		else
-			otherPlayersFront = attackerFront;
-		String[] choices = new String[otherPlayersFront.size()];
-		int i = 0;
-		for (Unit unit : otherPlayersFront) {
-			choices[i] = "Unit: " + unit.type + " " + unit.attack;
-			i++;
+	public class PlayerHandRadioListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String s = e.getActionCommand();
+			for (Unit unit : Combat.this.currentPlayerHand) {
+				if (s.equals(unit.toString())) {
+					Combat.this.ownUnit = unit;
+				}
+			}
 		}
-		makeChoice(choices, new chooseEnemyUnit(), new Point(100, 100));
+
 	}
 
 	public void switchCurrentPlayer() {
@@ -183,11 +191,13 @@ public class Combat extends JPanel {
 			this.currentPlayerHand = this.defenderHand;
 			this.currentPlayerHandSize = this.defenderHandSize;
 			this.currentPlayerFront = this.defenderFront;
+			this.enemyFront = this.attackerFront;
 		} else {
 			this.currentPlayer = this.attacker;
 			this.currentPlayerHand = this.attackerHand;
 			this.currentPlayerHandSize = this.attackerHandSize;
 			this.currentPlayerFront = this.attackerFront;
+			this.enemyFront = this.defenderFront;
 		}
 		repaint();
 	}
@@ -228,17 +238,21 @@ public class Combat extends JPanel {
 		} else {
 			if (goesFirst.equals(attacking)) {
 				defending.health -= attacking.attack;
+				switchCurrentPlayer();// defender
 				if (!this.checkDeath(defending)) {
 					attacking.health -= defending.attack;
-					if(!this.checkDeath(attacking)){
-						this.currentPlayerFront.add(attacking);
-					}
+				}
+				switchCurrentPlayer(); // attacker
+				if (!this.checkDeath(attacking)) {
+					this.currentPlayerFront.add(attacking);
 				}
 			} else {
 				attacking.health -= defending.attack;
 				if (!this.checkDeath(attacking)) {
 					defending.health -= attacking.attack;
+					switchCurrentPlayer();// defender
 					this.checkDeath(defending);
+					switchCurrentPlayer();// attacker
 					this.currentPlayerFront.add(attacking);
 				}
 			}
@@ -285,62 +299,23 @@ public class Combat extends JPanel {
 		return null;
 
 	}
-	
-	public boolean successfulAttack(){
+
+	public boolean successfulAttack() {
 		int attackingStrength = this.attacker.getPlayerCombatAdvantage();
 		int defendingStrength = this.defender.getPlayerCombatAdvantage();
 		defendingStrength += this.defenderBonus;
 
 		for (Unit u : this.attackerFront) {
 			attackingStrength += u.attack;
-			//this.attacker.units.add(u);
+			// this.attacker.units.add(u);
 		}
 
 		for (Unit u : this.defenderFront) {
 			defendingStrength += u.attack;
-			//this.defender.units.add(u);
+			// this.defender.units.add(u);
 		}
 
 		return attackingStrength > defendingStrength ? true : false;
-	}
-
-	public class EnvironmentHandler implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (currentPlayerHand.size() > 0) {
-				if (attackerHand.size() == 0 && defenderHand.size() == 0) {
-					switchCurrentPlayer();
-					repaint();
-				} else {
-					ownHandGetter();
-				}
-			}
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// Do nothing.
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// Do nothing.
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// Do nothing.
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// Do nothing.
-
-		}
 	}
 
 }
