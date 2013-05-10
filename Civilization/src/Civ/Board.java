@@ -912,7 +912,8 @@ public class Board extends JPanel {
 
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
-		description.setLayout(new GridLayout(2, 1));
+		description.setLayout(new GridLayout(3, 1));
+		final JLabel currentTrade = new JLabel("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 		final JLabel cardName = new JLabel("     Card name:    "
 				+ techCards.getItemAt(techCards.getSelectedIndex()));
 		final JTextArea cardDescription = new JTextArea(
@@ -921,6 +922,7 @@ public class Board extends JPanel {
 								.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
+		description.add(currentTrade);
 		description.add(cardName);
 		description.add(cardDescription);
 
@@ -982,6 +984,7 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1014,6 +1017,7 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
+				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1061,6 +1065,14 @@ public class Board extends JPanel {
 			}
 
 		});
+	}
+	
+	public int getTierCardCost(int tier){
+		if(tier == 1) return 6;
+		else if(tier == 2) return 11;
+		else if(tier == 3) return 16;
+		else if(tier == 4) return 21;
+		else return 25;
 	}
 
 	public void updateValidTiers(int tier) {
