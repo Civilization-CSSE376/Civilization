@@ -17,10 +17,10 @@ public class TechCard {
 		Constructor<TechCard> cons = null;
 
 		try {
-			tempClass = (Class<TechCard>) Class.forName(name);
+			tempClass = (Class<TechCard>) Class.forName("TechCards."+name);
 
 			try {
-				cons = tempClass.getDeclaredConstructor(String.class);
+				cons = tempClass.getDeclaredConstructor();
 
 				try {
 					TechCard adapter = cons.newInstance();
