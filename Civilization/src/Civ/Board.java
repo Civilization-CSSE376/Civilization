@@ -851,8 +851,8 @@ public class Board extends JPanel {
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
 		description.setLayout(new GridLayout(2, 1));
-		final JLabel cardName = new JLabel("Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
-		final JTextArea cardDescription = new JTextArea("Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
+		final JLabel cardName = new JLabel("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
+		final JTextArea cardDescription = new JTextArea("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
 		description.add(cardName);
@@ -916,8 +916,8 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardName.setText(techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText(cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
+				cardName.setText("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
 				System.out.println(message.getText());
 				System.out.println(message.getText().equals("You cannot buy a card from this tier level."));
 				if(!message.getText().equals("You cannot buy a card from this tier level.")){
@@ -943,10 +943,18 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				cardName.setText(techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText(cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
+				cardName.setText("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
 				if(!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
 					message.setText("You cannot buy a card from this tier level.");
+					buy.setEnabled(false);
+				}
+				else if(currentPlayer.techCards.contains(techCards.getItemAt(techCards.getSelectedIndex()))){
+					message.setText("You already have this card.");
+					buy.setEnabled(false);
+				}
+				else if(!checkPlayerHasEnoughTrade(tierDropDown.getSelectedIndex() + 1)){
+					message.setText("You do not have enough trade to buy this card.");
 					buy.setEnabled(false);
 				}
 				else {
