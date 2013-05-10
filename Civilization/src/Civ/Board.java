@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -40,47 +41,73 @@ import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
+
 import TechCards.*;
+
+import Civ.Tile.Resource;
+
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
-	
-	public static final Map<String, String> cardDescriptions = new HashMap<String, String>() {{
-		put("Ballistics", "If the player's artillery level is less than, 4 then the player's new artillery level is 4");
-		put("Banking", "Unlock the ability to build a bank");
-		put("Biology", "If the player's stacksize is less than 5, then the player's new stacksize is 5");
-		put("Chivalry", "Unlock the Feudalism type of government, and if the player's calvary level is less than 2, then the player's new calvary level is 2");
-		put("CivilServices", "Increase the player's handsize by 1 and the player's gold by 1");
-		put("CodeOfLaws", "Unlock the republic type of government and unlock the ability to build a trading post");
-		put("Combustion", "If the player's calvary level is less than 4, then the player's new calvary level is 4");
-		put("Communism", "Unlock the communism type of government");
-		put("Computers", "Increase the player's gold by 1");
-		put("Construction", "Unlock the ability to build a workshop");
-		put("Currency", "Unlock the ability to build a market");
-		put("Democracy", "Unlock the democracy type of government, and if the player's infantry level is less than 2, the player's new infrantry level is 2");
-		put("Engineering", "Unlock the ability to build an aqueduct");
-		put("Flight", "If the player's speed is less than 6, then the player's new speed is 6");
-		put("Gunpowder", "If the player's infantry level is less than 3, then the player's new infantry level is 3");
-		put("HorsebackRiding", "If the player's speed is less than 3, then the player's new speed is 3");
-		put("Irrigation", "If the player's city limit is less than 3, then the player's new city limit is 3");
-		put("Masonry", "If the player's stacksize is less than 3, then the player's new stacksize is 3");
-		put("Mathematics", "If the player's artillery level is less than 2, then the player's new artillery level is 2");
-		put("MetalCasting", "Increase the player's gold by 1, and if the player's artillery level is less than 3, then the player's new artillery level is 3");
-		put("MetalWorking", "Unlock the ability to build a barracks");
-		put("MilitaryScience", "Unlock the ability to build an academy");
-		put("Monarchy", "Unlock the monarchy type of government");
-		put("Navigation", "Unlock the ability to build a harbor");
-		put("Philosophy", "Unlock the ability to build a temple");
-		put("Pottery", "Unlock the ability to build a granary");
-		put("PrintingPress", "Unlock the ability to build a university, and if the player's stacksize is less than 4, then the player's new stacksize is 4");
-		put("Railroad", "Unlock the ability to build an iron mine and if the player's calvary level is less than 3, then the player's new calvary level is 3");
-		put("ReplaceableParts", "If the player's stacksize is less than 6, then the player's new stacksize is 6, and if the player's infantry level is less than 4, then the player's new infantry level is 4");
-		put("Sailing", "If the player's speed is less than 4, then the player's new speed is 4");
-		put("SteamPower", "If the player's speed is less than 5, then the player's new speed is 5");
-		put("Theology", "Increase the player's handsize by 1, unlock the fundamentalism type of government, and unlock the ability to build a cathedral");
-		put("Writing", "Unlock the ability to build a library");
-		put("SpaceFlight", "You win the game");
-	}};
+
+	public static final Map<String, String> cardDescriptions = new HashMap<String, String>() {
+		{
+			put("Ballistics",
+					"If the player's artillery level is less than, 4 then the player's new artillery level is 4");
+			put("Banking", "Unlock the ability to build a bank");
+			put("Biology",
+					"If the player's stacksize is less than 5, then the player's new stacksize is 5");
+			put("Chivalry",
+					"Unlock the Feudalism type of government, and if the player's calvary level is less than 2, then the player's new calvary level is 2");
+			put("CivilServices",
+					"Increase the player's handsize by 1 and the player's gold by 1");
+			put("CodeOfLaws",
+					"Unlock the republic type of government and unlock the ability to build a trading post");
+			put("Combustion",
+					"If the player's calvary level is less than 4, then the player's new calvary level is 4");
+			put("Communism", "Unlock the communism type of government");
+			put("Computers", "Increase the player's gold by 1");
+			put("Construction", "Unlock the ability to build a workshop");
+			put("Currency", "Unlock the ability to build a market");
+			put("Democracy",
+					"Unlock the democracy type of government, and if the player's infantry level is less than 2, the player's new infrantry level is 2");
+			put("Engineering", "Unlock the ability to build an aqueduct");
+			put("Flight",
+					"If the player's speed is less than 6, then the player's new speed is 6");
+			put("Gunpowder",
+					"If the player's infantry level is less than 3, then the player's new infantry level is 3");
+			put("HorsebackRiding",
+					"If the player's speed is less than 3, then the player's new speed is 3");
+			put("Irrigation",
+					"If the player's city limit is less than 3, then the player's new city limit is 3");
+			put("Masonry",
+					"If the player's stacksize is less than 3, then the player's new stacksize is 3");
+			put("Mathematics",
+					"If the player's artillery level is less than 2, then the player's new artillery level is 2");
+			put("MetalCasting",
+					"Increase the player's gold by 1, and if the player's artillery level is less than 3, then the player's new artillery level is 3");
+			put("MetalWorking", "Unlock the ability to build a barracks");
+			put("MilitaryScience", "Unlock the ability to build an academy");
+			put("Monarchy", "Unlock the monarchy type of government");
+			put("Navigation", "Unlock the ability to build a harbor");
+			put("Philosophy", "Unlock the ability to build a temple");
+			put("Pottery", "Unlock the ability to build a granary");
+			put("PrintingPress",
+					"Unlock the ability to build a university, and if the player's stacksize is less than 4, then the player's new stacksize is 4");
+			put("Railroad",
+					"Unlock the ability to build an iron mine and if the player's calvary level is less than 3, then the player's new calvary level is 3");
+			put("ReplaceableParts",
+					"If the player's stacksize is less than 6, then the player's new stacksize is 6, and if the player's infantry level is less than 4, then the player's new infantry level is 4");
+			put("Sailing",
+					"If the player's speed is less than 4, then the player's new speed is 4");
+			put("SteamPower",
+					"If the player's speed is less than 5, then the player's new speed is 5");
+			put("Theology",
+					"Increase the player's handsize by 1, unlock the fundamentalism type of government, and unlock the ability to build a cathedral");
+			put("Writing", "Unlock the ability to build a library");
+			put("SpaceFlight", "You win the game");
+		}
+	};
 
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
@@ -103,7 +130,7 @@ public class Board extends JPanel {
 	public static Player currentPlayer;
 
 	private int phase;
-	public JPanel p;
+	public JFrame p;
 
 	private String player1Civilization;
 	private String player2Civilization;
@@ -115,9 +142,9 @@ public class Board extends JPanel {
 		this.messages = messages;
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
-		
+
 		players = new ArrayList<Player>();
-		
+
 		map = new ArrayList<Panel>();
 		readFromFile();
 		setTileLocations();
@@ -127,36 +154,36 @@ public class Board extends JPanel {
 		this.player1 = new Player();
 		this.player2 = new Player();
 
-		 players.add(this.player1);
-		 players.add(this.player2);
+		players.add(this.player1);
+		players.add(this.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
-//		Army army1 = new Army(player1, map.get(0).getTiles()[1][0]);
-//		Army army2 = new Army(player2, map.get(0).getTiles()[0][1]);
+		Army army1 = new Army(player1, map.get(0).getTiles()[1][0]);
+		Army army2 = new Army(player2, map.get(0).getTiles()[0][1]);
 
 		settler1.resetMoves(player1.getSpeed());
 		settler2.resetMoves(player2.getSpeed());
-//		army1.resetMoves(player1.getSpeed());
-//		army2.resetMoves(player2.getSpeed());
+		army1.resetMoves(player1.getSpeed());
+		army2.resetMoves(player2.getSpeed());
 
 		settler1.setLocation(10, 10);
 		settler2.setScreenLocation(map.get(7).getTiles()[3][3]
 				.getScreenLocation());
-//		army1.setScreenLocation((map.get(0).getTiles()[1][0]
-//				.getScreenLocation()));
-//		army2.setScreenLocation((map.get(0).getTiles()[0][1]
-//				.getScreenLocation()));
+		army1.setScreenLocation((map.get(0).getTiles()[1][0]
+				.getScreenLocation()));
+		army2.setScreenLocation((map.get(0).getTiles()[0][1]
+				.getScreenLocation()));
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
-//		this.player1.figures.add(army1);
-//		this.player2.figures.add(army2);
+		this.player1.figures.add(army1);
+		this.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-//		map.get(0).getTiles()[1][0].getFigures().add(army1);
-//		map.get(0).getTiles()[0][1].getFigures().add(army2);
+		map.get(0).getTiles()[1][0].getFigures().add(army1);
+		map.get(0).getTiles()[0][1].getFigures().add(army2);
 
 		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
 		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
@@ -295,10 +322,12 @@ public class Board extends JPanel {
 				|| figures.get(0).getNumberOfMoves() == 0) {
 			return;
 		}
-		int answer = JOptionPane.showConfirmDialog(null,
+		int answer = JOptionPane.showConfirmDialog(
+				null,
 				messages.getString("askToMoveUnit")
-						+ figures.get(0).getNumberOfMoves() + messages.getString("numMovesLeft"),
-				"Movement", JOptionPane.YES_NO_OPTION);
+						+ figures.get(0).getNumberOfMoves()
+						+ messages.getString("numMovesLeft"), "Movement",
+				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
 			return;
@@ -310,8 +339,8 @@ public class Board extends JPanel {
 
 	public Boolean makeNewCityWindow() {
 		int answer = JOptionPane.showConfirmDialog(null,
-				messages.getString("askToCreateCity"),
-				"Create New City", JOptionPane.YES_NO_OPTION);
+				messages.getString("askToCreateCity"), "Create New City",
+				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION)
 			return true;
 		else
@@ -351,7 +380,8 @@ public class Board extends JPanel {
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = false;
 			city = tile.getCity();
-			String[] choices = { messages.getString("buildSomethingOption"), messages.getString("collectResourceOption"),
+			String[] choices = { messages.getString("buildSomethingOption"),
+					messages.getString("collectResourceOption"),
 					messages.getString("devoteArtsOption") };
 			makeChoice(
 					choices,
@@ -441,7 +471,9 @@ public class Board extends JPanel {
 	}
 
 	public void buildSomething() {
-		String[] choices = { messages.getString("building"), messages.getString("settler"), messages.getString("army"), messages.getString("wonder"), messages.getString("units") };
+		String[] choices = { messages.getString("building"),
+				messages.getString("settler"), messages.getString("army"),
+				messages.getString("wonder"), messages.getString("units") };
 		makeChoice(choices, new BuilderHandler(), currentClick);
 	}
 
@@ -465,7 +497,7 @@ public class Board extends JPanel {
 			enemy = player1;
 
 		for (Figure f : tile.getFigures()) {
-			if (f.getOwner().equals(enemy))
+			if (f.getOwner() == null || f.getOwner().equals(enemy))
 				return true;
 		}
 		return false;
@@ -496,9 +528,11 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					if (items[i].getText().equals(messages.getString("buildSomethingOption"))) {
+					if (items[i].getText().equals(
+							messages.getString("buildSomethingOption"))) {
 						buildSomething();
-					} else if (items[i].getText().equals(messages.getString("collectResourceOption"))) {
+					} else if (items[i].getText().equals(
+							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
 					}
 					repaint();
@@ -509,7 +543,7 @@ public class Board extends JPanel {
 
 	public void movement(Tile tile, Panel panel) {
 		if (p != null) {
-			if(currentFigure == null){
+			if (currentFigure == null) {
 				p = null;
 				return;
 			}
@@ -517,13 +551,14 @@ public class Board extends JPanel {
 			Figure fig;
 			if (((Combat) p).successfulAttack()) {
 				fig = conqueredTile.getFigures().get(0);
-				if(player1.equals(currentPlayer)){
+				if (player1.equals(currentPlayer)) {
 					player2.figures.remove(fig);
-				}else{
+				} else {
 					player1.figures.remove(fig);
 				}
 			} else {
-				fig = conqueredTile.getFigures().get(conqueredTile.getFigures().size()-1);
+				fig = conqueredTile.getFigures().get(
+						conqueredTile.getFigures().size() - 1);
 				currentPlayer.figures.remove(fig);
 			}
 			conqueredTile.getFigures().remove(fig);
@@ -548,23 +583,32 @@ public class Board extends JPanel {
 					if (panel.getIsExplored()) {
 						if (checkSpaceForEnemyFigures(tile)) {
 							Figure enemy = tile.getFigures().get(0);
+							Player enemyPlayer = enemy.getOwner();
+							if (enemyPlayer == null) {
+								enemyPlayer = new Player();
+							}
 
-							final JFrame combatWindow = new JFrame("Combat");
-							combatWindow.setResizable(false);
-							combatWindow.setLayout(null);
-
-							ImageIcon icon = new ImageIcon(
-									"src/civilizationicon.jpg");
-							combatWindow.setIconImage(icon.getImage());
-
-							combatWindow.setSize(900, 565);
-							p = new Combat(currentPlayer, enemy.getOwner(), 0);
-							p.setLocation(10, 10);
-							p.setSize(combatWindow.getSize());
-							combatWindow.add(p);
-							combatWindow.setAlwaysOnTop(true);
-							combatWindow.setVisible(true);
-							this.setEnabled(false);
+							if (enemy instanceof Settler) {
+								tile.getFigures().remove(0);
+								enemyPlayer.figures.remove(enemy);
+								if (enemy.getOwner() == null) {
+									Resource resource = Resource.values()[new Random()
+											.nextInt(4)];
+									currentPlayer.resources.add(resource);
+									JOptionPane
+											.showConfirmDialog(
+													null,
+													messages.getString("resourceObtained")
+															+ resource
+																	.toString(),
+													"Collect Resource",
+													JOptionPane.PLAIN_MESSAGE);
+								}
+							} else {
+								p = new Combat(currentPlayer, enemyPlayer, 0);
+								p.setLocation(10, 10);
+								this.setEnabled(false);
+							}
 							Tile oldTile = currentMovementFigure.location;
 							oldTile.getFigures().remove(currentMovementFigure);
 							Board.this.currentMovementFigure
@@ -573,6 +617,7 @@ public class Board extends JPanel {
 							tile.getFigures().add(currentMovementFigure);
 							Board.this.validTiles.clear();
 							currentMovementFigure.setUsedThisTurn(true);
+							Board.this.repaint();
 							return;
 
 						}
@@ -788,6 +833,9 @@ public class Board extends JPanel {
 				movement(tile, panel);
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
+			} else if (Board.this.currentPhase.equals(RESEARCH)) {
+				research(); // TODO: techwindow
+
 			}
 		}
 
@@ -815,19 +863,20 @@ public class Board extends JPanel {
 
 		}
 	}
-	
+
 	public void research() {
+
 		final JFrame researchWindow = new JFrame("Research");
 		researchWindow.setSize(505, 380);
 		researchWindow.setLayout(null);
-		
+
 		JPanel tierOptions = new JPanel();
 		JPanel cardOptions = new JPanel();
 		JPanel description = new JPanel();
 		JPanel warningMessage = new JPanel();
 		JPanel buttons = new JPanel();
-		
-		String[] tiers = {"1", "2", "3", "4", "5"};
+
+		String[] tiers = { "1", "2", "3", "4", "5" };
 		tierOptions.setLocation(0, 0);
 		tierOptions.setSize(250, 50);
 		JLabel tierLabel = new JLabel("Tier: ");
@@ -835,37 +884,52 @@ public class Board extends JPanel {
 		tierDropDown.setSelectedIndex(0);
 		tierOptions.add(tierLabel);
 		tierOptions.add(tierDropDown);
-		
+
 		cardOptions.setLocation(250, 0);
 		cardOptions.setSize(250, 50);
 		JLabel cardLabel = new JLabel("Card: ");
 		final JComboBox<String> techCards = new JComboBox<String>();
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
-		tierCards[0] = new DefaultComboBoxModel<String>(new String[]{"CodeOfLaws", "Currency", "HorsebackRiding", "Masonry", "MetalWorking", "Navigation", "Philosophy", "Pottery", "Writing"});
-		tierCards[1] = new DefaultComboBoxModel<String>(new String[]{"Chivalry", "CivilServices", "Construction", "Democracy", "Engineering", "Irrigation", "Mathematics", "Monarchy", "PrintingPress", "Sailing"});
-		tierCards[2] = new DefaultComboBoxModel<String>(new String[]{"Banking", "Biology", "Communism", "Gunpowder", "MetalCasting", "MilitaryScience", "Railroad", "SteamPower", "Theology"});
-		tierCards[3] = new DefaultComboBoxModel<String>(new String[]{"Ballistics", "Combustion", "Computers", "Flight", "ReplaceableParts"});
-		tierCards[4] = new DefaultComboBoxModel<String>(new String[]{"SpaceFlight"});
+		tierCards[0] = new DefaultComboBoxModel<String>(new String[] {
+				"CodeOfLaws", "Currency", "HorsebackRiding", "Masonry",
+				"MetalWorking", "Navigation", "Philosophy", "Pottery",
+				"Writing" });
+		tierCards[1] = new DefaultComboBoxModel<String>(new String[] {
+				"Chivalry", "CivilServices", "Construction", "Democracy",
+				"Engineering", "Irrigation", "Mathematics", "Monarchy",
+				"PrintingPress", "Sailing" });
+		tierCards[2] = new DefaultComboBoxModel<String>(new String[] {
+				"Banking", "Biology", "Communism", "Gunpowder", "MetalCasting",
+				"MilitaryScience", "Railroad", "SteamPower", "Theology" });
+		tierCards[3] = new DefaultComboBoxModel<String>(new String[] {
+				"Ballistics", "Combustion", "Computers", "Flight",
+				"ReplaceableParts" });
+		tierCards[4] = new DefaultComboBoxModel<String>(
+				new String[] { "SpaceFlight" });
 		techCards.setModel(tierCards[0]);
 		cardOptions.add(cardLabel);
 		cardOptions.add(techCards);
-		
+
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
 		description.setLayout(new GridLayout(2, 1));
-		final JLabel cardName = new JLabel("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
-		final JTextArea cardDescription = new JTextArea("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
+		final JLabel cardName = new JLabel("     Card name:    "
+				+ techCards.getItemAt(techCards.getSelectedIndex()));
+		final JTextArea cardDescription = new JTextArea(
+				"     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
 		description.add(cardName);
 		description.add(cardDescription);
-		
+
 		warningMessage.setLocation(0, 250);
 		warningMessage.setSize(500, 50);
 		final JLabel message = new JLabel("");
 		message.setForeground(Color.RED);
 		warningMessage.add(message);
-		
+
 		buttons.setLocation(0, 300);
 		buttons.setSize(500, 50);
 		final JButton buy = new JButton("Buy");
@@ -874,206 +938,234 @@ public class Board extends JPanel {
 		buttons.add(tree);
 		buttons.add(buy);
 		buttons.add(cancel);
-		
+
 		researchWindow.add(tierOptions);
 		researchWindow.add(cardOptions);
 		researchWindow.add(description);
 		researchWindow.add(warningMessage);
 		researchWindow.add(buttons);
-		
+
 		researchWindow.setVisible(true);
-		
-		tree.addActionListener(new ActionListener(){
+
+		tree.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				final JFrame treeWindow = new JFrame("Player tech card tree");
 				treeWindow.setLayout(null);
 				treeWindow.setSize(525, 370);
-				
+
 				treeWindow.add(drawTechCardTree(currentPlayer));
-				
+
 				JPanel button = new JPanel();
 				button.setLocation(0, 290);
 				button.setSize(525, 50);
 				JButton close = new JButton("Close");
 				button.add(close);
 				treeWindow.add(button);
-				
+
 				treeWindow.setAlwaysOnTop(true);
 				treeWindow.setVisible(true);
-				
-				close.addActionListener(new ActionListener(){
+
+				close.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						treeWindow.dispose();
 					}
-					
+
 				});
 			}
 		});
-		
-		techCards.addActionListener(new ActionListener(){
+
+		techCards.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardName.setText("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
+				cardName.setText("     Card name:    "
+						+ techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
 				System.out.println(message.getText());
-				System.out.println(message.getText().equals("You cannot buy a card from this tier level."));
-				if(!message.getText().equals("You cannot buy a card from this tier level.")){
-					if(currentPlayer.techCards.contains(techCards.getItemAt(techCards.getSelectedIndex()))){
+				System.out.println(message.getText().equals(
+						"You cannot buy a card from this tier level."));
+				if (!message.getText().equals(
+						"You cannot buy a card from this tier level.")) {
+					if (currentPlayer.techCards.contains(techCards
+							.getItemAt(techCards.getSelectedIndex()))) {
 						message.setText("You already have this card.");
 						buy.setEnabled(false);
-					}
-					else if(!checkPlayerHasEnoughTrade(tierDropDown.getSelectedIndex() + 1)){
+					} else if (!checkPlayerHasEnoughTrade(tierDropDown
+							.getSelectedIndex() + 1)) {
 						message.setText("You do not have enough trade to buy this card.");
 						buy.setEnabled(false);
-					}
-					else{
+					} else {
 						buy.setEnabled(true);
 						message.setText("");
 					}
 				}
 			}
-			
+
 		});
-		
-		tierDropDown.addActionListener(new ActionListener(){
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				cardName.setText("     Card name:    " + techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     Card description:    " + cardDescriptions.get(techCards.getItemAt(techCards.getSelectedIndex())));
-				if(!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
-					message.setText("You cannot buy a card from this tier level.");
-					buy.setEnabled(false);
-				}
-				else if(currentPlayer.techCards.contains(techCards.getItemAt(techCards.getSelectedIndex()))){
-					message.setText("You already have this card.");
-					buy.setEnabled(false);
-				}
-				else if(!checkPlayerHasEnoughTrade(tierDropDown.getSelectedIndex() + 1)){
-					message.setText("You do not have enough trade to buy this card.");
-					buy.setEnabled(false);
-				}
-				else {
-					buy.setEnabled(true);
-					message.setText("");
-				}
-					
-			}
-		});
-		
-		buy.addActionListener(new ActionListener(){
+
+		tierDropDown.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(techCards.getItemAt(techCards.getSelectedIndex()));
-				currentPlayer.techCards.add(new TechCard(techCards.getItemAt(techCards.getSelectedIndex())));
+				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
+				cardName.setText("     Card name:    "
+						+ techCards.getItemAt(techCards.getSelectedIndex()));
+				cardDescription.setText("     Card description:    "
+						+ cardDescriptions.get(techCards.getItemAt(techCards
+								.getSelectedIndex())));
+				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
+					message.setText("You cannot buy a card from this tier level.");
+					buy.setEnabled(false);
+				} else if (currentPlayer.techCards.contains(techCards
+						.getItemAt(techCards.getSelectedIndex()))) {
+					message.setText("You already have this card.");
+					buy.setEnabled(false);
+				} else if (!checkPlayerHasEnoughTrade(tierDropDown
+						.getSelectedIndex() + 1)) {
+					message.setText("You do not have enough trade to buy this card.");
+					buy.setEnabled(false);
+				} else {
+					buy.setEnabled(true);
+					message.setText("");
+				}
+
+			}
+		});
+
+		buy.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(techCards.getItemAt(techCards
+						.getSelectedIndex()));
+				currentPlayer.techCards.add(new TechCard(techCards
+						.getItemAt(techCards.getSelectedIndex())));
 				currentPlayer.trade = 0;
 				updateValidTiers(tierDropDown.getSelectedIndex() + 1);
 				researchWindow.dispose();
 			}
-			
+
 		});
-		
-		cancel.addActionListener(new ActionListener(){
+
+		cancel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 researchWindow.dispose();
+				researchWindow.dispose();
 			}
-			
+
 		});
 	}
-	
-	public void updateValidTiers(int tier){
-		if(tier == 1){
-			if((currentPlayer.tier1Cards - currentPlayer.tier2Cards) >= 2) currentPlayer.canBuyTier2TechCard = true;
-			else currentPlayer.canBuyTier2TechCard = false;
-		}
-		else if(tier == 2){
-			if((currentPlayer.tier2Cards - currentPlayer.tier3Cards) >= 2) currentPlayer.canBuyTier3TechCard = true;
-			else currentPlayer.canBuyTier3TechCard = false;
-		}
-		else if(tier == 3){
-			if((currentPlayer.tier3Cards - currentPlayer.tier4Cards) >= 2) currentPlayer.canBuyTier4TechCard = true;
-			else currentPlayer.canBuyTier4TechCard = false;
-		}
-		else{
-			if(currentPlayer.tier4Cards >= 2) currentPlayer.canBuyTier5TechCard = true;
-			else currentPlayer.canBuyTier5TechCard = false;
+
+	public void updateValidTiers(int tier) {
+		if (tier == 1) {
+			if ((currentPlayer.tier1Cards - currentPlayer.tier2Cards) >= 2)
+				currentPlayer.canBuyTier2TechCard = true;
+			else
+				currentPlayer.canBuyTier2TechCard = false;
+		} else if (tier == 2) {
+			if ((currentPlayer.tier2Cards - currentPlayer.tier3Cards) >= 2)
+				currentPlayer.canBuyTier3TechCard = true;
+			else
+				currentPlayer.canBuyTier3TechCard = false;
+		} else if (tier == 3) {
+			if ((currentPlayer.tier3Cards - currentPlayer.tier4Cards) >= 2)
+				currentPlayer.canBuyTier4TechCard = true;
+			else
+				currentPlayer.canBuyTier4TechCard = false;
+		} else {
+			if (currentPlayer.tier4Cards >= 2)
+				currentPlayer.canBuyTier5TechCard = true;
+			else
+				currentPlayer.canBuyTier5TechCard = false;
 		}
 	}
-	
-	public boolean checkPlayerHasEnoughTrade(int tier){
-		if(tier == 1 && currentPlayer.trade >= 6) return true;
-		else if(tier == 2 && currentPlayer.trade >= 11) return true;
-		else if(tier == 3 && currentPlayer.trade >= 16) return true;
-		else if(tier == 4 && currentPlayer.trade >= 21) return true;
-		else if(tier == 5 && currentPlayer.trade >= 26) return true;
-		else return false;
+
+	public boolean checkPlayerHasEnoughTrade(int tier) {
+		if (tier == 1 && currentPlayer.trade >= 6)
+			return true;
+		else if (tier == 2 && currentPlayer.trade >= 11)
+			return true;
+		else if (tier == 3 && currentPlayer.trade >= 16)
+			return true;
+		else if (tier == 4 && currentPlayer.trade >= 21)
+			return true;
+		else if (tier == 5 && currentPlayer.trade >= 26)
+			return true;
+		else
+			return false;
 	}
-	
-	public boolean checkValidTier(int tier){
-		if(tier == 1) return true;
-		else if(tier == 2 && currentPlayer.canBuyTier2TechCard) return true;
-		else if(tier == 3 && currentPlayer.canBuyTier3TechCard) return true;
-		else if(tier == 4 && currentPlayer.canBuyTier4TechCard) return true;
-		else if(tier == 5 && currentPlayer.canBuyTier5TechCard) return true;
-		else return false;
+
+	public boolean checkValidTier(int tier) {
+		if (tier == 1)
+			return true;
+		else if (tier == 2 && currentPlayer.canBuyTier2TechCard)
+			return true;
+		else if (tier == 3 && currentPlayer.canBuyTier3TechCard)
+			return true;
+		else if (tier == 4 && currentPlayer.canBuyTier4TechCard)
+			return true;
+		else if (tier == 5 && currentPlayer.canBuyTier5TechCard)
+			return true;
+		else
+			return false;
 	}
-	
-	public static JPanel drawTechCardTree(Player player){
+
+	public static JPanel drawTechCardTree(Player player) {
 		JPanel tree = new JPanel();
 		tree.setLocation(0, 0);
 		tree.setSize(510, 290);
 		tree.setLayout(null);
-		if(player.tier1Cards + player.tier2Cards + player.tier3Cards + player.tier4Cards == 0){
+		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
+				+ player.tier4Cards == 0) {
 			System.out.println("No cards!");
-			JLabel label = new JLabel("Player has not bought any tech cards yet.");
+			JLabel label = new JLabel(
+					"Player has not bought any tech cards yet.");
 			label.setLocation(100, 145);
 			label.setSize(300, 20);
 			tree.add(label);
-		}
-		else{
-		int xCoord = 10;
-		for(int i = 0; i < player.tier1Cards; i++){
-			
-			tree.add(makeCard(xCoord, 230));
-			xCoord += 55;
-		}
-		
-		xCoord = 37;
-		for(int i = 0; i < player.tier2Cards; i++){
-			tree.add(makeCard(xCoord, 175));
-			xCoord += 55;
-		}
-		
-		xCoord = 65;
-		for(int i = 0; i < player.tier3Cards; i++){
-			tree.add(makeCard(xCoord, 120));
-			xCoord += 55;
-		}
-		
-		xCoord = 92;
-		for(int i = 0; i < player.tier4Cards; i++){
-			tree.add(makeCard(xCoord, 65));
-			xCoord += 55;
-		}
+		} else {
+			int xCoord = 10;
+			for (int i = 0; i < player.tier1Cards; i++) {
+
+				tree.add(makeCard(xCoord, 230));
+				xCoord += 55;
+			}
+
+			xCoord = 37;
+			for (int i = 0; i < player.tier2Cards; i++) {
+				tree.add(makeCard(xCoord, 175));
+				xCoord += 55;
+			}
+
+			xCoord = 65;
+			for (int i = 0; i < player.tier3Cards; i++) {
+				tree.add(makeCard(xCoord, 120));
+				xCoord += 55;
+			}
+
+			xCoord = 92;
+			for (int i = 0; i < player.tier4Cards; i++) {
+				tree.add(makeCard(xCoord, 65));
+				xCoord += 55;
+			}
 		}
 		return tree;
 	}
-		
-	public static JPanel makeCard(int x, int y){
+
+	public static JPanel makeCard(int x, int y) {
 		JPanel card = new JPanel();
 		card.setLocation(x, y);
 		card.setSize(50, 50);
 		card.setBackground(Color.BLACK);
 		return card;
+
 	}
 
 	public Player getPlayer1() {
@@ -1254,15 +1346,15 @@ public class Board extends JPanel {
 
 		return p.getTiles()[tileX][tileY];
 	}
-	
+
 	public void readFromFile() {
-		
+
 		readFromFile(new File("src/civPanelDetails/" + this.player1Civilization));
-		for(int i = 0; i < 6; i++){
-			readFromFile(new File("src/panelDetails/Panel" + (i+1)));
+		for (int i = 0; i < 6; i++) {
+			readFromFile(new File("src/panelDetails/Panel" + (i + 1)));
 		}
 		readFromFile(new File("src/civPanelDetails/" + this.player2Civilization));
-		
+
 		map.get(0).changeIsExplored(); // Player 1's initial location.
 		map.get(7).changeIsExplored(); // Player 2's initial location.
 	}
@@ -1355,7 +1447,8 @@ public class Board extends JPanel {
 
 		g2.setColor(Color.GREEN);
 		g2.setFont(new Font("Arial", g2.getFont().getStyle(), 18));
-		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50, 900);
+		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50,
+				900);
 
 		if (this.currentPlayer == this.player1) {
 			g2.setColor(Color.RED);
@@ -1399,12 +1492,12 @@ public class Board extends JPanel {
 
 	private String getPhaseText() {
 		String phase = "";
-		switch (this.currentPhase){
+		switch (this.currentPhase) {
 		case START_OF_TURN:
 			phase = messages.getString("startOfTurn");
 			break;
 		case TRADE:
-			phase =  messages.getString("trade2");
+			phase = messages.getString("trade2");
 			break;
 		case CITY_MANAGEMENT:
 			phase = messages.getString("cityManagement");
@@ -1585,11 +1678,10 @@ public class Board extends JPanel {
 
 			this.validTiles.clear();
 		} else {
-			if (this.currentPlayer == this.firstPlayer){
+			if (this.currentPlayer == this.firstPlayer) {
 				this.changePlayerTurn();
 				research();
-			}
-			else {
+			} else {
 				if (this.firstPlayer == this.player1)
 					this.firstPlayer = this.player2;
 				else
@@ -1673,10 +1765,18 @@ public class Board extends JPanel {
 				currentChoice = items[i].getText();
 			}
 		} else if (items[i].getText().equals(messages.getString("building"))) {
-			String[] Choiceitems = { messages.getString("market"), messages.getString("bank"), messages.getString("temple"), messages.getString("cathedral"),
-					messages.getString("granary"), messages.getString("aqueduct"), messages.getString("library"), messages.getString("university"), messages.getString("barracks"),
-					messages.getString("academy"), messages.getString("workshop"), messages.getString("ironMine"), messages.getString("tradingPost"),
-					"Harbor" };
+			String[] Choiceitems = { messages.getString("market"),
+					messages.getString("bank"), messages.getString("temple"),
+					messages.getString("cathedral"),
+					messages.getString("granary"),
+					messages.getString("aqueduct"),
+					messages.getString("library"),
+					messages.getString("university"),
+					messages.getString("barracks"),
+					messages.getString("academy"),
+					messages.getString("workshop"),
+					messages.getString("ironMine"),
+					messages.getString("tradingPost"), "Harbor" };
 			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
 		}
 		repaint();
@@ -1689,9 +1789,10 @@ public class Board extends JPanel {
 	public static void setGoingForResource(boolean goingForResource) {
 		Board.goingForResource = goingForResource;
 	}
-	
-	public static Player getPlayer(int playerNumber){
-		if(playerNumber == 1) return player1;
+
+	public static Player getPlayer(int playerNumber) {
+		if (playerNumber == 1)
+			return player1;
 		return player2;
 	}
 

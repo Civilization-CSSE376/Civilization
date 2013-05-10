@@ -22,16 +22,15 @@ public class Settler extends Figure {
 
 	@Override
 	public Boolean tryToBuildCity(Tile tile, Player player, City city) {
-		if (city.isValid
-				&& player.cities.size() + 1 <= player.cityLimit) {
+		if (city.isValid && player.cities.size() + 1 <= player.cityLimit) {
 			city.setScreenLocation(this.screenLocation);
 			player.cities.add(city);
 			tile.setCity(city);
 			player.figures.remove(this);
-			tile.getFigure().remove(this);
+			tile.getFigures().remove(this);
 			return true;
-		}
-		else return false;
+		} else
+			return false;
 	}
 
 	@Override
