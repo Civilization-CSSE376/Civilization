@@ -18,8 +18,15 @@ public class GreatPerson extends Marker {
 
 	public GreatPerson(String name, ResourceBundle messages) {
 		super(name, messages);
+		this.createGreatPerson(name);
+		this.allowedTerrain = Terrain.NotWater;
+	}
+	
+	public GreatPerson(ResourceBundle messages){
+		super(messages);
 		Collections.shuffle(this.possibleGreatPeople);
-		this.createGreatPerson(this.possibleGreatPeople.get(0));
+		this.name = this.possibleGreatPeople.get(0);
+		this.createGreatPerson(name);
 		this.allowedTerrain = Terrain.NotWater;
 	}
 
