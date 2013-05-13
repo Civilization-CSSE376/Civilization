@@ -309,7 +309,7 @@ public class MainWindow extends JFrame {
 		buffer.setBackground(Color.BLACK);
 		
 		JButton closeButton = new JButton(messages.getString("close"));
-		JButton techTree = new JButton("Player tech tree"); // TODO Needs internationalized
+		JButton techTree = new JButton(messages.getString("playerTechTree"));
 		buttonPanel.add(closeButton);
 		buttonPanel.add(techTree);
 		
@@ -330,7 +330,7 @@ public class MainWindow extends JFrame {
 		JLabel governmentAbility = new JLabel(messages.getString("ability"));
 		governmentAbility.setForeground(Color.WHITE);
 		
-		JLabel trade = new JLabel(messages.getString("trade1") + Board.getPlayer(playerNum).trade);
+		JLabel trade = new JLabel(messages.getString("trade") + ": " + Board.getPlayer(playerNum).trade);
 		trade.setForeground(Color.WHITE);
 		
 		JLabel gold = new JLabel(messages.getString("gold") + Board.getPlayer(playerNum).gold);

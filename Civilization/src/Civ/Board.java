@@ -1532,7 +1532,7 @@ public class Board extends JPanel {
 			phase = messages.getString("startOfTurn");
 			break;
 		case TRADE:
-			phase = messages.getString("trade2");
+			phase = messages.getString("trade");
 			break;
 		case CITY_MANAGEMENT:
 			phase = messages.getString("cityManagement");
