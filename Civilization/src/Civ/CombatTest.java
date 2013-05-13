@@ -130,23 +130,23 @@ public class CombatTest {
 		Unit attacking = combat.attacker.units.get(0);
 		Unit defending = combat.defenderFront.get(0);
 		combat.attackFront(attacking, defending);
-//		assertEquals(1, combat.defenderFront.size());
+		assertEquals(0, combat.defenderFront.size());
 		assertEquals(-1, combat.attackerHand.indexOf(attacking));
-//		assertEquals(0, combat.defenderFront.indexOf(defending));
+		assertEquals(-1, combat.defenderFront.indexOf(defending));
 	}
-	
+
 	@Test
-	public void testSuccessfulAttack(){
+	public void testSuccessfulAttack() {
 		this.combat.attackerFront.add(this.combat.attackerHand.get(0));
 		this.combat.attackerFront.add(this.combat.attackerHand.get(1));
 		this.combat.defenderFront.add(this.combat.defenderHand.get(0));
-		
+
 		assertTrue(this.combat.successfulAttack());
-		
+
 		this.combat.defenderFront.add(this.combat.defenderHand.get(1));
 		this.combat.defenderFront.add(this.combat.defenderHand.get(2));
-		
+
 		assertFalse(this.combat.successfulAttack());
 	}
-	
+
 }
