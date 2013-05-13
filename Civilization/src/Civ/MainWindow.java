@@ -459,6 +459,8 @@ public class MainWindow extends JFrame {
 			//they just won by culture
 			cost[0] = 7;
 			cost[1] = 5;
+			Board.currentPlayer.hasWon = true;
+			Board.currentPlayer.winCondition = "Culture";
 		}
 		return cost;
 	}

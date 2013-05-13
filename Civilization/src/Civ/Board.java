@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -108,6 +110,47 @@ public class Board extends JPanel {
 			put("SpaceFlight", "You win the game");
 		}
 	};
+	
+	public static final Map<String, TechCard> techCards = new HashMap<String, TechCard>(){
+		{
+			put("AnimalHusbandry", new AnimalHusbandry());
+			put("AtomicTheory", new AtomicTheory());
+			put("Ballistics", new Ballistics());
+			put("Banking", new Banking());
+			put("Biology", new Biology());
+			put("Chivalry", new Chivalry());
+			put("CivilServices", new CivilServices());
+			put("CodeOfLaws", new CodeOfLaws());
+			put("Combustion", new Combustion());
+			put("Communism", new Communism());
+			put("Computers", new Computers());
+			put("Construction", new Construction());
+			put("Currency", new Currency());
+			put("Democracy", new Democracy());
+			put("Engineering", new Engineering());
+			put("Flight", new Flight());
+			put("Gunpowder", new Gunpowder());
+			put("HorsebackRiding", new HorsebackRiding());
+			put("Irrigation", new Irrigation());
+			put("Masonry", new Masonry());
+			put("MassMedia", new MassMedia());
+			put("Mathematics", new Mathematics());
+			put("MetalCasting", new MetalCasting());
+			put("MetalWorking", new MetalWorking());
+			put("MilitaryScience", new MilitaryScience());
+			put("Monarchy", new Monarchy());
+			put("Navigation", new Navigation());
+			put("Philosophy", new Philosophy());
+			put("Pottery", new Pottery());
+			put("PrintingPress", new PrintingPress());
+			put("Railroad", new Railroad());
+			put("ReplaceableParts", new ReplaceableParts());
+			put("Sailing", new Sailing());
+			put("SteamPower", new SteamPower());
+			put("Theology", new Theology());
+			put("Writing", new Writing());
+		}
+	};
 
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
@@ -122,6 +165,7 @@ public class Board extends JPanel {
 	private static Player player1;
 	private static Player player2;
 	Figure currentMovementFigure = null;
+	public static boolean isGameOver = false;
 
 	public static ArrayList<Panel> map;
 	public static ArrayList<Player> players = new ArrayList<Player>();
@@ -131,6 +175,8 @@ public class Board extends JPanel {
 
 	private int phase;
 	public JFrame p;
+	
+	public static ArrayList<Player> winners = new ArrayList<Player>();
 
 	private String player1Civilization;
 	private String player2Civilization;
@@ -1071,10 +1117,14 @@ public class Board extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(techCards.getItemAt(techCards
 						.getSelectedIndex()));
-				currentPlayer.techCards.add(new TechCard(techCards
+				currentPlayer.techCards.add(Board.techCards.get(techCards
 						.getItemAt(techCards.getSelectedIndex())));
 				currentPlayer.trade = 0;
 				updateValidTiers(tierDropDown.getSelectedIndex() + 1);
+				if(currentPlayer.techCards.contains("SpaceFlight")){
+					currentPlayer.hasWon = true;
+					currentPlayer.winCondition = "Tech";
+				}
 				researchWindow.dispose();
 			}
 
@@ -1831,6 +1881,43 @@ public class Board extends JPanel {
 		if (playerNumber == 1)
 			return player1;
 		return player2;
+	}
+	
+	public void isGameOver(){
+		boolean isOver = false;
+		for(Player p: this.players){
+			if(p.hasWon == true){
+				isOver = true;
+			}
+		}
+		if(!isOver){
+			return;
+		}
+		
+		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
+		for(Player p: this.players){
+			score.put(tieBreakerScore(p), p);
+		}
+		
+		int highestScore = 0;
+		for(Integer i : score.keySet()){
+			if(i > highestScore){
+				highestScore = i;
+			}
+		}
+		
+		if(!score.isEmpty()){
+			Board.isGameOver = true;
+			Board.winners.add(score.get(highestScore));
+		}
+	}
+	
+	public int tieBreakerScore(Player p){
+		int score = 0;
+		score += p.cultureTrackProgress;
+		score += p.techCards.size();
+		score += p.gold;
+		return score;
 	}
 
 }
