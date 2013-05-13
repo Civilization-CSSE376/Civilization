@@ -314,6 +314,12 @@ public class Combat extends JFrame {
 			defendingStrength += u.attack;
 			// this.defender.units.add(u);
 		}
+		
+		if(this.defenderBonus == 12 || this.defenderBonus == 16){
+			this.attacker.hasWon = true;
+			this.attacker.winCondition = "Military";
+			Board.isGameOver = true;
+		}
 
 		return attackingStrength > defendingStrength ? true : false;
 	}

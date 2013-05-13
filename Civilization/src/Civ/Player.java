@@ -36,6 +36,8 @@ public class Player {
 	public int tier2Cards = 0;
 	public int tier3Cards = 0;
 	public int tier4Cards = 0;
+	public boolean hasWon = false;
+	public String winCondition = "";
 
 	public int artilleryLevel = 1;
 	public int infantryLevel = 1;

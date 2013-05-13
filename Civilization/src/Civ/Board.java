@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -163,6 +165,7 @@ public class Board extends JPanel {
 	private static Player player1;
 	private static Player player2;
 	Figure currentMovementFigure = null;
+	public static boolean isGameOver = false;
 
 	public static ArrayList<Panel> map;
 	public static ArrayList<Player> players = new ArrayList<Player>();
@@ -172,6 +175,8 @@ public class Board extends JPanel {
 
 	private int phase;
 	public JFrame p;
+	
+	public static ArrayList<Player> winners = new ArrayList<Player>();
 
 	private String player1Civilization;
 	private String player2Civilization;
@@ -1116,6 +1121,10 @@ public class Board extends JPanel {
 						.getItemAt(techCards.getSelectedIndex())));
 				currentPlayer.trade = 0;
 				updateValidTiers(tierDropDown.getSelectedIndex() + 1);
+				if(currentPlayer.techCards.contains("SpaceFlight")){
+					currentPlayer.hasWon = true;
+					currentPlayer.winCondition = "Tech";
+				}
 				researchWindow.dispose();
 			}
 
@@ -1872,6 +1881,43 @@ public class Board extends JPanel {
 		if (playerNumber == 1)
 			return player1;
 		return player2;
+	}
+	
+	public void isGameOver(){
+		boolean isOver = false;
+		for(Player p: this.players){
+			if(p.hasWon == true){
+				isOver = true;
+			}
+		}
+		if(!isOver){
+			return;
+		}
+		
+		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
+		for(Player p: this.players){
+			score.put(tieBreakerScore(p), p);
+		}
+		
+		int highestScore = 0;
+		for(Integer i : score.keySet()){
+			if(i > highestScore){
+				highestScore = i;
+			}
+		}
+		
+		if(!score.isEmpty()){
+			Board.isGameOver = true;
+			Board.winners.add(score.get(highestScore));
+		}
+	}
+	
+	public int tieBreakerScore(Player p){
+		int score = 0;
+		score += p.cultureTrackProgress;
+		score += p.techCards.size();
+		score += p.gold;
+		return score;
 	}
 
 }
