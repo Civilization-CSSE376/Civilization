@@ -1119,8 +1119,8 @@ public class Board extends JPanel {
 						.getSelectedIndex()));
 				currentPlayer.techCards.add(Board.techCards.get(techCards
 						.getItemAt(techCards.getSelectedIndex())));
+				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				updateValidTiers(tierDropDown.getSelectedIndex() + 1);
 				if(currentPlayer.techCards.contains("SpaceFlight")){
 					currentPlayer.hasWon = true;
 					currentPlayer.winCondition = "Tech";
@@ -1148,23 +1148,27 @@ public class Board extends JPanel {
 		else return 26;
 	}
 
-	public void updateValidTiers(int tier) {
+	public void updateValidTiersAndCards(int tier) {
 		if (tier == 1) {
+			currentPlayer.tier1Cards++;
 			if ((currentPlayer.tier1Cards - currentPlayer.tier2Cards) >= 2)
 				currentPlayer.canBuyTier2TechCard = true;
 			else
 				currentPlayer.canBuyTier2TechCard = false;
 		} else if (tier == 2) {
+			currentPlayer.tier2Cards++;
 			if ((currentPlayer.tier2Cards - currentPlayer.tier3Cards) >= 2)
 				currentPlayer.canBuyTier3TechCard = true;
 			else
 				currentPlayer.canBuyTier3TechCard = false;
 		} else if (tier == 3) {
+			currentPlayer.tier3Cards++;
 			if ((currentPlayer.tier3Cards - currentPlayer.tier4Cards) >= 2)
 				currentPlayer.canBuyTier4TechCard = true;
 			else
 				currentPlayer.canBuyTier4TechCard = false;
 		} else {
+			currentPlayer.tier4Cards++;
 			if (currentPlayer.tier4Cards >= 2)
 				currentPlayer.canBuyTier5TechCard = true;
 			else
