@@ -43,11 +43,9 @@ import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
-
 import TechCards.*;
 
 import Civ.Tile.Resource;
-
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
@@ -110,8 +108,8 @@ public class Board extends JPanel {
 			put("SpaceFlight", "You win the game");
 		}
 	};
-	
-	public static final Map<String, TechCard> techCards = new HashMap<String, TechCard>(){
+
+	public static final Map<String, TechCard> techCards = new HashMap<String, TechCard>() {
 		{
 			put("AnimalHusbandry", new AnimalHusbandry());
 			put("AtomicTheory", new AtomicTheory());
@@ -175,7 +173,7 @@ public class Board extends JPanel {
 
 	private int phase;
 	public JFrame p;
-	
+
 	public static ArrayList<Player> winners = new ArrayList<Player>();
 
 	private String player1Civilization;
@@ -428,7 +426,9 @@ public class Board extends JPanel {
 			city = tile.getCity();
 			String[] choices = { messages.getString("buildSomethingOption"),
 					messages.getString("collectResourceOption"),
-					messages.getString("devoteArtsOption") };
+					messages.getString("devoteArtsOption"),
+					// TODO messages.getString("convertTradeOption")
+					"convertTradeOption" };
 			makeChoice(
 					choices,
 					new InitialHandler(),
@@ -580,6 +580,10 @@ public class Board extends JPanel {
 					} else if (items[i].getText().equals(
 							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
+					} else if (items[i].getText().equals(
+					// messages.getString("convertTradeOption")))
+							"convertTradeOption")) {
+						convertTradeToProduction(currentPlayer, currentCity);
 					}
 					repaint();
 					return;
@@ -702,6 +706,14 @@ public class Board extends JPanel {
 				// "Invalid Tile",
 				// "Movement", JOptionPane.PLAIN_MESSAGE);
 			}
+		}
+	}
+
+	public void convertTradeToProduction(Player player, City city) {
+		if (player.trade >= 3) {
+			city.setProduction(city.getProduction() + 1);
+			// TODO 'Murica gets more cause it's awesome and stuffs
+			player.trade -= 3;
 		}
 	}
 
@@ -982,7 +994,9 @@ public class Board extends JPanel {
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
 		description.setLayout(new GridLayout(3, 1));
-		final JLabel currentTrade = new JLabel("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
+		final JLabel currentTrade = new JLabel("Tier card cost: "
+				+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
+				+ " , player has " + currentPlayer.trade + " trade available.");
 		final JLabel cardName = new JLabel("     Card name:    "
 				+ techCards.getItemAt(techCards.getSelectedIndex()));
 		final JTextArea cardDescription = new JTextArea(
@@ -1053,7 +1067,10 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
+				currentTrade.setText("Tier card cost: "
+						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
+						+ " , player has " + currentPlayer.trade
+						+ " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1086,7 +1103,10 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
+				currentTrade.setText("Tier card cost: "
+						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
+						+ " , player has " + currentPlayer.trade
+						+ " trade available.");
 				cardName.setText("     Card name:    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
 				cardDescription.setText("     Card description:    "
@@ -1121,7 +1141,7 @@ public class Board extends JPanel {
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				if(currentPlayer.techCards.contains("SpaceFlight")){
+				if (currentPlayer.techCards.contains("SpaceFlight")) {
 					currentPlayer.hasWon = true;
 					currentPlayer.winCondition = "Tech";
 				}
@@ -1139,13 +1159,18 @@ public class Board extends JPanel {
 
 		});
 	}
-	
-	public int getTierCardCost(int tier){
-		if(tier == 1) return 6;
-		else if(tier == 2) return 11;
-		else if(tier == 3) return 16;
-		else if(tier == 4) return 21;
-		else return 26;
+
+	public int getTierCardCost(int tier) {
+		if (tier == 1)
+			return 6;
+		else if (tier == 2)
+			return 11;
+		else if (tier == 3)
+			return 16;
+		else if (tier == 4)
+			return 21;
+		else
+			return 26;
 	}
 
 	public void updateValidTiersAndCards(int tier) {
@@ -1307,36 +1332,40 @@ public class Board extends JPanel {
 	private Player playerConfig(String civ) {
 
 		Player tempPlayer = new Player();
-		
+
 		switch (civ) {
 		case "Egypt":
 			tempPlayer.techCards.add(new Construction());
-			//free wonder at start of game
-			//one free building each turn as an action
+			// free wonder at start of game
+			// one free building each turn as an action
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = "Communism";
 			tempPlayer.stackSize = 3;
-			//one extra army
+			// one extra army
 			/*
-			 * once per turn the russians may move an army or scout into an enemy city and sacrifice that figure
-			 * to research a tech known by that civilization for free. armies sacrificed this way cannot also attack
+			 * once per turn the russians may move an army or scout into an
+			 * enemy city and sacrifice that figure to research a tech known by
+			 * that civilization for free. armies sacrificed this way cannot
+			 * also attack
 			 */
 			break;
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
 			tempPlayer.government = "Republic";
 			/*
-			 * the romans advance one space on the culture track for free each time
-			 * they build a wonder or a city, and each time they conquer a city or village
+			 * the romans advance one space on the culture track for free each
+			 * time they build a wonder or a city, and each time they conquer a
+			 * city or village
 			 */
 			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
-			//free great person at start of game
+			// free great person at start of game
 			/*
-			 * each time the americans convert 3 trade into production, they recieve 2 production instead of 1
+			 * each time the americans convert 3 trade into production, they
+			 * recieve 2 production instead of 1
 			 */
 			break;
 		case "Germany":
@@ -1344,18 +1373,19 @@ public class Board extends JPanel {
 			tempPlayer.units.add(new Unit("Infantry", 1));
 			tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
-			 * after setup, each time the germans research a tech that upgrades or unlocks a unit, they build
-			 * one of that unit for free and gain one resource of their choice from the market
+			 * after setup, each time the germans research a tech that upgrades
+			 * or unlocks a unit, they build one of that unit for free and gain
+			 * one resource of their choice from the market
 			 */
-			
+
 			break;
 		case "China":
 			tempPlayer.techCards.add(new Writing());
 			/*
-			 * the chinese start with city walls in their capital.
-			 * the chinese gain 3 culture each time they explore a hut or conquer a village.
-			 * the chinese may save one of their killed units after each battle, returning it to
-			 * their staning forces.
+			 * the chinese start with city walls in their capital. the chinese
+			 * gain 3 culture each time they explore a hut or conquer a village.
+			 * the chinese may save one of their killed units after each battle,
+			 * returning it to their staning forces.
 			 */
 			break;
 		default:
@@ -1886,37 +1916,37 @@ public class Board extends JPanel {
 			return player1;
 		return player2;
 	}
-	
-	public void isGameOver(){
+
+	public void isGameOver() {
 		boolean isOver = false;
-		for(Player p: this.players){
-			if(p.hasWon == true){
+		for (Player p : this.players) {
+			if (p.hasWon == true) {
 				isOver = true;
 			}
 		}
-		if(!isOver){
+		if (!isOver) {
 			return;
 		}
-		
+
 		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
-		for(Player p: this.players){
+		for (Player p : this.players) {
 			score.put(tieBreakerScore(p), p);
 		}
-		
+
 		int highestScore = 0;
-		for(Integer i : score.keySet()){
-			if(i > highestScore){
+		for (Integer i : score.keySet()) {
+			if (i > highestScore) {
 				highestScore = i;
 			}
 		}
-		
-		if(!score.isEmpty()){
+
+		if (!score.isEmpty()) {
 			Board.isGameOver = true;
 			Board.winners.add(score.get(highestScore));
 		}
 	}
-	
-	public int tieBreakerScore(Player p){
+
+	public int tieBreakerScore(Player p) {
 		int score = 0;
 		score += p.cultureTrackProgress;
 		score += p.techCards.size();
