@@ -29,7 +29,7 @@ import Civ.Tile.Resource;
 public class MainWindow extends JFrame {
 
 	// Fields...
-	private JPanel buttons = new JPanel();
+	private JPanel buttons = makeJPanel(1800, 50, 0, 925);
 	private JPanel board = new JPanel();
 	private JPanel content = new JPanel();
 	private JButton rules = new JButton();
@@ -58,7 +58,6 @@ public class MainWindow extends JFrame {
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
-		
 		this.player1Details.setText(messages.getString("player1Details"));
 		this.player2Details.setText(messages.getString("player2Details"));
 		this.marketDetails.setText(messages.getString("marketDetails"));
@@ -76,12 +75,10 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.tradeResource);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
-
+		
 		this.content.add(this.board);
 		
 		this.buttons.setBackground(Color.BLACK);
-		this.buttons.setLocation(0, 925);
-		this.buttons.setSize(1800, 50);
 
 		this.add(this.buttons);
 		
@@ -240,11 +237,9 @@ public class MainWindow extends JFrame {
 						+ " : " + cultureAmount + " " + messages.getString("culture1"));
 				JButton silkButton = new JButton(silkAmount + " " + messages.getString("silk")
 						+ " : " + tradeAmount + " " + messages.getString("trade"));
+				JButton[] buttonList = {wheatButton, ironButton, incenseButton, silkButton};
 				buyPanel.setLayout(new GridLayout(2, 2));
-				buyPanel.add(wheatButton);
-				buyPanel.add(ironButton);
-				buyPanel.add(incenseButton);
-				buyPanel.add(silkButton);
+				for(JButton button : buttonList) buyPanel.add(button);
 				
 				JPanel closePanel = new JPanel();
 				JButton closeButton = new JButton(messages.getString("close"));
@@ -355,26 +350,17 @@ public class MainWindow extends JFrame {
 				final JFrame marketWindow = makeNewWindow(1225, 685, messages.getString("marketDetails"));
 				
 				JPanel marketBoard = makePicturePanel(0, -5, 1220, 625, "src/marketBoard.png");
-				JPanel buttonPanel = new JPanel();
+				JPanel buttonPanel = makeJPanel(1235, 40, 0, 620);
 				buttonPanel.setBackground(Color.BLACK);
 				JButton closeButton = new JButton(messages.getString("close"));
 				buttonPanel.add(closeButton);
-				buttonPanel.setLocation(0, 620);
-				buttonPanel.setSize(1235, 40);
 				
-				JPanel player1CultureLocation = new JPanel();
+				JPanel player1CultureLocation = makeJPanel(cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540, 15, 25);
 				player1CultureLocation.setBackground(Color.RED);
-				player1CultureLocation.setLocation(cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540);
-				player1CultureLocation.setSize(15, 25);
-				JPanel player2CultureLocation = new JPanel();
+				JPanel player2CultureLocation = makeJPanel(cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570, 15, 25);
 				player2CultureLocation.setBackground(Color.YELLOW);
-				player2CultureLocation.setLocation(cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570);
-				player2CultureLocation.setSize(15, 25);
-				
-				marketWindow.add(player1CultureLocation);
-				marketWindow.add(player2CultureLocation);
-				marketWindow.add(marketBoard);
-				marketWindow.add(buttonPanel);
+				JPanel[] panelList = {player1CultureLocation, player2CultureLocation, marketBoard, buttonPanel};
+				for(JPanel panel : panelList) marketWindow.add(panel);
 				marketWindow.setVisible(true);
 				
 				closeButton.addActionListener(new ActionListener() {
@@ -435,11 +421,11 @@ public class MainWindow extends JFrame {
 		
 		final JFrame playerWindow = makeNewWindow(900, 565, windowName);
 		
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = makeJPanel(345, 40, 550, 500);
 		JPanel civPic = makePicturePanel(0, -6, 550, 565, "src/civs/" + playerCivilizationField + ".png");
-		JPanel info = new JPanel();
-		JPanel buffer = new JPanel();
-		
+		JPanel info = makeJPanel(295, 500, 600, 0);
+		JPanel buffer = makeJPanel(50, 500, 550, 0);
+		JPanel[] panelList = {buttonPanel, civPic, info, buffer};
 		info.setBackground(Color.BLACK);
 		buttonPanel.setBackground(Color.BLACK);
 		buffer.setBackground(Color.BLACK);
@@ -448,12 +434,7 @@ public class MainWindow extends JFrame {
 		JButton techTree = new JButton(messages.getString("playerTechTree"));
 		buttonPanel.add(closeButton);
 		buttonPanel.add(techTree);
-		
-		buttonPanel.setLocation(550, 500);
-		buttonPanel.setSize(345, 40);
-		
-		info.setLocation(600, 0);
-		info.setSize(295, 500);
+
 		info.setLayout(new GridLayout(6, 1));
 		String gov = "";
 		if(playerCivilizationField.equals("Rome")) gov = messages.getString("republic");
@@ -480,21 +461,11 @@ public class MainWindow extends JFrame {
 		
 		JLabel resources = new JLabel(messages.getString("resources") + resourceString);
 		resources.setForeground(Color.WHITE);
+		JLabel[] labelList = {government, governmentAbility, trade, gold, resources, culture};
+		for(JLabel label : labelList) info.add(label);
 		
-		info.add(government);
-		info.add(governmentAbility);
-		info.add(trade);
-		info.add(gold);
-		info.add(resources);
-		info.add(culture);
 		
-		buffer.setLocation(550, 0);
-		buffer.setSize(50, 500);
-		
-		playerWindow.add(buttonPanel);
-		playerWindow.add(civPic);
-		playerWindow.add(info);
-		playerWindow.add(buffer);
+		for(JPanel panel : panelList) playerWindow.add(panel);
 		
 		playerWindow.setVisible(true);
 		
@@ -609,5 +580,12 @@ public class MainWindow extends JFrame {
 			return true;
 		}
 		return false;
+	}
+	
+	public JPanel makeJPanel(int width, int height, int xLocation, int yLocation){
+		JPanel panel = new JPanel();
+		panel.setLocation(xLocation, yLocation);
+		panel.setSize(width, height);
+		return panel;
 	}
 }

@@ -994,27 +994,21 @@ public class Board extends JPanel {
 
 	public void research() {
 
-		final JFrame researchWindow = new JFrame(messages.getString("research"));
-		researchWindow.setSize(505, 380);
-		researchWindow.setLayout(null);
-
-		JPanel tierOptions = new JPanel();
-		JPanel cardOptions = new JPanel();
-		JPanel description = new JPanel();
-		JPanel warningMessage = new JPanel();
-		JPanel buttons = new JPanel();
-
+		final JFrame researchWindow = buildFrame(505, 380, messages.getString("research"));
+		
+		JPanel tierOptions = buildJPanel(250, 50, 0, 0);
+		JPanel cardOptions = buildJPanel(250, 50, 250, 0);
+		JPanel description = buildJPanel(500, 200, 0, 50);
+		JPanel warningMessage = buildJPanel(500, 50, 0, 250);
+		JPanel buttons = buildJPanel(500, 50, 0, 300);
+		JPanel[] panels = {tierOptions, cardOptions, description, warningMessage, buttons};
 		String[] tiers = { "1", "2", "3", "4", "5" };
-		tierOptions.setLocation(0, 0);
-		tierOptions.setSize(250, 50);
 		JLabel tierLabel = new JLabel(messages.getString("tier") + ": ");
 		final JComboBox<String> tierDropDown = new JComboBox<String>(tiers);
 		tierDropDown.setSelectedIndex(0);
 		tierOptions.add(tierLabel);
 		tierOptions.add(tierDropDown);
 
-		cardOptions.setLocation(250, 0);
-		cardOptions.setSize(250, 50);
 		JLabel cardLabel = new JLabel(messages.getString("card") + ": ");
 		final JComboBox<String> techCards = new JComboBox<String>();
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
@@ -1038,8 +1032,6 @@ public class Board extends JPanel {
 		cardOptions.add(cardLabel);
 		cardOptions.add(techCards);
 
-		description.setLocation(0, 50);
-		description.setSize(500, 200);
 		description.setLayout(new GridLayout(3, 1));
 		final JLabel currentTrade = new JLabel(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
 		final JLabel cardName = new JLabel("     " + messages.getString("cardName") + ":    "
@@ -1054,14 +1046,10 @@ public class Board extends JPanel {
 		description.add(cardName);
 		description.add(cardDescription);
 
-		warningMessage.setLocation(0, 250);
-		warningMessage.setSize(500, 50);
 		final JLabel message = new JLabel("");
 		message.setForeground(Color.RED);
 		warningMessage.add(message);
 
-		buttons.setLocation(0, 300);
-		buttons.setSize(500, 50);
 		final JButton buy = new JButton(messages.getString("buy"));
 		JButton cancel = new JButton(messages.getString("cancel"));
 		JButton tree = new JButton(messages.getString("playerTechCardTree"));
@@ -1081,15 +1069,11 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
-				treeWindow.setLayout(null);
-				treeWindow.setSize(525, 370);
-
+				final JFrame treeWindow = buildFrame(525, 370, messages.getString("playerTechCardTree"));
+				
 				treeWindow.add(drawTechCardTree(currentPlayer));
 
-				JPanel button = new JPanel();
-				button.setLocation(0, 290);
-				button.setSize(525, 50);
+				JPanel button = buildJPanel(525, 50, 0, 290);
 				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
@@ -1142,12 +1126,7 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				currentTrade.setText(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
-				cardName.setText("     " + messages.getString("cardName") + ":    "
-						+ techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     " + messages.getString("cardDescription") + ":    "
-						+ cardDescriptions.get(techCards.getItemAt(techCards
-								.getSelectedIndex())));
+				
 				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
 					message.setText(messages.getString("cannotBuyCardTierLevel"));
 					buy.setEnabled(false);
@@ -1194,6 +1173,20 @@ public class Board extends JPanel {
 			}
 
 		});
+	}
+	
+	public JFrame buildFrame(int width, int height, String title){
+		JFrame frame = new JFrame(title);
+		frame.setSize(width, height);
+		frame.setLayout(null);
+		return frame;
+	}
+	
+	public static JPanel buildJPanel(int width, int height, int xLocation, int yLocation){
+		JPanel panel = new JPanel();
+		panel.setLocation(xLocation, yLocation);
+		panel.setSize(width, height);
+		return panel;
 	}
 	
 	public int getTierCardCost(int tier){
@@ -1263,9 +1256,7 @@ public class Board extends JPanel {
 	}
 
 	public static JPanel drawTechCardTree(Player player) {
-		JPanel tree = new JPanel();
-		tree.setLocation(0, 0);
-		tree.setSize(510, 290);
+		JPanel tree = buildJPanel(510, 290, 0, 0);
 		tree.setLayout(null);
 		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
 				+ player.tier4Cards == 0) {
@@ -1305,9 +1296,7 @@ public class Board extends JPanel {
 	}
 
 	public static JPanel makeCard(int x, int y) {
-		JPanel card = new JPanel();
-		card.setLocation(x, y);
-		card.setSize(50, 50);
+		JPanel card = buildJPanel(50, 50, x, y);
 		card.setBackground(Color.BLACK);
 		return card;
 
