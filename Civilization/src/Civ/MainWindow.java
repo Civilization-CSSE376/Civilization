@@ -269,7 +269,7 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Wheat");
-						boolean canBuy = amount > wheatAmount ? true : false;
+						boolean canBuy = amount >= wheatAmount ? true : false;
 
 						if(canBuy){
 							Board.currentPlayer.gold += goldAmount;
@@ -284,7 +284,7 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Iron");
-						boolean canBuy = amount > ironAmount ? true : false;
+						boolean canBuy = amount >= ironAmount ? true : false;
 						List<Integer> randomChoices = Arrays.asList(1, 2, 3);
 
 						if(canBuy){
@@ -316,7 +316,7 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Incense");
-						boolean canBuy = amount > incenseAmount ? true : false;
+						boolean canBuy = amount >= incenseAmount ? true : false;
 
 						if(canBuy){
 							Board.currentPlayer.culture += cultureAmount;
@@ -331,7 +331,7 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Silk");
-						boolean canBuy = amount > silkAmount ? true : false;
+						boolean canBuy = amount >= silkAmount ? true : false;
 
 						if(canBuy){
 							Board.currentPlayer.trade += tradeAmount;

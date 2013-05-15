@@ -427,13 +427,21 @@ public class City implements Drawable{
 			}
 		}
 		
-		for(Tile t : outskirts){
-			for(Figure f : t.getFigures()){
-				if(enemyFigures.contains(f)){
-					outskirts.remove(t);
+		for(int i = 0; i < outskirts.size(); i++){
+			for(int j = 0; j < outskirts.get(i).getFigures().size(); j++){
+				if(enemyFigures.contains(outskirts.get(i).getFigures().get(j))){
+					outskirts.remove(i);
 				}
 			}
 		}
+		//this for loop doesn't work because of a ConcurrentModificationException so the above loop was made
+//		for(Tile t : outskirts){
+//			for(Figure f : t.getFigures()){
+//				if(enemyFigures.contains(f)){
+//					outskirts.remove(t);
+//				}
+//			}
+//		}
 
 		return outskirts;
 	}
@@ -452,9 +460,25 @@ public class City implements Drawable{
 	 */
 	private boolean validOutskirts(Player buildingPlayer) {
 
-		Player player = Board.currentPlayer;
 		HashSet<Tile> cityTiles = new HashSet<Tile>(this.outskirts);
 		cityTiles.add(this.location);
+		
+		ArrayList<City> gameCities = new ArrayList<City>();
+		ArrayList<Tile> gameOutskirts = new ArrayList<Tile>();
+		for(Player p : Board.players){
+				gameCities.addAll(p.cities);
+		}
+		gameCities.remove(this);
+		for(City c : gameCities){
+			gameOutskirts.addAll(c.getOutskirts(c.location));
+		}
+		
+		//too close to another city
+		for(Tile t : gameOutskirts){
+			if(cityTiles.contains(t)){
+				return false;
+			}
+		}
 
 		// water test
 		if (this.location.getTerrain().equals(Terrain.Water)) {
@@ -465,7 +489,7 @@ public class City implements Drawable{
 		//enemy figures, villages, and huts test since huts and villages are just figures
 		for(Tile t : cityTiles){
 			for(Figure f : t.getFigures()){
-				if(!player.figures.contains(f)){
+				if(!buildingPlayer.figures.contains(f)){
 					return false;
 				}
 			}
