@@ -466,7 +466,21 @@ public class Board extends JPanel {
 	}
 
 	public City goForResource(Tile tile, City city) {
+		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
+		for(City c: Board.this.currentPlayer.cities){
+			playerOutskirtTiles.addAll(c.getOutskirts());
+		}
+		
 		if ((tile.getResource() != null && !tile.getResource().toString()
+				.equals("None"))
+				&& Board.this.currentPlayer.government.name.equals("Feudalism")
+				&& playerOutskirtTiles.contains(tile)) {
+			currentPlayer.resources.add(tile.getResource());
+			// check that there is enough of that resource left
+			city.setHasAction(false);
+			city = null;
+			setGoingForResource(false);
+		}else if ((tile.getResource() != null && !tile.getResource().toString()
 				.equals("None"))
 				&& city.getOutskirts().contains(tile)) {
 			currentPlayer.resources.add(tile.getResource());
@@ -580,11 +594,26 @@ public class Board extends JPanel {
 					} else if (items[i].getText().equals(
 							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
+					} else if (items[i].getText().equals(
+							messages.getString("devoteArtsOption"))){
+						collectCulture(Board.currentPlayer, Board.currentCity);
 					}
 					repaint();
 					return;
 				}
 		}
+	}
+	
+	public void collectCulture(Player p, City c){
+		p.culture += c.calcCulture();
+		if(p.government.name.equals("Communism")){
+			p.culture -= 1;
+		}
+		if(p.government.name.equals("Monarchy")){
+			p.culture += 1;
+		}
+		c.setHasAction(false);
+		c = null;
 	}
 
 	public void movement(Tile tile, Panel panel) {
@@ -666,11 +695,11 @@ public class Board extends JPanel {
 									break;
 								}
 							}
-							if (attackingCity == null) {
+							if (attackingCity == null && !currentPlayer.government.name.equals("Democracy")) {
 								if (currentPlayer == player1) {
-									p = new Combat(currentPlayer, player2, 5);
+									p = new Combat(currentPlayer, player2, 12);
 								} else {
-									p = new Combat(currentPlayer, player1, 5);
+									p = new Combat(currentPlayer, player1, 12);
 								}
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -1316,7 +1345,7 @@ public class Board extends JPanel {
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
-			tempPlayer.government = "Communism";
+			tempPlayer.government = new Government(tempPlayer,"Communism");
 			tempPlayer.stackSize = 3;
 			//one extra army
 			/*
@@ -1326,7 +1355,7 @@ public class Board extends JPanel {
 			break;
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
-			tempPlayer.government = "Republic";
+			tempPlayer.government = new Government(tempPlayer,"Republic");
 			/*
 			 * the romans advance one space on the culture track for free each time
 			 * they build a wonder or a city, and each time they conquer a city or village
@@ -1355,7 +1384,7 @@ public class Board extends JPanel {
 			 * the chinese start with city walls in their capital.
 			 * the chinese gain 3 culture each time they explore a hut or conquer a village.
 			 * the chinese may save one of their killed units after each battle, returning it to
-			 * their staning forces.
+			 * their standing forces.
 			 */
 			break;
 		default:
@@ -1713,6 +1742,15 @@ public class Board extends JPanel {
 				for (City c : Board.this.currentPlayer.cities) {
 					Board.this.currentPlayer.trade += c.calcTrade();
 				}
+				if(Board.this.currentPlayer.government.name.equals("Democracy")){
+					Board.this.currentPlayer.trade += 2;
+				}
+				if(Board.this.currentPlayer.government.name.equals("Fundamentalism")){
+					Board.this.currentPlayer.trade -= 2;
+				}
+				if(Board.this.currentPlayer.trade < 0){
+					Board.this.currentPlayer.trade = 0;
+				}
 				System.out.println(currentPlayer.trade);
 			}
 		} else if (this.currentPhase.equals(TRADE)) {
@@ -1727,6 +1765,9 @@ public class Board extends JPanel {
 				this.currentPhase = CITY_MANAGEMENT;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
+					if(this.currentPlayer.government.name.equals("Communism")){
+						c.setProduction(c.getProduction() + 2);
+					}
 				}
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
@@ -1738,6 +1779,9 @@ public class Board extends JPanel {
 				currentCity = null;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
+					if(this.currentPlayer.government.name.equals("Communism")){
+						c.setProduction(c.getProduction() + 2);
+					}
 				}
 			} else {
 				for (City c : this.currentPlayer.cities) {
