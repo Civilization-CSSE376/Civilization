@@ -146,6 +146,14 @@ public class Board extends JPanel {
 
 		this.player1.cities.add(city1);
 		this.player2.cities.add(city2);
+		
+		
+		
+		
+		this.player1.government = new Government(this.player1, "Fundamentalism");
+		this.player1.units.add(new Unit("Infantry",1));
+		this.player1.units.add(new Unit("Cavalry", 1));
+		this.player1.units.add(new Unit("Artillery", 1));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);

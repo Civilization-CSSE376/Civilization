@@ -432,8 +432,8 @@ public class City implements Drawable{
 			}
 		}
 		
-		for(int i = 0; i < outskirts.size(); i++){
-			for(int j = 0; j < outskirts.get(i).getFigures().size(); j++){
+		for(int i = 0; i < outskirts.size() - 1; i++){
+			for(int j = 0; j < outskirts.get(i).getFigures().size() - 1; j++){
 				if(enemyFigures.contains(outskirts.get(i).getFigures().get(j))){
 					outskirts.remove(i);
 				}
