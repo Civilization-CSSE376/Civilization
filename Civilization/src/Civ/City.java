@@ -68,13 +68,18 @@ public class City implements Drawable{
 	 * 
 	 * @return totalProduction
 	 */
-	int calcProduction() {
+	public int calcProduction() {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalProduction = 0;
 
 		for (Tile t : this.outskirts) {
 			totalProduction += t.getProduction();
+		}
+		for(Figure f : Board.currentPlayer.figures){
+			if(f.getClass().toString().equals("class Civ.Settler")){
+				totalProduction += f.location.getProduction();
+			}
 		}
 		this.production = totalProduction;
 		return totalProduction;
@@ -85,7 +90,7 @@ public class City implements Drawable{
 	 * 
 	 * @return totalCulture
 	 */
-	int calcCulture() {
+	public int calcCulture() {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalCulture = 0;
@@ -102,7 +107,7 @@ public class City implements Drawable{
 	 * 
 	 * @return totalTrade
 	 */
-	int calcTrade() {
+	public int calcTrade() {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalTrade = 0;

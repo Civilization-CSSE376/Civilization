@@ -455,22 +455,22 @@ public class Board extends JPanel {
 
 	public City goForResource(Tile tile, City city) {
 		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
-		for(City c: Board.this.currentPlayer.cities){
-			playerOutskirtTiles.addAll(c.getOutskirts());
+		
+		for(Figure f : Board.this.currentPlayer.figures){
+			if(f.getClass().toString().equals("class Civ.Settler")){
+				playerOutskirtTiles.add(f.location);
+			}
+		}
+		
+		if(Board.this.currentPlayer.government.name.equals("Feudalism")){
+			for(City c: Board.this.currentPlayer.cities){
+				playerOutskirtTiles.addAll(c.getOutskirts());
+			}
 		}
 		
 		if ((tile.getResource() != null && !tile.getResource().toString()
 				.equals("None"))
-				&& Board.this.currentPlayer.government.name.equals("Feudalism")
 				&& playerOutskirtTiles.contains(tile)) {
-			currentPlayer.resources.add(tile.getResource());
-			// check that there is enough of that resource left
-			city.setHasAction(false);
-			city = null;
-			setGoingForResource(false);
-		}else if ((tile.getResource() != null && !tile.getResource().toString()
-				.equals("None"))
-				&& city.getOutskirts().contains(tile)) {
 			currentPlayer.resources.add(tile.getResource());
 			// check that there is enough of that resource left
 			city.setHasAction(false);
@@ -668,6 +668,7 @@ public class Board extends JPanel {
 													JOptionPane.PLAIN_MESSAGE);
 								}
 							} else {
+								calcBattleHandSize(tile, currentPlayer, enemyPlayer);
 								p = new Combat(currentPlayer, enemyPlayer, 0);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -685,8 +686,10 @@ public class Board extends JPanel {
 							}
 							if (attackingCity == null && !currentPlayer.government.name.equals("Democracy")) {
 								if (currentPlayer == player1) {
+									calcBattleHandSize(tile, currentPlayer, player2);
 									p = new Combat(currentPlayer, player2, 12);
 								} else {
+									calcBattleHandSize(tile, currentPlayer, player1);
 									p = new Combat(currentPlayer, player1, 12);
 								}
 								p.setLocation(10, 10);
@@ -720,6 +723,40 @@ public class Board extends JPanel {
 				// "Movement", JOptionPane.PLAIN_MESSAGE);
 			}
 		}
+	}
+
+	private void calcBattleHandSize(Tile tile, Player attacker, Player defender) {
+		attacker.battleHandSize = 3;
+		defender.battleHandSize = 3;
+		
+		if(attacker.government.name.equals("Fundamentalism")){
+			attacker.battleHandSize++;
+		}
+		if(defender.government.name.equals("Fundamentalism")){
+			defender.battleHandSize++;
+		}
+		
+		for(Figure f : tile.getFigures()){
+			if(f instanceof Army){
+				if(f.getOwner().equals(attacker)){
+					attacker.battleHandSize += 2;
+				}
+				if(f.getOwner().equals(defender)){
+					defender.battleHandSize +=2;
+				}
+			}
+		}
+		
+		for(City c : defender.cities){
+			if(c.getLocation().equals(tile)){
+				defender.battleHandSize += 3;
+			}
+		}
+		
+		//have to subtract because we "over counted" the first army
+		attacker.battleHandSize -= 2;
+		defender.battleHandSize -= 2;
+		
 	}
 
 	private void finishCombat(Tile tile) {
@@ -1916,6 +1953,10 @@ public class Board extends JPanel {
 	public void isGameOver(){
 		boolean isOver = false;
 		for(Player p: this.players){
+			if(p.gold >= 15){
+				p.winCondition = "Economic";
+				p.hasWon = true;
+			}
 			if(p.hasWon == true){
 				isOver = true;
 			}

@@ -40,12 +40,12 @@ public class Combat extends JFrame {
 		this.attacker = attacker;
 		this.defender = defender;
 		this.currentPlayer = attacker;
+		this.attackerHandSize = attacker.battleHandSize;
+		this.defenderHandSize = defender.battleHandSize;
 		this.switchCurrentPlayer(); // initializes current player properties to
 									// defender
 
-		this.calculateHandSize();// defender
-		this.switchCurrentPlayer();
-		this.calculateHandSize();// attacker
+		this.switchCurrentPlayer();//attacker
 
 		this.selectCombatHand();// attacker
 		this.switchCurrentPlayer();
@@ -200,10 +200,6 @@ public class Combat extends JFrame {
 			this.enemyFront = this.defenderFront;
 		}
 		repaint();
-	}
-
-	private void calculateHandSize() {
-		// to be implemented when we have variable handsizes
 	}
 
 	private void selectCombatHand() {

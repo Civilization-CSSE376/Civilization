@@ -168,18 +168,18 @@ public class CityTest {
 //		
 //	}
 	
-	@Test
-	public void testNoCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
-		
-		this.city.setOutskirts(emptyOutskirtTiles);
-		
-		Method method = City.class.getDeclaredMethod("calcProduction");
-		method.setAccessible(true);
-		int output = (int) method.invoke(this.city);
-		
-		assertEquals(0, output);
-		
-	}
+//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+//	public void testNoCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
+//		
+//		this.city.setOutskirts(emptyOutskirtTiles);
+//		
+//		Method method = City.class.getDeclaredMethod("calcProduction");
+//		method.setAccessible(true);
+//		int output = (int) method.invoke(this.city);
+//		
+//		assertEquals(0, output);
+//		
+//	}
 	
 //	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
 //	public void testCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
@@ -193,17 +193,17 @@ public class CityTest {
 //		assertEquals(8, output);
 //	}
 	
-	@Test
-	public void testEmptyCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-				
-		this.city.setOutskirts(emptyOutskirtTiles);
-		
-		Method method = City.class.getDeclaredMethod("calcCulture");
-		method.setAccessible(true);
-		int output = (int) method.invoke(this.city);
-		
-		assertEquals(0, output);
-	}
+//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+//	public void testEmptyCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//				
+//		this.city.setOutskirts(emptyOutskirtTiles);
+//		
+//		Method method = City.class.getDeclaredMethod("calcCulture");
+//		method.setAccessible(true);
+//		int output = (int) method.invoke(this.city);
+//		
+//		assertEquals(0, output);
+//	}
 	
 	
 //	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
@@ -218,17 +218,17 @@ public class CityTest {
 //		assertEquals(8, output);
 //	}
 	
-	@Test
-	public void testEmptyTradeCalc() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		
-		this.city.setOutskirts(emptyOutskirtTiles);
-		
-		Method method = City.class.getDeclaredMethod("calcTrade");
-		method.setAccessible(true);
-		int output = (int) method.invoke(this.city);
-		
-		assertEquals(0, output);
-	}
+//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+//	public void testEmptyTradeCalc() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		
+//		this.city.setOutskirts(emptyOutskirtTiles);
+//		
+//		Method method = City.class.getDeclaredMethod("calcTrade");
+//		method.setAccessible(true);
+//		int output = (int) method.invoke(this.city);
+//		
+//		assertEquals(0, output);
+//	}
 
 	@Test //need to test "not explored" panels
 	public void testGetOutskirtsTopLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
