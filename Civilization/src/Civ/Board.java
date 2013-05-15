@@ -85,7 +85,7 @@ public class Board extends JPanel {
 	private String player1Civilization;
 	private String player2Civilization;
 
-	private ArrayList<Tile> validTiles = new ArrayList<Tile>();
+	public ArrayList<Tile> validTiles = new ArrayList<Tile>();
 	private static ResourceBundle messages;
 
 	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
@@ -1635,7 +1635,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	private String getPhaseText() {
+	public String getPhaseText() {
 		String phase = "";
 		switch (this.currentPhase) {
 		case START_OF_TURN:
@@ -1880,7 +1880,7 @@ public class Board extends JPanel {
 
 	// For testing...
 	public void setCurrentMovementFigure() {
-		this.currentMovementFigure = this.player1.figures.get(0);
+		this.currentMovementFigure = Board.player1.figures.get(0);
 	}
 
 	// For testing...

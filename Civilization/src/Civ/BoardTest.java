@@ -912,7 +912,7 @@ public class BoardTest {
 	public void testCheckPlayerHasEnoughTrade(){
 		TestBoard board = new TestBoard("America", "China", messages);
 		Board.currentPlayer.trade = 3;
-		assertFalse(board.checkPlayerHasEnoughTrade(1));
+		for(int i = 1; i < 6; i++) assertFalse(board.checkPlayerHasEnoughTrade(i));
 		Board.currentPlayer.trade = 6;
 		assertTrue(board.checkPlayerHasEnoughTrade(1));
 		Board.currentPlayer.trade = 11;
@@ -923,6 +923,58 @@ public class BoardTest {
 		assertTrue(board.checkPlayerHasEnoughTrade(4));
 		Board.currentPlayer.trade = 26;
 		assertTrue(board.checkPlayerHasEnoughTrade(5));
+	}
+	
+	@Test
+	public void testGetPhaseText(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		String[] phases = { "Start of Turn", "Start of Turn", "Trade", "Trade", "City Management", "City Management", "Movement", "Movement", "Research", "Research", "Start of Turn" };
+		
+		for(int i = 0; i < phases.length; i++){
+			assertEquals(phases[i], board.getPhaseText());
+			board.endPhase();
+		}
+	}
+	
+	@Test
+	public void testPlayerTieBreakerScore(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertEquals(0, board.tieBreakerScore(board.getPlayer1()));
+		assertEquals(0, board.tieBreakerScore(board.getPlayer2()));
+	}
+	
+	@Test
+	public void testGetPlayer(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertEquals(board.getPlayer1(), Board.getPlayer(1));
+		assertEquals(board.getPlayer2(), Board.getPlayer(2));
+	}
+	
+	@Test
+	public void testCheckValidTier(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertTrue(board.checkValidTier(1));
+		for(int i = 2; i < 6; i++) assertFalse(board.checkValidTier(i));
+		Board.currentPlayer.canBuyTier2TechCard = true;
+		Board.currentPlayer.canBuyTier3TechCard = true;
+		Board.currentPlayer.canBuyTier4TechCard = true;
+		Board.currentPlayer.canBuyTier5TechCard = true;
+		for(int i = 2; i < 6; i++) assertTrue(board.checkValidTier(i));
+	}
+	
+	@Test
+	public void testUpdateValidTiersAndCards(){
+		assertEquals(0, board.getPlayer1().tier1Cards);
+		assertEquals(0, board.getPlayer1().tier2Cards);
+		assertEquals(0, board.getPlayer1().tier3Cards);
+		assertEquals(0, board.getPlayer1().tier4Cards);
+		for(int i = 1; i < 5; i++) board.updateValidTiersAndCards(i);
+		board.getPlayer1().tier1Cards = 8;
+		board.getPlayer1().tier2Cards = 6;
+		board.getPlayer1().tier3Cards = 4;
+		board.getPlayer1().tier4Cards = 2;
+		for(int i = 1; i < 5; i++) board.updateValidTiersAndCards(i);
+		
 	}
 
 }
