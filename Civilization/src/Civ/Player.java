@@ -38,17 +38,18 @@ public class Player {
 
 	public int artilleryLevel = 1;
 	public int infantryLevel = 1;
-	public int calvaryLevel = 1;
+	public int cavalryLevel = 1;
 	public int airplaneLevel = 1;
 	public ArrayList<String> unlockedBuildings = new ArrayList<String>();
 	public ArrayList<String> unlockedGovernments = new ArrayList<String>();
-	public Government government = new Government(this);
+	public Government government;
 
 	public Player() {
 		this.location = new Point2D.Double(55, 55);
 		this.units.add(new Unit("Infantry", 1));
 		this.units.add(new Unit("Cavalry", 1));
 		this.units.add(new Unit("Artillery", 1));
+		this.government =  new Government(this);
 
 	}
 
@@ -130,6 +131,16 @@ public class Player {
 			}
 		}
 		return temp;
+	}
+	
+	public int getResourceAmount(String type){
+		int amount = 0;
+		for(Tile.Resource r : this.resources){
+			if(r.toString().equals(type)){
+				amount++;
+			}
+		}
+		return amount;
 	}
 
 }

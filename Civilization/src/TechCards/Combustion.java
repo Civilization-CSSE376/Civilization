@@ -12,8 +12,8 @@ public class Combustion extends TechCard {
 
 	@Override
 	public void takeEffect(Player player) {
-		if(player.calvaryLevel < 4){
-			player.calvaryLevel = 4;
+		if(player.cavalryLevel < 4){
+			player.cavalryLevel = 4;
 		}
 
 	}

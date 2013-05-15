@@ -13,8 +13,8 @@ public class Chivalry extends TechCard {
 	@Override
 	public void takeEffect(Player player) {
 		player.unlockedGovernments.add("Feudalism");
-		if(player.calvaryLevel < 2){
-			player.calvaryLevel = 2;
+		if(player.cavalryLevel < 2){
+			player.cavalryLevel = 2;
 		}
 	}
 

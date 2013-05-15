@@ -10,6 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
@@ -19,6 +22,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import Civ.Tile.Resource;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -34,6 +39,7 @@ public class MainWindow extends JFrame {
 	private JButton endPhase = new JButton();
 	private JButton quit = new JButton();
 	private JButton tradeCulture = new JButton();
+	private JButton tradeResource = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
 	
@@ -60,12 +66,14 @@ public class MainWindow extends JFrame {
 		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
 		this.tradeCulture.setText(messages.getString("tradeCulture"));
+		this.tradeResource.setText(messages.getString("tradeResource"));
 		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
 		this.buttons.add(this.endPhase);
 		this.buttons.add(this.tradeCulture);
+		this.buttons.add(this.tradeResource);
 		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 
@@ -209,6 +217,134 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
+		this.tradeResource.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				final JFrame tradeResourceWindow = makeNewWindow(400,200, messages.getString("tradeResource"));
+				tradeResourceWindow.setLayout(new BorderLayout());
+				final int wheatAmount = 1;
+				final int ironAmount = 1;
+				final int incenseAmount = 1;
+				final int silkAmount = 1;
+				final int goldAmount = 1;
+				final int unitAmount = 1;
+				final int cultureAmount = 2;
+				final int tradeAmount = 3;
+				JPanel buyPanel = new JPanel();
+				JButton wheatButton = new JButton(wheatAmount + " " + messages.getString("wheat")
+						+ " : " + goldAmount + " " + messages.getString("gold1"));
+				JButton ironButton = new JButton(ironAmount + " " + messages.getString("unit")
+						+ " : " + unitAmount + " " + messages.getString("unit"));
+				JButton incenseButton = new JButton(incenseAmount + " " + messages.getString("incense")
+						+ " : " + cultureAmount + " " + messages.getString("culture1"));
+				JButton silkButton = new JButton(silkAmount + " " + messages.getString("silk")
+						+ " : " + tradeAmount + " " + messages.getString("trade"));
+				buyPanel.setLayout(new GridLayout(2, 2));
+				buyPanel.add(wheatButton);
+				buyPanel.add(ironButton);
+				buyPanel.add(incenseButton);
+				buyPanel.add(silkButton);
+				
+				JPanel closePanel = new JPanel();
+				JButton closeButton = new JButton(messages.getString("close"));
+				closePanel.add(closeButton, BorderLayout.EAST);
+				tradeResourceWindow.add(buyPanel, BorderLayout.CENTER);
+				tradeResourceWindow.add(closePanel, BorderLayout.SOUTH);
+				tradeResourceWindow.setVisible(true);
+				
+				closeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						MainWindow.this.setEnabled(true);
+						tradeResourceWindow.dispose();
+						
+					}
+					
+				});
+				
+				wheatButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Wheat");
+						boolean canBuy = amount > wheatAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.gold += goldAmount;
+							Board.currentPlayer.resources.remove(Resource.Wheat);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				ironButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Iron");
+						boolean canBuy = amount > ironAmount ? true : false;
+						List<Integer> randomChoices = Arrays.asList(1, 2, 3);
+
+						if(canBuy){
+							for(int i = 0; i < unitAmount; i++){
+								Collections.shuffle(randomChoices);
+								int random = randomChoices.get(0);
+								switch(random){
+								case 1:
+									Board.currentPlayer.units.add(new Unit("Infantry", Board.currentPlayer.infantryLevel));
+									break;
+								case 2:
+									Board.currentPlayer.units.add(new Unit("Cavalry", Board.currentPlayer.cavalryLevel));
+									break;
+								case 3:
+									Board.currentPlayer.units.add(new Unit("Artillery", Board.currentPlayer.artilleryLevel));
+									break;
+								default:
+									break;
+								}
+							}
+							Board.currentPlayer.resources.remove(Resource.Iron);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				incenseButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Incense");
+						boolean canBuy = amount > incenseAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.culture += cultureAmount;
+							Board.currentPlayer.resources.remove(Resource.Incense);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				silkButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Silk");
+						boolean canBuy = amount > silkAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.trade += tradeAmount;
+							Board.currentPlayer.resources.remove(Resource.Silk);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				}	
+			});
+			
+				
 		this.marketDetails.addActionListener(new ActionListener() {
 
 			@Override
@@ -292,7 +428,7 @@ public class MainWindow extends JFrame {
 	}
 
 
-	private void makePlayerWindow(String windowName, String playerCivilizationField, ResourceBundle messages) {
+	private void makePlayerWindow(String windowName, String playerCivilizationField, final ResourceBundle messages) {
 		final int playerNum;
 		if(windowName.equals(messages.getString("player1Details"))) playerNum = 1;
 		else playerNum = 2;
@@ -376,7 +512,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JFrame treeWindow = new JFrame("Player tech card tree");
+				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
 				treeWindow.setLayout(null);
 				treeWindow.setSize(525, 370);
 				
@@ -385,7 +521,7 @@ public class MainWindow extends JFrame {
 				JPanel button = new JPanel();
 				button.setLocation(0, 290);
 				button.setSize(525, 50);
-				JButton close = new JButton("Close");
+				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
 				

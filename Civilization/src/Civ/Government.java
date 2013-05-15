@@ -15,7 +15,7 @@ public class Government {
 	}
 	
 	private void becomeGovernment(Player p, String name){
-		this.clear(p);
+		this.clear(p, name);
 		switch(name){
 		case "Feudalism":
 			p.gold++;
@@ -34,9 +34,9 @@ public class Government {
 		}
 	}
 	
-	private void clear(Player p){
+	private void clear(Player p, String name){
 		
-		switch(p.government.name){
+		switch(name){
 		case "Feudalism":
 			p.gold--;
 			break;

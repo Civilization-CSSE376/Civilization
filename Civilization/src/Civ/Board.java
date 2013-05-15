@@ -52,105 +52,9 @@ import Civ.Tile.Resource;
 @SuppressWarnings("serial")
 public class Board extends JPanel {
 
-	public static final Map<String, String> cardDescriptions = new HashMap<String, String>() {
-		{
-			put("Ballistics",
-					"If the player's artillery level is less than, 4 then the player's new artillery level is 4");
-			put("Banking", "Unlock the ability to build a bank");
-			put("Biology",
-					"If the player's stacksize is less than 5, then the player's new stacksize is 5");
-			put("Chivalry",
-					"Unlock the Feudalism type of government, and if the player's calvary level is less than 2, then the player's new calvary level is 2");
-			put("CivilServices",
-					"Increase the player's handsize by 1 and the player's gold by 1");
-			put("CodeOfLaws",
-					"Unlock the republic type of government and unlock the ability to build a trading post");
-			put("Combustion",
-					"If the player's calvary level is less than 4, then the player's new calvary level is 4");
-			put("Communism", "Unlock the communism type of government");
-			put("Computers", "Increase the player's gold by 1");
-			put("Construction", "Unlock the ability to build a workshop");
-			put("Currency", "Unlock the ability to build a market");
-			put("Democracy",
-					"Unlock the democracy type of government, and if the player's infantry level is less than 2, the player's new infrantry level is 2");
-			put("Engineering", "Unlock the ability to build an aqueduct");
-			put("Flight",
-					"If the player's speed is less than 6, then the player's new speed is 6");
-			put("Gunpowder",
-					"If the player's infantry level is less than 3, then the player's new infantry level is 3");
-			put("HorsebackRiding",
-					"If the player's speed is less than 3, then the player's new speed is 3");
-			put("Irrigation",
-					"If the player's city limit is less than 3, then the player's new city limit is 3");
-			put("Masonry",
-					"If the player's stacksize is less than 3, then the player's new stacksize is 3");
-			put("Mathematics",
-					"If the player's artillery level is less than 2, then the player's new artillery level is 2");
-			put("MetalCasting",
-					"Increase the player's gold by 1, and if the player's artillery level is less than 3, then the player's new artillery level is 3");
-			put("MetalWorking", "Unlock the ability to build a barracks");
-			put("MilitaryScience", "Unlock the ability to build an academy");
-			put("Monarchy", "Unlock the monarchy type of government");
-			put("Navigation", "Unlock the ability to build a harbor");
-			put("Philosophy", "Unlock the ability to build a temple");
-			put("Pottery", "Unlock the ability to build a granary");
-			put("PrintingPress",
-					"Unlock the ability to build a university, and if the player's stacksize is less than 4, then the player's new stacksize is 4");
-			put("Railroad",
-					"Unlock the ability to build an iron mine and if the player's calvary level is less than 3, then the player's new calvary level is 3");
-			put("ReplaceableParts",
-					"If the player's stacksize is less than 6, then the player's new stacksize is 6, and if the player's infantry level is less than 4, then the player's new infantry level is 4");
-			put("Sailing",
-					"If the player's speed is less than 4, then the player's new speed is 4");
-			put("SteamPower",
-					"If the player's speed is less than 5, then the player's new speed is 5");
-			put("Theology",
-					"Increase the player's handsize by 1, unlock the fundamentalism type of government, and unlock the ability to build a cathedral");
-			put("Writing", "Unlock the ability to build a library");
-			put("SpaceFlight", "You win the game");
-		}
-	};
+	public static Map<String, String> cardDescriptions = new HashMap<String, String>();
 	
-	public static final Map<String, TechCard> techCards = new HashMap<String, TechCard>(){
-		{
-			put("AnimalHusbandry", new AnimalHusbandry());
-			put("AtomicTheory", new AtomicTheory());
-			put("Ballistics", new Ballistics());
-			put("Banking", new Banking());
-			put("Biology", new Biology());
-			put("Chivalry", new Chivalry());
-			put("CivilServices", new CivilServices());
-			put("CodeOfLaws", new CodeOfLaws());
-			put("Combustion", new Combustion());
-			put("Communism", new Communism());
-			put("Computers", new Computers());
-			put("Construction", new Construction());
-			put("Currency", new Currency());
-			put("Democracy", new Democracy());
-			put("Engineering", new Engineering());
-			put("Flight", new Flight());
-			put("Gunpowder", new Gunpowder());
-			put("HorsebackRiding", new HorsebackRiding());
-			put("Irrigation", new Irrigation());
-			put("Masonry", new Masonry());
-			put("MassMedia", new MassMedia());
-			put("Mathematics", new Mathematics());
-			put("MetalCasting", new MetalCasting());
-			put("MetalWorking", new MetalWorking());
-			put("MilitaryScience", new MilitaryScience());
-			put("Monarchy", new Monarchy());
-			put("Navigation", new Navigation());
-			put("Philosophy", new Philosophy());
-			put("Pottery", new Pottery());
-			put("PrintingPress", new PrintingPress());
-			put("Railroad", new Railroad());
-			put("ReplaceableParts", new ReplaceableParts());
-			put("Sailing", new Sailing());
-			put("SteamPower", new SteamPower());
-			put("Theology", new Theology());
-			put("Writing", new Writing());
-		}
-	};
+	public static Map<String, TechCard> techCards = new HashMap<String, TechCard>();
 
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
@@ -182,13 +86,16 @@ public class Board extends JPanel {
 	private String player2Civilization;
 
 	private ArrayList<Tile> validTiles = new ArrayList<Tile>();
-	private ResourceBundle messages;
+	private static ResourceBundle messages;
 
 	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
 		this.messages = messages;
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
-
+		
+		writeCardDescriptions();
+		writeTechCards();
+		
 		players = new ArrayList<Player>();
 
 		map = new ArrayList<Panel>();
@@ -260,6 +167,87 @@ public class Board extends JPanel {
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
 		this.addMouseListener(mouseHandler);
 
+	}
+	
+	public void writeTechCards(){
+		techCards = new HashMap<String, TechCard>(){
+			{
+				put(messages.getString("ballistics"), new Ballistics());
+				put(messages.getString("banking"), new Banking());
+				put(messages.getString("biology"), new Biology());
+				put(messages.getString("chivalry"), new Chivalry());
+				put(messages.getString("civilServices"), new CivilServices());
+				put(messages.getString("codeOfLaws"), new CodeOfLaws());
+				put(messages.getString("combustion"), new Combustion());
+				put(messages.getString("communism"), new Communism());
+				put(messages.getString("computers"), new Computers());
+				put(messages.getString("construction"), new Construction());
+				put(messages.getString("currency"), new Currency());
+				put(messages.getString("democracy"), new Democracy());
+				put(messages.getString("engineering"), new Engineering());
+				put(messages.getString("flight"), new Flight());
+				put(messages.getString("gunpowder"), new Gunpowder());
+				put(messages.getString("horsebackRiding"), new HorsebackRiding());
+				put(messages.getString("irrigation"), new Irrigation());
+				put(messages.getString("masonry"), new Masonry());
+				put(messages.getString("mathematics"), new Mathematics());
+				put(messages.getString("metalCasting"), new MetalCasting());
+				put(messages.getString("metalWorking"), new MetalWorking());
+				put(messages.getString("militaryScience"), new MilitaryScience());
+				put(messages.getString("monarchy"), new Monarchy());
+				put(messages.getString("navigation"), new Navigation());
+				put(messages.getString("philosophy"), new Philosophy());
+				put(messages.getString("pottery"), new Pottery());
+				put(messages.getString("printingPress"), new PrintingPress());
+				put(messages.getString("railroad"), new Railroad());
+				put(messages.getString("replaceableParts"), new ReplaceableParts());
+				put(messages.getString("sailing"), new Sailing());
+				put(messages.getString("steamPower"), new SteamPower());
+				put(messages.getString("theology"), new Theology());
+				put(messages.getString("writing"), new Writing());
+			}
+		};
+	}
+	
+	public void writeCardDescriptions(){
+		 cardDescriptions = new HashMap<String, String>() {
+				{
+					put(messages.getString("ballistics"), messages.getString("ballisticsCard"));
+					put(messages.getString("banking"), messages.getString("bankingCard"));
+					put(messages.getString("biology"), messages.getString("biologyCard"));
+					put(messages.getString("chivalry"), messages.getString("chivalryCard"));
+					put(messages.getString("civilServices"), messages.getString("civilServicesCard"));
+					put(messages.getString("codeOfLaws"), messages.getString("codeOfLawsCard"));
+					put(messages.getString("combustion"), messages.getString("combustionCard"));
+					put(messages.getString("communism"), messages.getString("communismCard"));
+					put(messages.getString("computers"), messages.getString("computersCard"));
+					put(messages.getString("construction"), messages.getString("constructionCard"));
+					put(messages.getString("currency"), messages.getString("currencyCard"));
+					put(messages.getString("democracy"), messages.getString("democracyCard"));
+					put(messages.getString("engineering"), messages.getString("engineeringCard"));
+					put(messages.getString("flight"), messages.getString("flightCard"));
+					put(messages.getString("gunpowder"), messages.getString("gunpowderCard"));
+					put(messages.getString("horsebackRiding"), messages.getString("horsebackRidingCard"));
+					put(messages.getString("irrigation"), messages.getString("irrigationCard"));
+					put(messages.getString("masonry"), messages.getString("masonryCard"));
+					put(messages.getString("mathematics"), messages.getString("mathematicsCard"));
+					put(messages.getString("metalCasting"), messages.getString("metalCastingCard"));
+					put(messages.getString("metalWorking"), messages.getString("metalWorkingCard"));
+					put(messages.getString("militaryScience"), messages.getString("militaryScienceCard"));
+					put(messages.getString("monarchy"), messages.getString("monarchyCard"));
+					put(messages.getString("navigation"), messages.getString("navigationCard"));
+					put(messages.getString("philosophy"), messages.getString("philosophyCard"));
+					put(messages.getString("pottery"), messages.getString("potteryCard"));
+					put(messages.getString("printingPress"), messages.getString("printingPressCard"));
+					put(messages.getString("railroad"), messages.getString("railroadCard"));
+					put(messages.getString("replaceableParts"), messages.getString("replaceablePartsCard"));
+					put(messages.getString("sailing"), messages.getString("sailingCard"));
+					put(messages.getString("steamPower"), messages.getString("steamPowerCard"));
+					put(messages.getString("theology"), messages.getString("theologyCard"));
+					put(messages.getString("writing"), messages.getString("writingCard"));
+					put(messages.getString("spaceFlight"), messages.getString("spaceFlightCard"));
+				}
+			};
 	}
 
 	private void setPanelNeighbors() {
@@ -931,9 +919,6 @@ public class Board extends JPanel {
 				movement(tile, panel);
 			} else if (Board.this.currentPhase.equals(TRADE)) {
 				// TODO: ask if want to trade
-			} else if (Board.this.currentPhase.equals(RESEARCH)) {
-				research(); // TODO: techwindow
-
 			}
 		}
 
@@ -964,7 +949,7 @@ public class Board extends JPanel {
 
 	public void research() {
 
-		final JFrame researchWindow = new JFrame("Research");
+		final JFrame researchWindow = new JFrame(messages.getString("research"));
 		researchWindow.setSize(505, 380);
 		researchWindow.setLayout(null);
 
@@ -977,7 +962,7 @@ public class Board extends JPanel {
 		String[] tiers = { "1", "2", "3", "4", "5" };
 		tierOptions.setLocation(0, 0);
 		tierOptions.setSize(250, 50);
-		JLabel tierLabel = new JLabel("Tier: ");
+		JLabel tierLabel = new JLabel(messages.getString("tier") + ": ");
 		final JComboBox<String> tierDropDown = new JComboBox<String>(tiers);
 		tierDropDown.setSelectedIndex(0);
 		tierOptions.add(tierLabel);
@@ -985,25 +970,25 @@ public class Board extends JPanel {
 
 		cardOptions.setLocation(250, 0);
 		cardOptions.setSize(250, 50);
-		JLabel cardLabel = new JLabel("Card: ");
+		JLabel cardLabel = new JLabel(messages.getString("card") + ": ");
 		final JComboBox<String> techCards = new JComboBox<String>();
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
 		tierCards[0] = new DefaultComboBoxModel<String>(new String[] {
-				"CodeOfLaws", "Currency", "HorsebackRiding", "Masonry",
-				"MetalWorking", "Navigation", "Philosophy", "Pottery",
-				"Writing" });
+				messages.getString("codeOfLaws"), messages.getString("currency"), messages.getString("horsebackRiding"), messages.getString("masonry"),
+				messages.getString("metalWorking"), messages.getString("navigation"), messages.getString("philosophy"), messages.getString("pottery"),
+				messages.getString("writing") });
 		tierCards[1] = new DefaultComboBoxModel<String>(new String[] {
-				"Chivalry", "CivilServices", "Construction", "Democracy",
-				"Engineering", "Irrigation", "Mathematics", "Monarchy",
-				"PrintingPress", "Sailing" });
+				messages.getString("chivalry"), messages.getString("civilServices"), messages.getString("construction"), messages.getString("democracy"),
+				messages.getString("engineering"), messages.getString("irrigation"), messages.getString("mathematics"), messages.getString("monarchy"),
+				messages.getString("printingPress"), messages.getString("sailing") });
 		tierCards[2] = new DefaultComboBoxModel<String>(new String[] {
-				"Banking", "Biology", "Communism", "Gunpowder", "MetalCasting",
-				"MilitaryScience", "Railroad", "SteamPower", "Theology" });
+				messages.getString("banking"), messages.getString("biology"), messages.getString("communism"), messages.getString("gunpowder"), messages.getString("metalCasting"),
+				messages.getString("militaryScience"), messages.getString("railroad"), messages.getString("steamPower"), messages.getString("theology") });
 		tierCards[3] = new DefaultComboBoxModel<String>(new String[] {
-				"Ballistics", "Combustion", "Computers", "Flight",
-				"ReplaceableParts" });
+				messages.getString("ballistics"), messages.getString("combustion"), messages.getString("computers"), messages.getString("flight"),
+				messages.getString("replaceableParts") });
 		tierCards[4] = new DefaultComboBoxModel<String>(
-				new String[] { "SpaceFlight" });
+				new String[] { messages.getString("spaceFlight") });
 		techCards.setModel(tierCards[0]);
 		cardOptions.add(cardLabel);
 		cardOptions.add(techCards);
@@ -1011,11 +996,11 @@ public class Board extends JPanel {
 		description.setLocation(0, 50);
 		description.setSize(500, 200);
 		description.setLayout(new GridLayout(3, 1));
-		final JLabel currentTrade = new JLabel("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
-		final JLabel cardName = new JLabel("     Card name:    "
+		final JLabel currentTrade = new JLabel(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
+		final JLabel cardName = new JLabel("     " + messages.getString("cardName") + ":    "
 				+ techCards.getItemAt(techCards.getSelectedIndex()));
 		final JTextArea cardDescription = new JTextArea(
-				"     Card description:    "
+				"     " + messages.getString("cardDescription") + ":    "
 						+ cardDescriptions.get(techCards.getItemAt(techCards
 								.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
@@ -1032,9 +1017,9 @@ public class Board extends JPanel {
 
 		buttons.setLocation(0, 300);
 		buttons.setSize(500, 50);
-		final JButton buy = new JButton("Buy");
-		JButton cancel = new JButton("Cancel");
-		JButton tree = new JButton("Tech Card Tree");
+		final JButton buy = new JButton(messages.getString("buy"));
+		JButton cancel = new JButton(messages.getString("cancel"));
+		JButton tree = new JButton(messages.getString("playerTechCardTree"));
 		buttons.add(tree);
 		buttons.add(buy);
 		buttons.add(cancel);
@@ -1051,7 +1036,7 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final JFrame treeWindow = new JFrame("Player tech card tree");
+				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
 				treeWindow.setLayout(null);
 				treeWindow.setSize(525, 370);
 
@@ -1060,7 +1045,7 @@ public class Board extends JPanel {
 				JPanel button = new JPanel();
 				button.setLocation(0, 290);
 				button.setSize(525, 50);
-				JButton close = new JButton("Close");
+				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
 
@@ -1082,24 +1067,21 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
-				cardName.setText("     Card name:    "
+				currentTrade.setText(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
+				cardName.setText("     " + messages.getString("cardName") + ":    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     Card description:    "
+				cardDescription.setText("     " + messages.getString("cardDescription") + ":    "
 						+ cardDescriptions.get(techCards.getItemAt(techCards
 								.getSelectedIndex())));
-				System.out.println(message.getText());
-				System.out.println(message.getText().equals(
-						"You cannot buy a card from this tier level."));
 				if (!message.getText().equals(
-						"You cannot buy a card from this tier level.")) {
+						messages.getString("cannotBuyCardTierLevel"))) {
 					if (currentPlayer.techCards.contains(techCards
 							.getItemAt(techCards.getSelectedIndex()))) {
-						message.setText("You already have this card.");
+						message.setText(messages.getString("cardAlreadyOwned"));
 						buy.setEnabled(false);
 					} else if (!checkPlayerHasEnoughTrade(tierDropDown
 							.getSelectedIndex() + 1)) {
-						message.setText("You do not have enough trade to buy this card.");
+						message.setText(messages.getString("notEnoughTrade"));
 						buy.setEnabled(false);
 					} else {
 						buy.setEnabled(true);
@@ -1115,22 +1097,22 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				currentTrade.setText("Tier card cost: " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , player has " + currentPlayer.trade + " trade available.");
-				cardName.setText("     Card name:    "
+				currentTrade.setText(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
+				cardName.setText("     " + messages.getString("cardName") + ":    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     Card description:    "
+				cardDescription.setText("     " + messages.getString("cardDescription") + ":    "
 						+ cardDescriptions.get(techCards.getItemAt(techCards
 								.getSelectedIndex())));
 				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
-					message.setText("You cannot buy a card from this tier level.");
+					message.setText(messages.getString("cannotBuyCardTierLevel"));
 					buy.setEnabled(false);
 				} else if (currentPlayer.techCards.contains(techCards
 						.getItemAt(techCards.getSelectedIndex()))) {
-					message.setText("You already have this card.");
+					message.setText(messages.getString("cardAlreadyOwned"));
 					buy.setEnabled(false);
 				} else if (!checkPlayerHasEnoughTrade(tierDropDown
 						.getSelectedIndex() + 1)) {
-					message.setText("You do not have enough trade to buy this card.");
+					message.setText(messages.getString("notEnoughTrade"));
 					buy.setEnabled(false);
 				} else {
 					buy.setEnabled(true);
@@ -1150,7 +1132,7 @@ public class Board extends JPanel {
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				if(currentPlayer.techCards.contains("SpaceFlight")){
+				if(currentPlayer.techCards.contains(messages.getString("spaceFlight"))){
 					currentPlayer.hasWon = true;
 					currentPlayer.winCondition = "Tech";
 				}
@@ -1244,9 +1226,9 @@ public class Board extends JPanel {
 				+ player.tier4Cards == 0) {
 			System.out.println("No cards!");
 			JLabel label = new JLabel(
-					"Player has not bought any tech cards yet.");
-			label.setLocation(100, 145);
-			label.setSize(300, 20);
+					messages.getString("noCards"));
+			label.setLocation(50, 145);
+			label.setSize(400, 20);
 			tree.add(label);
 		} else {
 			int xCoord = 10;
@@ -1338,7 +1320,7 @@ public class Board extends JPanel {
 		Player tempPlayer = new Player();
 		
 		switch (civ) {
-		case "Egypt":
+		case "Egypt": // TODO check if needs internationalized
 			tempPlayer.techCards.add(new Construction());
 			//free wonder at start of game
 			//one free building each turn as an action
