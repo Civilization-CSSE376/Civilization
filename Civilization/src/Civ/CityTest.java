@@ -46,9 +46,11 @@ public class CityTest {
 	
 	private City city;
 	private City enemyCity;
+	private Board board;
 	
 	@Before
 	public void setUp() throws Exception{
+		board = new Board("America", "China", messages);
 		this.topLeft = new Panel();
 		this.topRight = new Panel();
 		this.bottomLeft = new Panel();
