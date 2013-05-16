@@ -953,8 +953,8 @@ public class BoardTest {
 	@Test
 	public void testPlayerTieBreakerScore() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		assertEquals(0, board.tieBreakerScore(board.getPlayer1()));
-		assertEquals(0, board.tieBreakerScore(board.getPlayer2()));
+		assertEquals(1, board.tieBreakerScore(board.getPlayer1()));
+		assertEquals(1, board.tieBreakerScore(board.getPlayer2()));
 	}
 
 	@Test
@@ -979,8 +979,9 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testUpdateValidTiersAndCards() {
-		assertEquals(0, board.getPlayer1().tier1Cards);
+
+	public void testUpdateValidTiersAndCards(){
+		assertEquals(1, board.getPlayer1().tier1Cards);
 		assertEquals(0, board.getPlayer1().tier2Cards);
 		assertEquals(0, board.getPlayer1().tier3Cards);
 		assertEquals(0, board.getPlayer1().tier4Cards);

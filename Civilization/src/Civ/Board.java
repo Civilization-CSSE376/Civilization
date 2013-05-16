@@ -198,13 +198,10 @@ public class Board extends JPanel {
 
 		setPanelNeighbors();
 
-		this.player1 = new Player();
-		this.player2 = new Player();
-		player1.techCards.add(techCards.get(messages.getString("flight"))); // TODO
-																			// Kill
-																			// it
-																			// with
-																			// fire
+
+		this.player1 = playerConfig(this.player1Civilization);
+		this.player2 = playerConfig(this.player2Civilization);
+
 
 		players.add(this.player1);
 		players.add(this.player2);
@@ -1611,13 +1608,15 @@ public class Board extends JPanel {
 		switch (civ) {
 		case "Egypt": // TODO check if needs internationalized
 			tempPlayer.techCards.add(new Construction());
+			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
-			tempPlayer.stackSize = 3;
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.stackSize = 3;
 			// one extra army
 			/*
 			 * once per turn the russians may move an army or scout into an
@@ -1629,6 +1628,7 @@ public class Board extends JPanel {
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
 			tempPlayer.government = new Government(tempPlayer, "Republic");
+			tempPlayer.tier1Cards += 1;
 			/*
 			 * the romans advance one space on the culture track for free each
 			 * time they build a wonder or a city, and each time they conquer a
@@ -1637,6 +1637,7 @@ public class Board extends JPanel {
 			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
+			tempPlayer.tier1Cards += 1;
 			// free great person at start of game
 			/*
 			 * each time the americans convert 3 trade into production, they
@@ -1645,8 +1646,9 @@ public class Board extends JPanel {
 			break;
 		case "Germany":
 			tempPlayer.techCards.add(new MetalWorking());
-			tempPlayer.units.add(new Unit("Infantry", 1));
-			tempPlayer.units.add(new Unit("Infantry", 1));
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			// tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
 			 * after setup, each time the germans research a tech that upgrades
 			 * or unlocks a unit, they build one of that unit for free and gain
@@ -1656,6 +1658,7 @@ public class Board extends JPanel {
 			break;
 		case "China":
 			tempPlayer.techCards.add(new Writing());
+			tempPlayer.tier1Cards += 1;
 			/*
 			 * the chinese start with city walls in their capital. the chinese
 			 * gain 3 culture each time they explore a hut or conquer a village.
@@ -2096,6 +2099,8 @@ public class Board extends JPanel {
 				else
 					this.firstPlayer = this.player1;
 				this.currentPhase = START_OF_TURN;
+
+				this.isGameOver();
 			}
 		}
 		this.repaint();
@@ -2156,9 +2161,16 @@ public class Board extends JPanel {
 		return player2;
 	}
 
-	public void isGameOver() {
+	public static void isGameOver() {
+
+		if (Board.isGameOver) {
+			// the won militaristically
+			winningWindow();
+		}
+
 		boolean isOver = false;
-		for (Player p : this.players) {
+
+		for (Player p : Board.players) {
 
 			if (p.gold >= 15) {
 				p.winCondition = "Economic";
@@ -2174,7 +2186,7 @@ public class Board extends JPanel {
 		}
 
 		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
-		for (Player p : this.players) {
+		for (Player p : Board.players) {
 			score.put(tieBreakerScore(p), p);
 		}
 
@@ -2189,9 +2201,20 @@ public class Board extends JPanel {
 			Board.isGameOver = true;
 			Board.winners.add(score.get(highestScore));
 		}
+
+		if (Board.isGameOver) {
+			winningWindow();
+		}
 	}
 
-	public int tieBreakerScore(Player p) {
+	private static void winningWindow() {
+		// look at Board.winners;
+		// display who won and how with Player.winCondition
+		// exit game
+
+	}
+
+	public static int tieBreakerScore(Player p) {
 		int score = 0;
 		score += p.cultureTrackProgress;
 		score += p.techCards.size();
