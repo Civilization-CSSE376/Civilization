@@ -292,7 +292,7 @@ public class MainWindow extends JFrame {
 	}
 
 
-	private void makePlayerWindow(String windowName, String playerCivilizationField, ResourceBundle messages) {
+	private void makePlayerWindow(String windowName, String playerCivilizationField, final ResourceBundle messages) {
 		final int playerNum;
 		if(windowName.equals(messages.getString("player1Details"))) playerNum = 1;
 		else playerNum = 2;
@@ -376,7 +376,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JFrame treeWindow = new JFrame("Player tech card tree");
+				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
 				treeWindow.setLayout(null);
 				treeWindow.setSize(525, 370);
 				
@@ -385,7 +385,7 @@ public class MainWindow extends JFrame {
 				JPanel button = new JPanel();
 				button.setLocation(0, 290);
 				button.setSize(525, 50);
-				JButton close = new JButton("Close");
+				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
 				

@@ -574,11 +574,11 @@ public class BoardTest {
 		target.items[2] = new JRadioButtonMenuItem("Cancel");
 		TestBoard.currentFigure = null;
 		assertNull(TestBoard.currentFigure);
-		target.handleBuild(0, TestBoard.currentCity);
+		target.handleBuild("Settler", TestBoard.currentCity.getProduction());
 		assertNull(TestBoard.currentFigure);
 //		assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
 //				.size());
-		target.handleBuild(1, TestBoard.currentCity);
+		target.handleBuild("Army", TestBoard.currentCity.getProduction());
 		assertNotNull(TestBoard.currentFigure);
 
 	}
@@ -923,6 +923,64 @@ public class BoardTest {
 		assertTrue(board.checkPlayerHasEnoughTrade(4));
 		Board.currentPlayer.trade = 26;
 		assertTrue(board.checkPlayerHasEnoughTrade(5));
+	}
+	
+	@Test
+	public void testHandleUnitInfantry(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Infantry", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Infantry", p1.units.get(3).type);
+		p1.infantryLevel = 2;
+		assertFalse(board.handleUnit("Infantry", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+	
+	@Test
+	public void testHandleUnitCavalry(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Cavalry", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Cavalry", p1.units.get(3).type);
+		p1.calvaryLevel = 2;
+		assertFalse(board.handleUnit("Cavalry", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+	
+	@Test
+	public void testHandleUnitArtillary(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Artillary", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Artillary", p1.units.get(3).type);
+		p1.artilleryLevel = 2;
+		assertFalse(board.handleUnit("Artillary", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+	
+	@Test
+	public void testHandleUnitAirplane(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Airplane", 12, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Airplane", p1.units.get(3).type);
+	}
+	
+	@Test
+	public void testHandleUnit(){
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertFalse(board.handleUnit("Cancel", 12, p1));
+		assertEquals(3, p1.units.size());
 	}
 
 }
