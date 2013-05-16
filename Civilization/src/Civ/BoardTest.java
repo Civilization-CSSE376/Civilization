@@ -16,13 +16,14 @@ public class BoardTest {
 
 	private static TestBoard board;
 	private static Locale currentLocale = new Locale("en", "US");
-	private static ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+	private static ResourceBundle messages = ResourceBundle.getBundle(
+			"MessagesBundle", currentLocale);
 
 	@BeforeClass
 	public static void setupLoadedTiles() {
-//		File file = new File("src/Panel1.txt");
+		// File file = new File("src/Panel1.txt");
 		board = new TestBoard("America", "China", messages);
-//		board.readFromFile(file);
+		// board.readFromFile(file);
 		board.readFromFile();
 	}
 
@@ -531,8 +532,8 @@ public class BoardTest {
 		target.movement(tile, TestBoard.map.get(0));
 		assertEquals(0, TestBoard.map.get(0).getTiles()[0][0].getFigures()
 				.size());
-//		assertEquals(1, TestBoard.map.get(0).getTiles()[0][1].getFigures()
-//				.size());
+		// assertEquals(1, TestBoard.map.get(0).getTiles()[0][1].getFigures()
+		// .size());
 		target.currentMovementFigure = TestBoard.map.get(0).getTiles()[0][1]
 				.getFigures().get(0);
 		target.movement(TestBoard.map.get(0).getTiles()[0][1],
@@ -556,11 +557,12 @@ public class BoardTest {
 		target.items[2] = new JRadioButtonMenuItem("Cancel");
 		TestBoard.currentFigure = null;
 		assertNull(TestBoard.currentFigure);
-		target.handleBuild(0, TestBoard.currentCity);
+
+		target.handleBuild("Settler", TestBoard.currentCity.getProduction());
 		assertTrue(TestBoard.currentFigure);
-//		assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
-//				.size());
-		target.handleBuild(1, TestBoard.currentCity);
+		// assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
+		// .size());
+		target.handleBuild("Army", TestBoard.currentCity.getProduction());
 		assertTrue(TestBoard.currentFigure);
 
 	}
@@ -686,7 +688,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testAddMarkerInvalidHasStar() {		
+	public void testAddMarkerInvalidHasStar() {
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -834,20 +836,20 @@ public class BoardTest {
 		assertTrue(board.getCurrentPlayer().cities.contains(city));
 		assertFalse(board.getCurrentPlayer().figures.contains(newCity));
 	}
-	
-//	@Test
-//	public void testStartTurn(){
-//		Board board = new TestBoard("America", "China");
-//		Tile tile = board.map.get(0).getTiles()[]
-//		Settler newCity = new Settler(board.getCurrentPlayer(), tile);
-//		tile.getFigures().add(newCity);
-//		board.getCurrentPlayer().figures.add(newCity);
-//		board.startOfTurn(tile);
-//		
-//	}
-	
+
+	// @Test
+	// public void testStartTurn(){
+	// Board board = new TestBoard("America", "China");
+	// Tile tile = board.map.get(0).getTiles()[]
+	// Settler newCity = new Settler(board.getCurrentPlayer(), tile);
+	// tile.getFigures().add(newCity);
+	// board.getCurrentPlayer().figures.add(newCity);
+	// board.startOfTurn(tile);
+	//
+	// }
+
 	@Test
-	public void testGetTierCardCost(){
+	public void testGetTierCardCost() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		assertEquals(6, board.getTierCardCost(1));
 		assertEquals(11, board.getTierCardCost(2));
@@ -855,12 +857,13 @@ public class BoardTest {
 		assertEquals(21, board.getTierCardCost(4));
 		assertEquals(26, board.getTierCardCost(5));
 	}
-	
+
 	@Test
-	public void testCheckPlayerHasEnoughTrade(){
+	public void testCheckPlayerHasEnoughTrade() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Board.currentPlayer.trade = 3;
-		for(int i = 1; i < 6; i++) assertFalse(board.checkPlayerHasEnoughTrade(i));
+		for (int i = 1; i < 6; i++)
+			assertFalse(board.checkPlayerHasEnoughTrade(i));
 		Board.currentPlayer.trade = 6;
 		assertTrue(board.checkPlayerHasEnoughTrade(1));
 		Board.currentPlayer.trade = 11;
@@ -872,57 +875,121 @@ public class BoardTest {
 		Board.currentPlayer.trade = 26;
 		assertTrue(board.checkPlayerHasEnoughTrade(5));
 	}
-	
+
 	@Test
-	public void testGetPhaseText(){
+	public void testHandleUnitInfantry() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		String[] phases = { "Start of Turn", "Start of Turn", "Trade", "Trade", "City Management", "City Management", "Movement", "Movement", "Research", "Research", "Start of Turn" };
-		
-		for(int i = 0; i < phases.length; i++){
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Infantry", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Infantry", p1.units.get(3).type);
+		p1.infantryLevel = 2;
+		assertFalse(board.handleUnit("Infantry", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+
+	@Test
+	public void testHandleUnitCavalry() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Cavalry", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Cavalry", p1.units.get(3).type);
+		p1.cavalryLevel = 2;
+		assertFalse(board.handleUnit("Cavalry", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+
+	@Test
+	public void testHandleUnitArtillary() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Artillary", 5, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Artillary", p1.units.get(3).type);
+		p1.artilleryLevel = 2;
+		assertFalse(board.handleUnit("Artillary", 5, p1));
+		assertEquals(4, p1.units.size());
+	}
+
+	@Test
+	public void testHandleUnitAirplane() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertTrue(board.handleUnit("Airplane", 12, p1));
+		assertEquals(4, p1.units.size());
+		assertEquals("Airplane", p1.units.get(3).type);
+	}
+
+	@Test
+	public void testHandleUnit() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		Player p1 = new Player();
+		assertEquals(3, p1.units.size());
+		assertFalse(board.handleUnit("Cancel", 12, p1));
+		assertEquals(3, p1.units.size());
+	}
+
+	public void testGetPhaseText() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		String[] phases = { "Start of Turn", "Start of Turn", "Trade", "Trade",
+				"City Management", "City Management", "Movement", "Movement",
+				"Research", "Research", "Start of Turn" };
+
+		for (int i = 0; i < phases.length; i++) {
 			assertEquals(phases[i], board.getPhaseText());
 			board.endPhase();
 		}
 	}
-	
+
 	@Test
-	public void testPlayerTieBreakerScore(){
+	public void testPlayerTieBreakerScore() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		assertEquals(1, Board.tieBreakerScore(board.getPlayer1()));
 		assertEquals(1, Board.tieBreakerScore(board.getPlayer2()));
 	}
-	
+
 	@Test
-	public void testGetPlayer(){
+	public void testGetPlayer() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		assertEquals(board.getPlayer1(), Board.getPlayer(1));
 		assertEquals(board.getPlayer2(), Board.getPlayer(2));
 	}
-	
+
 	@Test
-	public void testCheckValidTier(){
+	public void testCheckValidTier() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		assertTrue(board.checkValidTier(1));
-		for(int i = 2; i < 6; i++) assertFalse(board.checkValidTier(i));
+		for (int i = 2; i < 6; i++)
+			assertFalse(board.checkValidTier(i));
 		Board.currentPlayer.canBuyTier2TechCard = true;
 		Board.currentPlayer.canBuyTier3TechCard = true;
 		Board.currentPlayer.canBuyTier4TechCard = true;
 		Board.currentPlayer.canBuyTier5TechCard = true;
-		for(int i = 2; i < 6; i++) assertTrue(board.checkValidTier(i));
+		for (int i = 2; i < 6; i++)
+			assertTrue(board.checkValidTier(i));
 	}
-	
+
 	@Test
+
 	public void testUpdateValidTiersAndCards(){
 		assertEquals(1, board.getPlayer1().tier1Cards);
 		assertEquals(0, board.getPlayer1().tier2Cards);
 		assertEquals(0, board.getPlayer1().tier3Cards);
 		assertEquals(0, board.getPlayer1().tier4Cards);
-		for(int i = 1; i < 5; i++) board.updateValidTiersAndCards(i);
+		for (int i = 1; i < 5; i++)
+			board.updateValidTiersAndCards(i);
 		board.getPlayer1().tier1Cards = 8;
 		board.getPlayer1().tier2Cards = 6;
 		board.getPlayer1().tier3Cards = 4;
 		board.getPlayer1().tier4Cards = 2;
-		for(int i = 1; i < 5; i++) board.updateValidTiersAndCards(i);
-		
+		for (int i = 1; i < 5; i++)
+			board.updateValidTiersAndCards(i);
+	
 	}
 
 }

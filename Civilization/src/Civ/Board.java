@@ -45,9 +45,105 @@ import Civ.Tile.Resource;
 @SuppressWarnings("serial")
 public class Board extends JPanel {
 
-	public static Map<String, String> cardDescriptions = new HashMap<String, String>();
+	public static Map<String, String> cardDescriptions = new HashMap<String, String>() {
+		{
+			put("Ballistics",
+					"If the player's artillery level is less than, 4 then the player's new artillery level is 4");
+			put("Banking", "Unlock the ability to build a bank");
+			put("Biology",
+					"If the player's stacksize is less than 5, then the player's new stacksize is 5");
+			put("Chivalry",
+					"Unlock the Feudalism type of government, and if the player's calvary level is less than 2, then the player's new calvary level is 2");
+			put("CivilServices",
+					"Increase the player's handsize by 1 and the player's gold by 1");
+			put("CodeOfLaws",
+					"Unlock the republic type of government and unlock the ability to build a trading post");
+			put("Combustion",
+					"If the player's calvary level is less than 4, then the player's new calvary level is 4");
+			put("Communism", "Unlock the communism type of government");
+			put("Computers", "Increase the player's gold by 1");
+			put("Construction", "Unlock the ability to build a workshop");
+			put("Currency", "Unlock the ability to build a market");
+			put("Democracy",
+					"Unlock the democracy type of government, and if the player's infantry level is less than 2, the player's new infrantry level is 2");
+			put("Engineering", "Unlock the ability to build an aqueduct");
+			put("Flight",
+					"If the player's speed is less than 6, then the player's new speed is 6");
+			put("Gunpowder",
+					"If the player's infantry level is less than 3, then the player's new infantry level is 3");
+			put("HorsebackRiding",
+					"If the player's speed is less than 3, then the player's new speed is 3");
+			put("Irrigation",
+					"If the player's city limit is less than 3, then the player's new city limit is 3");
+			put("Masonry",
+					"If the player's stacksize is less than 3, then the player's new stacksize is 3");
+			put("Mathematics",
+					"If the player's artillery level is less than 2, then the player's new artillery level is 2");
+			put("MetalCasting",
+					"Increase the player's gold by 1, and if the player's artillery level is less than 3, then the player's new artillery level is 3");
+			put("MetalWorking", "Unlock the ability to build a barracks");
+			put("MilitaryScience", "Unlock the ability to build an academy");
+			put("Monarchy", "Unlock the monarchy type of government");
+			put("Navigation", "Unlock the ability to build a harbor");
+			put("Philosophy", "Unlock the ability to build a temple");
+			put("Pottery", "Unlock the ability to build a granary");
+			put("PrintingPress",
+					"Unlock the ability to build a university, and if the player's stacksize is less than 4, then the player's new stacksize is 4");
+			put("Railroad",
+					"Unlock the ability to build an iron mine and if the player's calvary level is less than 3, then the player's new calvary level is 3");
+			put("ReplaceableParts",
+					"If the player's stacksize is less than 6, then the player's new stacksize is 6, and if the player's infantry level is less than 4, then the player's new infantry level is 4");
+			put("Sailing",
+					"If the player's speed is less than 4, then the player's new speed is 4");
+			put("SteamPower",
+					"If the player's speed is less than 5, then the player's new speed is 5");
+			put("Theology",
+					"Increase the player's handsize by 1, unlock the fundamentalism type of government, and unlock the ability to build a cathedral");
+			put("Writing", "Unlock the ability to build a library");
+			put("SpaceFlight", "You win the game");
+		}
+	};
 
-	public static Map<String, TechCard> techCards = new HashMap<String, TechCard>();
+	public static Map<String, TechCard> techCards = new HashMap<String, TechCard>() {
+		{
+			put("AnimalHusbandry", new AnimalHusbandry());
+			put("AtomicTheory", new AtomicTheory());
+			put("Ballistics", new Ballistics());
+			put("Banking", new Banking());
+			put("Biology", new Biology());
+			put("Chivalry", new Chivalry());
+			put("CivilServices", new CivilServices());
+			put("CodeOfLaws", new CodeOfLaws());
+			put("Combustion", new Combustion());
+			put("Communism", new Communism());
+			put("Computers", new Computers());
+			put("Construction", new Construction());
+			put("Currency", new Currency());
+			put("Democracy", new Democracy());
+			put("Engineering", new Engineering());
+			put("Flight", new Flight());
+			put("Gunpowder", new Gunpowder());
+			put("HorsebackRiding", new HorsebackRiding());
+			put("Irrigation", new Irrigation());
+			put("Masonry", new Masonry());
+			put("MassMedia", new MassMedia());
+			put("Mathematics", new Mathematics());
+			put("MetalCasting", new MetalCasting());
+			put("MetalWorking", new MetalWorking());
+			put("MilitaryScience", new MilitaryScience());
+			put("Monarchy", new Monarchy());
+			put("Navigation", new Navigation());
+			put("Philosophy", new Philosophy());
+			put("Pottery", new Pottery());
+			put("PrintingPress", new PrintingPress());
+			put("Railroad", new Railroad());
+			put("ReplaceableParts", new ReplaceableParts());
+			put("Sailing", new Sailing());
+			put("SteamPower", new SteamPower());
+			put("Theology", new Theology());
+			put("Writing", new Writing());
+		}
+	};
 
 	final String START_OF_TURN = "Start of Turn";
 	final String TRADE = "Trade";
@@ -448,10 +544,16 @@ public class Board extends JPanel {
 		if (tile.getCity() != null && tile.getCity().getHasAction()
 				&& currentPlayer.cities.contains(tile.getCity())) {
 			currentFigure = false;
+			currentMarker = null;
+			currentChoice = null;
+			goingForResource = false;
 			city = tile.getCity();
 			String[] choices = { messages.getString("buildSomethingOption"),
 					messages.getString("collectResourceOption"),
-					messages.getString("devoteArtsOption") };
+					messages.getString("devoteArtsOption"),
+
+					"convertTradeOption" };// TODO
+											// messages.getString("convertTradeOption")
 			makeChoice(
 					choices,
 					new InitialHandler(),
@@ -603,7 +705,8 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					handleBuild(i, Board.currentCity);
+					handleBuild(items[i].getText(),
+							Board.currentCity.getProduction());
 					return;
 				}
 		}
@@ -621,13 +724,101 @@ public class Board extends JPanel {
 							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
 					} else if (items[i].getText().equals(
+					// messages.getString("convertTradeOption")))
+							"convertTradeOption")) {
+						convertTradeToProduction(currentPlayer, currentCity);
+					} else if (items[i].getText().equals(
 							messages.getString("devoteArtsOption"))) {
 						collectCulture(Board.currentPlayer, Board.currentCity);
+
 					}
 					repaint();
 					return;
 				}
 		}
+	}
+
+	private class UnitHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// determine which menu item was selected
+			for (int i = 0; i < items.length; i++)
+				if (e.getSource() == items[i]) {
+					handleUnit(items[i].getText(),
+							Board.currentCity.getProduction(), currentPlayer);
+					return;
+				}
+		}
+	}
+
+	void handleBuild(String option, int production) {
+		if (option.equals(messages.getString("settler"))
+				|| option.equals(messages.getString("army"))) {
+			if (option.equals(messages.getString("settler"))) {
+				if (production < 6)
+					return;
+				int settlers = 0;
+				for (Figure f : currentPlayer.figures) {
+					if (f instanceof Settler)
+						settlers++;
+				}
+				if (settlers >= 2) {
+					return;
+				}
+			} else if (option.equals(messages.getString("army"))) {
+				if (production < 4)
+					return;
+				int armies = 0;
+				for (Figure f : currentPlayer.figures) {
+					if (f instanceof Army)
+						armies++;
+				}
+				if (armies >= 6) {
+					return;
+				}
+			}
+			Board.currentFigure = true;
+			currentChoice = option;
+		} else if (option.equals(messages.getString("building"))) {
+			String[] Choiceitems = currentPlayer.unlockedBuildings
+					.toArray(new String[currentPlayer.unlockedBuildings.size()]);
+			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
+		} else if (option.equals(messages.getString("units"))) {
+			ArrayList<String> Choiceitems = new ArrayList<String>();
+			Choiceitems.add(messages.getString("infantry"));
+			Choiceitems.add(messages.getString("artillary"));
+			Choiceitems.add(messages.getString("cavalry"));
+			if (currentPlayer.techCards.contains(Board.techCards.get(messages
+					.getString("flight")))) {
+				Choiceitems.add(messages.getString("airplane"));
+			}
+
+			String[] choices = Choiceitems.toArray(new String[Choiceitems
+					.size()]);
+			makeChoice(choices, new UnitHandler(), currentClick);
+		}
+		repaint();
+	}
+
+	public boolean handleUnit(String option, int production, Player player) {
+		int level = 0;
+		if (option.equals(messages.getString("airplane"))) {
+			level = player.airplaneLevel;
+		} else if (option.equals(messages.getString("infantry"))) {
+			level = player.infantryLevel;
+		} else if (option.equals(messages.getString("artillary"))) {
+			level = player.artilleryLevel;
+		} else if (option.equals(messages.getString("cavalry"))) {
+			level = player.cavalryLevel;
+		} else {
+			return false;
+		}
+		Unit unit = new Unit(option, level);
+		if (unit.cost > production) {
+			return false;
+		}
+		player.units.add(unit);
+
+		return true;
 	}
 
 	public void collectCulture(Player p, City c) {
@@ -690,7 +881,8 @@ public class Board extends JPanel {
 							}
 
 							if (enemy instanceof Settler) {
-								if (currentMovementFigure.takeHut(currentPlayer)) {
+								if (currentMovementFigure
+										.takeHut(currentPlayer)) {
 									tile.getFigures().remove(0);
 									enemyPlayer.figures.remove(enemy);
 									if (enemy.getOwner() == null) {
@@ -705,8 +897,8 @@ public class Board extends JPanel {
 																		.toString(),
 														"Collect Resource",
 														JOptionPane.PLAIN_MESSAGE);
-									}
-									else return;
+									} else
+										return;
 								}
 							} else {
 								calcBattleHandSize(tile, currentPlayer,
@@ -767,6 +959,14 @@ public class Board extends JPanel {
 				// "Invalid Tile",
 				// "Movement", JOptionPane.PLAIN_MESSAGE);
 			}
+		}
+	}
+
+	public void convertTradeToProduction(Player player, City city) {
+		if (player.trade >= 3) {
+			city.setProduction(city.getProduction() + 1);
+			// TODO 'Murica gets more cause it's awesome and stuffs
+			player.trade -= 3;
 		}
 	}
 
@@ -1054,6 +1254,7 @@ public class Board extends JPanel {
 		cardOptions.add(techCards);
 
 		description.setLayout(new GridLayout(3, 1));
+
 		final JLabel currentTrade = new JLabel(
 				messages.getString("tierCardCost") + ": "
 						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
@@ -1112,6 +1313,7 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+
 				final JFrame treeWindow = buildFrame(525, 370,
 						messages.getString("playerTechCardTree"));
 
@@ -1322,8 +1524,7 @@ public class Board extends JPanel {
 		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
 				+ player.tier4Cards == 0) {
 
-			JLabel label = new JLabel(
-					messages.getString("noCards"));
+			JLabel label = new JLabel(messages.getString("noCards"));
 
 			label.setLocation(50, 145);
 			label.setSize(400, 20);
@@ -1418,7 +1619,7 @@ public class Board extends JPanel {
 		switch (civ) {
 		case "Egypt": // TODO check if needs internationalized
 			tempPlayer.techCards.add(new Construction());
-			tempPlayer.tier1Cards +=1;
+			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
@@ -1426,7 +1627,7 @@ public class Board extends JPanel {
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.tier1Cards += 1;
-//			tempPlayer.stackSize = 3;
+			// tempPlayer.stackSize = 3;
 			// one extra army
 			/*
 			 * once per turn the russians may move an army or scout into an
@@ -1438,7 +1639,7 @@ public class Board extends JPanel {
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
 			tempPlayer.government = new Government(tempPlayer, "Republic");
-			tempPlayer.tier1Cards +=1;
+			tempPlayer.tier1Cards += 1;
 			/*
 			 * the romans advance one space on the culture track for free each
 			 * time they build a wonder or a city, and each time they conquer a
@@ -1447,7 +1648,7 @@ public class Board extends JPanel {
 			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
-			tempPlayer.tier1Cards +=1;
+			tempPlayer.tier1Cards += 1;
 			// free great person at start of game
 			/*
 			 * each time the americans convert 3 trade into production, they
@@ -1456,9 +1657,9 @@ public class Board extends JPanel {
 			break;
 		case "Germany":
 			tempPlayer.techCards.add(new MetalWorking());
-			tempPlayer.tier1Cards +=1;
-//			tempPlayer.units.add(new Unit("Infantry", 1));
-//			tempPlayer.units.add(new Unit("Infantry", 1));
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			// tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
 			 * after setup, each time the germans research a tech that upgrades
 			 * or unlocks a unit, they build one of that unit for free and gain
@@ -1468,12 +1669,14 @@ public class Board extends JPanel {
 			break;
 		case "China":
 			tempPlayer.techCards.add(new Writing());
-			tempPlayer.tier1Cards +=1;
+			tempPlayer.tier1Cards += 1;
 			/*
 			 * the chinese start with city walls in their capital. the chinese
 			 * gain 3 culture each time they explore a hut or conquer a village.
 			 * the chinese may save one of their killed units after each battle,
-			 * returning it to their standing forces.
+			 * <<<<<<< HEAD returning it to their staning forces. =======
+			 * returning it to their standing forces. >>>>>>>
+			 * a685e1d7cfca774b593082f85c41a5cdbba8ed0e
 			 */
 			break;
 		default:
@@ -1955,57 +2158,6 @@ public class Board extends JPanel {
 		this.validTiles.clear();
 	}
 
-	void handleBuild(int i, City city) {
-		if (items[i].getText().equals(messages.getString("settler"))
-				|| items[i].getText().equals(messages.getString("army"))) {
-			if (items[i].getText().equals(messages.getString("settler"))
-					|| items[i].getText().equals(messages.getString("army"))) {
-				if (items[i].getText().equals(messages.getString("settler"))) {
-					if (city.getProduction() < 6)
-						return;
-					int settlers = 0;
-					for (Figure f : currentPlayer.figures) {
-						if (f instanceof Settler)
-							settlers++;
-					}
-					if (settlers >= 2) {
-						return;
-					}
-				} else {
-					if (city.getProduction() < 4)
-						return;
-					int armies = 0;
-					for (Figure f : currentPlayer.figures) {
-						if (f instanceof Army)
-							armies++;
-					}
-					if (armies >= 6) {
-						return;
-					}
-				}
-				Board.currentFigure = true;
-				currentChoice = items[i].getText();
-			}
-		} else if (items[i].getText().equals(messages.getString("building"))) {
-			String[] Choiceitems = currentPlayer.unlockedBuildings
-					.toArray(new String[currentPlayer.unlockedBuildings.size()]);
-			// String[] Choiceitems = { messages.getString("market"),
-			// messages.getString("bank"), messages.getString("temple"),
-			// messages.getString("cathedral"),
-			// messages.getString("granary"),
-			// messages.getString("aqueduct"),
-			// messages.getString("library"),
-			// messages.getString("university"),
-			// messages.getString("barracks"),
-			// messages.getString("academy"),
-			// messages.getString("workshop"),
-			// messages.getString("ironMine"),
-			// messages.getString("tradingPost"), "Harbor" };
-			makeChoice(Choiceitems, new BuildingHandler(), currentClick);
-		}
-		repaint();
-	}
-
 	public static boolean isGoingForResource() {
 		return goingForResource;
 	}
@@ -2021,18 +2173,21 @@ public class Board extends JPanel {
 	}
 
 	public static void isGameOver() {
-		
-		if(Board.isGameOver){
-			//the won militaristically
+
+		if (Board.isGameOver) {
+			// the won militaristically
 			winningWindow();
 		}
-		
+
 		boolean isOver = false;
+
 		for (Player p : Board.players) {
+
 			if (p.gold >= 15) {
 				p.winCondition = "Economic";
 				p.hasWon = true;
 			}
+
 			if (p.hasWon == true) {
 				isOver = true;
 			}
@@ -2057,8 +2212,8 @@ public class Board extends JPanel {
 			Board.isGameOver = true;
 			Board.winners.add(score.get(highestScore));
 		}
-		
-		if(Board.isGameOver){
+
+		if (Board.isGameOver) {
 			winningWindow();
 		}
 	}
@@ -2088,6 +2243,9 @@ public class Board extends JPanel {
 			}
 			
 		});
+		// look at Board.winners;
+		// display who won and how with Player.winCondition
+		// exit game
 	}
 
 	public static int tieBreakerScore(Player p) {
