@@ -488,7 +488,7 @@ public class Board extends JPanel {
 				null,
 				messages.getString("askToMoveUnit")
 						+ figures.get(0).getNumberOfMoves()
-						+ messages.getString("numMovesLeft"), "Movement",
+						+ messages.getString("numMovesLeft"), messages.getString("movement"),
 				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
@@ -2279,7 +2279,7 @@ public class Board extends JPanel {
 		JFrame winWindow = buildFrame(500, 200, messages.getString("gameOver"));
 		winWindow.setLayout(new GridLayout(2, 0));
 		JPanel textPanel = buildJPanel(500, 200, 0, 0);
-		JLabel text = new JLabel(messages.getString("gameOneWinner") + " Player has won due to " + Board.winners.get(0).winCondition);
+		JLabel text = new JLabel(messages.getString("gameOneWinner") + " Player has won due to " + Board.winners.get(0).winCondition + ".");
 		JButton close = new JButton(messages.getString("close"));
 		if(Board.winners.size() == 2){
 			text.setText("gameTie");
