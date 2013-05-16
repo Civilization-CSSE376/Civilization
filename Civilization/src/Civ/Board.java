@@ -1620,13 +1620,32 @@ public class Board extends JPanel {
 		Player tempPlayer = new Player(messages);
 
 		switch (civ) {
-		case "Egypt": // TODO check if needs internationalized
+		case "Egypt":
+			tempPlayer.techCards.add(new Construction());
+			tempPlayer.tier1Cards += 1;
+			// free wonder at start of game
+			// one free building each turn as an action
+			break;
+		case "Egipto":
 			tempPlayer.techCards.add(new Construction());
 			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Russia":
+			tempPlayer.techCards.add(new Communism());
+			tempPlayer.government = new Government(tempPlayer, "Communism");
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.stackSize = 3;
+			// one extra army
+			/*
+			 * once per turn the russians may move an army or scout into an
+			 * enemy city and sacrifice that figure to research a tech known by
+			 * that civilization for free. armies sacrificed this way cannot
+			 * also attack
+			 */
+			break;
+		case "Rusia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.tier1Cards += 1;
@@ -1649,6 +1668,16 @@ public class Board extends JPanel {
 			 * city or village
 			 */
 			break;
+		case "Roma":
+			tempPlayer.techCards.add(new CodeOfLaws());
+			tempPlayer.government = new Government(tempPlayer, "Republic");
+			tempPlayer.tier1Cards += 1;
+			/*
+			 * the romans advance one space on the culture track for free each
+			 * time they build a wonder or a city, and each time they conquer a
+			 * city or village
+			 */
+			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
 			tempPlayer.tier1Cards += 1;
@@ -1658,7 +1687,28 @@ public class Board extends JPanel {
 			 * recieve 2 production instead of 1
 			 */
 			break;
+		case "América":
+			tempPlayer.techCards.add(new Currency());
+			tempPlayer.tier1Cards += 1;
+			// free great person at start of game
+			/*
+			 * each time the americans convert 3 trade into production, they
+			 * recieve 2 production instead of 1
+			 */
+			break;
 		case "Germany":
+			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			/*
+			 * after setup, each time the germans research a tech that upgrades
+			 * or unlocks a unit, they build one of that unit for free and gain
+			 * one resource of their choice from the market
+			 */
+
+			break;
+		case "Alemania":
 			tempPlayer.techCards.add(new MetalWorking());
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.units.add(new Unit("Infantry", 1));
