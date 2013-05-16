@@ -221,18 +221,18 @@ public class Board extends JPanel {
 				.getScreenLocation());
 		army1.setScreenLocation((map.get(0).getTiles()[1][0]
 				.getScreenLocation()));
-		army2.setScreenLocation((map.get(0).getTiles()[0][1]
+		army2.setScreenLocation((map.get(7).getTiles()[2][3]
 				.getScreenLocation()));
 
 		this.player1.figures.add(settler1);
 		this.player2.figures.add(settler2);
-		// this.player1.figures.add(army1);
-		// this.player2.figures.add(army2);
+		 this.player1.figures.add(army1);
+		 this.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
-		// map.get(0).getTiles()[1][0].getFigures().add(army1);
-		// map.get(0).getTiles()[0][1].getFigures().add(army2);
+		 map.get(0).getTiles()[1][0].getFigures().add(army1);
+		 map.get(7).getTiles()[2][3].getFigures().add(army2);
 
 		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
 		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
