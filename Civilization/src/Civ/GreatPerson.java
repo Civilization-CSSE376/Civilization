@@ -2,7 +2,6 @@ package Civ;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D.Double;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,13 +16,13 @@ public class GreatPerson extends Marker {
 										// not
 
 	public GreatPerson(String name, ResourceBundle messages) {
-		super(name, messages);
+		super(name);
 		this.createGreatPerson(name);
 		this.allowedTerrain = Terrain.NotWater;
 	}
 	
 	public GreatPerson(ResourceBundle messages){
-		super(messages);
+		super();
 		Collections.shuffle(this.possibleGreatPeople);
 		this.name = this.possibleGreatPeople.get(0);
 		this.createGreatPerson(name);

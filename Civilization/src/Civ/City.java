@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 
 public class City implements Drawable{
 
@@ -16,9 +14,10 @@ public class City implements Drawable{
 	private Tile location;
 	private boolean isCapital;
 	private boolean hasAction = true;
+	
+	@SuppressWarnings("unused") // Unless the government is communism
 	private int production = 0;
-	private int culture = 0;
-	private int trade = 0;
+	
 	private Point2D.Double screenLocation;
 
 	public boolean isValid = false;

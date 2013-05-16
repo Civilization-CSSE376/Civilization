@@ -1,5 +1,7 @@
 package Civ;
 
+import java.util.ResourceBundle;
+
 public class Unit {
 
 	private static final double LAND_TIER_ONE_CHANCE = 20;
@@ -8,6 +10,8 @@ public class Unit {
 	private static final double AIR_TIER_ONE_CHANCE = 33;
 	private static final double AIR_TIER_TWO_CHANCE = 33;
 	private static final double AIR_TIER_THREE_CHANCE = 33;
+	
+	private static ResourceBundle messages;
 
 	String type;
 	int level;
@@ -15,10 +19,11 @@ public class Unit {
 	int health;
 	int cost;
 
-	public Unit(String type, int level) {
+	public Unit(String type, int level, ResourceBundle messages) {
+		Unit.messages = messages;
 		this.type = type;
 		this.level = level;
-		if (type.equals("Airplane")) {
+		if (type.equals(messages.getString("airplane"))) {
 			this.attack = this.randomAirAttackBase() + this.level - 1;
 			this.cost = 12;
 

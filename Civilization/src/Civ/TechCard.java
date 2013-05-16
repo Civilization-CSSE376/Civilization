@@ -1,6 +1,4 @@
 package Civ;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import Civ.Player;
 

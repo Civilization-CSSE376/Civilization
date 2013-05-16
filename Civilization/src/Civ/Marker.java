@@ -20,16 +20,14 @@ public abstract class Marker implements Drawable {
 	protected Terrain allowedTerrain = null;
 	protected Tile location;
 	private Point2D.Double screenLocation;
-	private ResourceBundle messages;
 
-	public Marker(String name, ResourceBundle messages) {
+	public Marker(String name) {
 		name = translateNameToEnglish(name);
 		this.name = name;
-		this.messages = messages;
 	}
 	
-	public Marker(ResourceBundle messages){
-		this.messages = messages;
+	public Marker(){
+		
 	}
 	
 	public String translateNameToEnglish(String name){

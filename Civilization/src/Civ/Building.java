@@ -20,7 +20,7 @@ public class Building extends Marker {
 	private ResourceBundle messages;
 
 	public Building(String name, ResourceBundle messages) {
-		super(name, messages);
+		super(name);
 		this.messages = messages;
 		this.upgradedBuildings = Arrays.asList(messages.getString("bank"), messages.getString("cathedral"), messages.getString("aqueduct"), messages.getString("university"), messages.getString("academy"), messages.getString("ironMine"));
 		this.isUpgraded = isItUpgraded(name);

@@ -2,6 +2,7 @@ package Civ;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class Player {
 
@@ -43,17 +44,19 @@ public class Player {
 	public ArrayList<String> unlockedBuildings = new ArrayList<String>();
 	public ArrayList<String> unlockedGovernments = new ArrayList<String>();
 	public Government government;
+	private static ResourceBundle messages;
 
-	public Player() {
+	public Player(ResourceBundle messages) {
+		Player.messages = messages;
 		this.location = new Point2D.Double(55, 55);
-		this.units.add(new Unit("Infantry", 1));
-		this.units.add(new Unit("Cavalry", 1));
-		this.units.add(new Unit("Artillery", 1));
+		this.units.add(new Unit(messages.getString("infantry"), 1, messages));
+		this.units.add(new Unit(messages.getString("cavalry"), 1, messages));
+		this.units.add(new Unit(messages.getString("artillery"), 1, messages));
 		this.government =  new Government(this);
 
 	}
 
-	private void setCapital(City capital) {
+	public void setCapital(City capital) {
 
 		boolean alreadyHave = false;
 

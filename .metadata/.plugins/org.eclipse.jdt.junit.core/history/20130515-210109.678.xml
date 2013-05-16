@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="CombatTest" project="Civilization" tests="11" started="11" failures="0" errors="0" ignored="0">
+  <testsuite name="Civ.CombatTest" time="0.535">
+    <testcase name="testAttackFrontAttackingSecond" classname="Civ.CombatTest" time="0.219"/>
+    <testcase name="testAttackFrontAttackingFirst" classname="Civ.CombatTest" time="0.013"/>
+    <testcase name="testMakeFront" classname="Civ.CombatTest" time="0.046"/>
+    <testcase name="testSwitchCurrentPlayer" classname="Civ.CombatTest" time="0.059"/>
+    <testcase name="testDetermineTrumpCavalry" classname="Civ.CombatTest" time="0.04"/>
+    <testcase name="testDetermineTrumpArtillary" classname="Civ.CombatTest" time="0.015"/>
+    <testcase name="testDetermineTrumpInfantry" classname="Civ.CombatTest" time="0.019"/>
+    <testcase name="testCheckDeathDead" classname="Civ.CombatTest" time="0.026"/>
+    <testcase name="testCheckDeathAlive" classname="Civ.CombatTest" time="0.041"/>
+    <testcase name="testAttackFrontNoTrump" classname="Civ.CombatTest" time="0.016"/>
+    <testcase name="testSuccessfulAttack" classname="Civ.CombatTest" time="0.041"/>
+  </testsuite>
+</testrun>

@@ -2,7 +2,6 @@ package Civ;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ResourceBundle;
 
 public class Wonder extends Marker {
@@ -10,7 +9,7 @@ public class Wonder extends Marker {
 	public int tier = 0;
 
 	public Wonder(String name, ResourceBundle messages) {
-		super(name, messages);
+		super(name);
 		this.createWonder(name);
 		this.allowedTerrain = Terrain.NotWater;
 	}

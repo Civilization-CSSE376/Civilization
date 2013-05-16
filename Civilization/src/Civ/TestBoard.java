@@ -4,14 +4,11 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+@SuppressWarnings("serial")
 public class TestBoard extends Board {
 
 	public String choice = null;
