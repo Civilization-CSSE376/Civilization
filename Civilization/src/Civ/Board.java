@@ -1410,7 +1410,7 @@ public class Board extends JPanel {
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
-			tempPlayer.stackSize = 3;
+//			tempPlayer.stackSize = 3;
 			// one extra army
 			/*
 			 * once per turn the russians may move an army or scout into an
@@ -1438,8 +1438,8 @@ public class Board extends JPanel {
 			break;
 		case "Germany":
 			tempPlayer.techCards.add(new MetalWorking());
-			tempPlayer.units.add(new Unit("Infantry", 1));
-			tempPlayer.units.add(new Unit("Infantry", 1));
+//			tempPlayer.units.add(new Unit("Infantry", 1));
+//			tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
 			 * after setup, each time the germans research a tech that upgrades
 			 * or unlocks a unit, they build one of that unit for free and gain
@@ -1887,6 +1887,8 @@ public class Board extends JPanel {
 				else
 					this.firstPlayer = this.player1;
 				this.currentPhase = START_OF_TURN;
+				
+				this.isGameOver();
 			}
 		}
 		this.repaint();
@@ -1998,9 +2000,15 @@ public class Board extends JPanel {
 		return player2;
 	}
 
-	public void isGameOver() {
+	public static void isGameOver() {
+		
+		if(Board.isGameOver){
+			//the won militaristically
+			winningWindow();
+		}
+		
 		boolean isOver = false;
-		for (Player p : this.players) {
+		for (Player p : Board.players) {
 			if (p.gold >= 15) {
 				p.winCondition = "Economic";
 				p.hasWon = true;
@@ -2014,7 +2022,7 @@ public class Board extends JPanel {
 		}
 
 		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
-		for (Player p : this.players) {
+		for (Player p : Board.players) {
 			score.put(tieBreakerScore(p), p);
 		}
 
@@ -2029,9 +2037,20 @@ public class Board extends JPanel {
 			Board.isGameOver = true;
 			Board.winners.add(score.get(highestScore));
 		}
+		
+		if(Board.isGameOver){
+			winningWindow();
+		}
 	}
 
-	public int tieBreakerScore(Player p) {
+	private static void winningWindow() {
+		//look at Board.winners;
+		//display who won and how with Player.winCondition
+		//exit game
+		
+	}
+
+	public static int tieBreakerScore(Player p) {
 		int score = 0;
 		score += p.cultureTrackProgress;
 		score += p.techCards.size();
