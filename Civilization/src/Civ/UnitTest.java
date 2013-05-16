@@ -166,7 +166,6 @@ public class UnitTest {
 		for(int i = 0; i < 20; i++){
 		Collections.shuffle(possibleUnits);
 		Unit target = new Unit(possibleUnits.get(0), 1);
-		System.out.println(target.type + " - " + target.attack);
 		}
 	}
 	

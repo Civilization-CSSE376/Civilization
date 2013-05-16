@@ -16,7 +16,7 @@ public abstract class TechCard {
 	}
 
 	public void takeEffect(Player player) {
-		System.out.println("This should have been overridden");
+		// Should have been overwritten.
 	}
 	
 

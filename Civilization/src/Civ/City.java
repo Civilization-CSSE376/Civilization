@@ -36,8 +36,6 @@ public class City implements Drawable{
 		this.outskirts = this.getOutskirts(location);
 		if (this.outskirts != null){
 			this.isValid = this.validOutskirts(player);
-		}else{
-			System.out.println("ITS OUTSKIRTS ARE NULL");
 		}
 	}
 
@@ -486,10 +484,7 @@ public class City implements Drawable{
 		}
 
 		// water test
-		if (this.location.getTerrain().equals(Terrain.Water)) {
-			System.out.println("THERE IS WATER");
-			return false;
-		}
+		if (this.location.getTerrain().equals(Terrain.Water)) return false;
 		
 		//enemy figures, villages, and huts test since huts and villages are just figures
 		for(Tile t : cityTiles){
@@ -539,8 +534,7 @@ public class City implements Drawable{
 					checkLocation2 += 110;
 			}
 			this.screenLocation = new Point2D.Double(newX, newY);
-		} else
-			System.out.println("\nInvalid location -- cannot move player.");
+		} 
 	}
 
 	public boolean getHasAction() {

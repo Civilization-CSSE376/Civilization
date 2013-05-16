@@ -238,8 +238,6 @@ public class CityTest {
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);
 		
-		System.out.println(output.size());
-		
 		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
 		assertTrue(output.contains(bottomRight.getTiles()[1][1]));
 		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
@@ -257,7 +255,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
 		assertTrue(output.contains(bottomLeft.getTiles()[2][1]));
@@ -276,7 +273,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(topLeft.getTiles()[3][2]));
 		assertTrue(output.contains(topLeft.getTiles()[2][2]));
@@ -295,7 +291,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(topRight.getTiles()[0][2]));
 		assertTrue(output.contains(topRight.getTiles()[1][2]));
@@ -314,7 +309,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(bottomRight.getTiles()[0][3]));
 		assertTrue(output.contains(bottomRight.getTiles()[1][3]));
@@ -333,7 +327,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(topLeft.getTiles()[3][2]));
 		assertTrue(output.contains(topLeft.getTiles()[2][2]));
@@ -352,7 +345,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(bottomLeft.getTiles()[0][0]));
 		assertTrue(output.contains(bottomLeft.getTiles()[0][1]));
@@ -371,7 +363,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(topRight.getTiles()[3][3]));
 		assertTrue(output.contains(topRight.getTiles()[3][2]));
@@ -390,7 +381,6 @@ public class CityTest {
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		System.out.println(output.size());
 		
 		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
 		assertTrue(output.contains(bottomRight.getTiles()[0][1]));

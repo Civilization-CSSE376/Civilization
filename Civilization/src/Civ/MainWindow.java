@@ -32,7 +32,6 @@ public class MainWindow extends JFrame {
 	private JPanel buttons = makeJPanel(1800, 50, 0, 925);
 	private JPanel board = new JPanel();
 	private JPanel content = new JPanel();
-	private JButton rules = new JButton();
 	private JButton player1Details = new JButton();
 	private JButton player2Details = new JButton();
 	private JButton marketDetails = new JButton();
@@ -62,7 +61,6 @@ public class MainWindow extends JFrame {
 		this.player2Details.setText(messages.getString("player2Details"));
 		this.marketDetails.setText(messages.getString("marketDetails"));
 		this.endPhase.setText(messages.getString("endPhase"));
-		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
 		this.tradeCulture.setText(messages.getString("tradeCulture"));
 		this.tradeResource.setText(messages.getString("tradeResource"));
@@ -73,7 +71,6 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.endPhase);
 		this.buttons.add(this.tradeCulture);
 		this.buttons.add(this.tradeResource);
-		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 		
 		this.content.add(this.board);
@@ -104,24 +101,6 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				((Board) map).endPhase();
 			}
-		});
-			
-		this.rules.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				if (Desktop.isDesktopSupported()) {
-					try {
-						File rulespdf = new File("src/civilization-rules.pdf");
-						Desktop.getDesktop().open(rulespdf);
-					} catch (IOException ex) {
-						System.out.println("Failed to open pdf.");
-					}
-				}
-
-			}
-
 		});
 
 		this.quit.addActionListener(new ActionListener() {
@@ -355,9 +334,10 @@ public class MainWindow extends JFrame {
 				JButton closeButton = new JButton(messages.getString("close"));
 				buttonPanel.add(closeButton);
 				
-				JPanel player1CultureLocation = makeJPanel(cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540, 15, 25);
+				JPanel player1CultureLocation = makeJPanel(15, 25, cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540);
+				
 				player1CultureLocation.setBackground(Color.RED);
-				JPanel player2CultureLocation = makeJPanel(cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570, 15, 25);
+				JPanel player2CultureLocation = makeJPanel(15, 25, cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570);
 				player2CultureLocation.setBackground(Color.YELLOW);
 				JPanel[] panelList = {player1CultureLocation, player2CultureLocation, marketBoard, buttonPanel};
 				for(JPanel panel : panelList) marketWindow.add(panel);
@@ -398,9 +378,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	private JPanel makePicturePanel(int locationX, int locationY, int width, int height, String fileName){
-		JPanel picturePanel = new JPanel();
-		picturePanel.setLocation(locationX, locationY);
-		picturePanel.setSize(width, height);
+		JPanel picturePanel = makeJPanel(width, height, locationX, locationY);
 		JLabel picLabel;
 		try {
 			BufferedImage civPicture = ImageIO.read(new File(fileName));
@@ -442,29 +420,25 @@ public class MainWindow extends JFrame {
 		else gov = messages.getString("despotism");
 		
 		JLabel government = new JLabel(messages.getString("government") + gov);
-		government.setForeground(Color.WHITE);
 		
 		JLabel governmentAbility = new JLabel(messages.getString("ability"));
-		governmentAbility.setForeground(Color.WHITE);
 		
 		JLabel trade = new JLabel(messages.getString("trade") + ": " + Board.getPlayer(playerNum).trade);
-		trade.setForeground(Color.WHITE);
 		
 		JLabel gold = new JLabel(messages.getString("gold") + Board.getPlayer(playerNum).gold);
-		gold.setForeground(Color.WHITE);
 		
 		JLabel culture = new JLabel(messages.getString("culture") + Board.getPlayer(playerNum).culture);
-		culture.setForeground(Color.WHITE);
 		
-		String resourceString = "";
-		resourceString = getResourceString(playerNum, messages);
+		String resourceString = getResourceString(playerNum, messages);
 		
 		JLabel resources = new JLabel(messages.getString("resources") + resourceString);
-		resources.setForeground(Color.WHITE);
+
 		JLabel[] labelList = {government, governmentAbility, trade, gold, resources, culture};
-		for(JLabel label : labelList) info.add(label);
-		
-		
+		for(JLabel label : labelList) {
+			label.setForeground(Color.WHITE);
+			info.add(label);
+		}
+
 		for(JPanel panel : panelList) playerWindow.add(panel);
 		
 		playerWindow.setVisible(true);
@@ -483,20 +457,15 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
-				treeWindow.setLayout(null);
-				treeWindow.setSize(525, 370);
+				final JFrame treeWindow = makeNewWindow(525, 370, messages.getString("playerTechCardTree"));
 				
 				treeWindow.add(Board.drawTechCardTree(Board.getPlayer(playerNum)));
 				
-				JPanel button = new JPanel();
-				button.setLocation(0, 290);
-				button.setSize(525, 50);
+				JPanel button = makeJPanel(525, 50, 0, 290);
 				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
 				
-				treeWindow.setAlwaysOnTop(true);
 				treeWindow.setVisible(true);
 				
 				close.addActionListener(new ActionListener(){
@@ -542,7 +511,7 @@ public class MainWindow extends JFrame {
 				resourceArray[3] += 1;
 				break;
 			default:
-				System.out.println("Unidentified resource: " + resource.toString());
+				// Unidentified resource... Wonderful
 				break;
 			}
 		}
