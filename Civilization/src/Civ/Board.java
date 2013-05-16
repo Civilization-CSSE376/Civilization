@@ -215,10 +215,10 @@ public class Board extends JPanel {
 		army2.setScreenLocation((map.get(7).getTiles()[2][3]
 				.getScreenLocation()));
 
-		this.player1.figures.add(settler1);
-		this.player2.figures.add(settler2);
-		 this.player1.figures.add(army1);
-		 this.player2.figures.add(army2);
+		Board.player1.figures.add(settler1);
+		Board.player2.figures.add(settler2);
+		 Board.player1.figures.add(army1);
+		 Board.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
@@ -552,8 +552,7 @@ public class Board extends JPanel {
 					messages.getString("collectResourceOption"),
 					messages.getString("devoteArtsOption"),
 
-					"convertTradeOption" };// TODO
-											// messages.getString("convertTradeOption")
+					messages.getString("convertTradeOption") };
 			makeChoice(
 					choices,
 					new InitialHandler(),
@@ -666,6 +665,7 @@ public class Board extends JPanel {
 	}
 
 	private class BuildingHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -701,6 +701,7 @@ public class Board extends JPanel {
 	}
 
 	private class BuilderHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -713,6 +714,7 @@ public class Board extends JPanel {
 	}
 
 	private class InitialHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -739,6 +741,7 @@ public class Board extends JPanel {
 	}
 
 	private class UnitHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -1840,6 +1843,7 @@ public class Board extends JPanel {
 		}
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;

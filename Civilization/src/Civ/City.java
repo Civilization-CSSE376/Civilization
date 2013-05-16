@@ -129,7 +129,6 @@ public class City implements Drawable{
 		 * Written assuming normal math (x,y) plot but needs to be upsidedown computer science (x,y) plot so North and South get switched
 		 */
 		Panel startPanel = Board.findPanel(startTile);
-		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		ArrayList<Tile> outskirts = new ArrayList<Tile>();
 

@@ -22,6 +22,7 @@ public class CityTest {
 	private static Locale currentLocale = new Locale("en", "US");
 	private static ResourceBundle messages = ResourceBundle.getBundle(
 			"MessagesBundle", currentLocale);
+	
 	private Hashtable<String, Panel> map;
 	private Player player;
 	private Player enemyPlayer;
@@ -128,7 +129,7 @@ public class CityTest {
 		
 		this.city = new City(this.startTile);
 		this.player.cities.add(this.city);
-		
+
 		this.enemyCity = new City(this.enemyStartTile);
 		this.enemyPlayer.cities.add(this.enemyCity);
 		
