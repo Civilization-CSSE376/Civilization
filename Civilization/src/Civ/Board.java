@@ -43,17 +43,15 @@ import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
-
 import TechCards.*;
 
 import Civ.Tile.Resource;
-
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
 
 	public static Map<String, String> cardDescriptions = new HashMap<String, String>();
-	
+
 	public static Map<String, TechCard> techCards = new HashMap<String, TechCard>();
 
 	final String START_OF_TURN = "Start of Turn";
@@ -79,7 +77,7 @@ public class Board extends JPanel {
 
 	private int phase;
 	public JFrame p;
-	
+
 	public static ArrayList<Player> winners = new ArrayList<Player>();
 
 	private String player1Civilization;
@@ -92,10 +90,10 @@ public class Board extends JPanel {
 		this.messages = messages;
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
-		
+
 		writeCardDescriptions();
 		writeTechCards();
-		
+
 		players = new ArrayList<Player>();
 
 		map = new ArrayList<Panel>();
@@ -146,12 +144,9 @@ public class Board extends JPanel {
 
 		this.player1.cities.add(city1);
 		this.player2.cities.add(city2);
-		
-		
-		
-		
+
 		this.player1.government = new Government(this.player1, "Fundamentalism");
-		this.player1.units.add(new Unit("Infantry",1));
+		this.player1.units.add(new Unit("Infantry", 1));
 		this.player1.units.add(new Unit("Cavalry", 1));
 		this.player1.units.add(new Unit("Artillery", 1));
 
@@ -176,9 +171,9 @@ public class Board extends JPanel {
 		this.addMouseListener(mouseHandler);
 
 	}
-	
-	public void writeTechCards(){
-		techCards = new HashMap<String, TechCard>(){
+
+	public void writeTechCards() {
+		techCards = new HashMap<String, TechCard>() {
 			{
 				put(messages.getString("ballistics"), new Ballistics());
 				put(messages.getString("banking"), new Banking());
@@ -195,20 +190,23 @@ public class Board extends JPanel {
 				put(messages.getString("engineering"), new Engineering());
 				put(messages.getString("flight"), new Flight());
 				put(messages.getString("gunpowder"), new Gunpowder());
-				put(messages.getString("horsebackRiding"), new HorsebackRiding());
+				put(messages.getString("horsebackRiding"),
+						new HorsebackRiding());
 				put(messages.getString("irrigation"), new Irrigation());
 				put(messages.getString("masonry"), new Masonry());
 				put(messages.getString("mathematics"), new Mathematics());
 				put(messages.getString("metalCasting"), new MetalCasting());
 				put(messages.getString("metalWorking"), new MetalWorking());
-				put(messages.getString("militaryScience"), new MilitaryScience());
+				put(messages.getString("militaryScience"),
+						new MilitaryScience());
 				put(messages.getString("monarchy"), new Monarchy());
 				put(messages.getString("navigation"), new Navigation());
 				put(messages.getString("philosophy"), new Philosophy());
 				put(messages.getString("pottery"), new Pottery());
 				put(messages.getString("printingPress"), new PrintingPress());
 				put(messages.getString("railroad"), new Railroad());
-				put(messages.getString("replaceableParts"), new ReplaceableParts());
+				put(messages.getString("replaceableParts"),
+						new ReplaceableParts());
 				put(messages.getString("sailing"), new Sailing());
 				put(messages.getString("steamPower"), new SteamPower());
 				put(messages.getString("theology"), new Theology());
@@ -216,46 +214,80 @@ public class Board extends JPanel {
 			}
 		};
 	}
-	
-	public void writeCardDescriptions(){
-		 cardDescriptions = new HashMap<String, String>() {
-				{
-					put(messages.getString("ballistics"), messages.getString("ballisticsCard"));
-					put(messages.getString("banking"), messages.getString("bankingCard"));
-					put(messages.getString("biology"), messages.getString("biologyCard"));
-					put(messages.getString("chivalry"), messages.getString("chivalryCard"));
-					put(messages.getString("civilServices"), messages.getString("civilServicesCard"));
-					put(messages.getString("codeOfLaws"), messages.getString("codeOfLawsCard"));
-					put(messages.getString("combustion"), messages.getString("combustionCard"));
-					put(messages.getString("communism"), messages.getString("communismCard"));
-					put(messages.getString("computers"), messages.getString("computersCard"));
-					put(messages.getString("construction"), messages.getString("constructionCard"));
-					put(messages.getString("currency"), messages.getString("currencyCard"));
-					put(messages.getString("democracy"), messages.getString("democracyCard"));
-					put(messages.getString("engineering"), messages.getString("engineeringCard"));
-					put(messages.getString("flight"), messages.getString("flightCard"));
-					put(messages.getString("gunpowder"), messages.getString("gunpowderCard"));
-					put(messages.getString("horsebackRiding"), messages.getString("horsebackRidingCard"));
-					put(messages.getString("irrigation"), messages.getString("irrigationCard"));
-					put(messages.getString("masonry"), messages.getString("masonryCard"));
-					put(messages.getString("mathematics"), messages.getString("mathematicsCard"));
-					put(messages.getString("metalCasting"), messages.getString("metalCastingCard"));
-					put(messages.getString("metalWorking"), messages.getString("metalWorkingCard"));
-					put(messages.getString("militaryScience"), messages.getString("militaryScienceCard"));
-					put(messages.getString("monarchy"), messages.getString("monarchyCard"));
-					put(messages.getString("navigation"), messages.getString("navigationCard"));
-					put(messages.getString("philosophy"), messages.getString("philosophyCard"));
-					put(messages.getString("pottery"), messages.getString("potteryCard"));
-					put(messages.getString("printingPress"), messages.getString("printingPressCard"));
-					put(messages.getString("railroad"), messages.getString("railroadCard"));
-					put(messages.getString("replaceableParts"), messages.getString("replaceablePartsCard"));
-					put(messages.getString("sailing"), messages.getString("sailingCard"));
-					put(messages.getString("steamPower"), messages.getString("steamPowerCard"));
-					put(messages.getString("theology"), messages.getString("theologyCard"));
-					put(messages.getString("writing"), messages.getString("writingCard"));
-					put(messages.getString("spaceFlight"), messages.getString("spaceFlightCard"));
-				}
-			};
+
+	public void writeCardDescriptions() {
+		cardDescriptions = new HashMap<String, String>() {
+			{
+				put(messages.getString("ballistics"),
+						messages.getString("ballisticsCard"));
+				put(messages.getString("banking"),
+						messages.getString("bankingCard"));
+				put(messages.getString("biology"),
+						messages.getString("biologyCard"));
+				put(messages.getString("chivalry"),
+						messages.getString("chivalryCard"));
+				put(messages.getString("civilServices"),
+						messages.getString("civilServicesCard"));
+				put(messages.getString("codeOfLaws"),
+						messages.getString("codeOfLawsCard"));
+				put(messages.getString("combustion"),
+						messages.getString("combustionCard"));
+				put(messages.getString("communism"),
+						messages.getString("communismCard"));
+				put(messages.getString("computers"),
+						messages.getString("computersCard"));
+				put(messages.getString("construction"),
+						messages.getString("constructionCard"));
+				put(messages.getString("currency"),
+						messages.getString("currencyCard"));
+				put(messages.getString("democracy"),
+						messages.getString("democracyCard"));
+				put(messages.getString("engineering"),
+						messages.getString("engineeringCard"));
+				put(messages.getString("flight"),
+						messages.getString("flightCard"));
+				put(messages.getString("gunpowder"),
+						messages.getString("gunpowderCard"));
+				put(messages.getString("horsebackRiding"),
+						messages.getString("horsebackRidingCard"));
+				put(messages.getString("irrigation"),
+						messages.getString("irrigationCard"));
+				put(messages.getString("masonry"),
+						messages.getString("masonryCard"));
+				put(messages.getString("mathematics"),
+						messages.getString("mathematicsCard"));
+				put(messages.getString("metalCasting"),
+						messages.getString("metalCastingCard"));
+				put(messages.getString("metalWorking"),
+						messages.getString("metalWorkingCard"));
+				put(messages.getString("militaryScience"),
+						messages.getString("militaryScienceCard"));
+				put(messages.getString("monarchy"),
+						messages.getString("monarchyCard"));
+				put(messages.getString("navigation"),
+						messages.getString("navigationCard"));
+				put(messages.getString("philosophy"),
+						messages.getString("philosophyCard"));
+				put(messages.getString("pottery"),
+						messages.getString("potteryCard"));
+				put(messages.getString("printingPress"),
+						messages.getString("printingPressCard"));
+				put(messages.getString("railroad"),
+						messages.getString("railroadCard"));
+				put(messages.getString("replaceableParts"),
+						messages.getString("replaceablePartsCard"));
+				put(messages.getString("sailing"),
+						messages.getString("sailingCard"));
+				put(messages.getString("steamPower"),
+						messages.getString("steamPowerCard"));
+				put(messages.getString("theology"),
+						messages.getString("theologyCard"));
+				put(messages.getString("writing"),
+						messages.getString("writingCard"));
+				put(messages.getString("spaceFlight"),
+						messages.getString("spaceFlightCard"));
+			}
+		};
 	}
 
 	private void setPanelNeighbors() {
@@ -393,7 +425,10 @@ public class Board extends JPanel {
 		for (Figure f : tile.getFigures()) {
 			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
 				newCity = f;
-				break;
+			}
+			if (f instanceof Army && currentPlayer.figures.contains(f)
+					&& currentPlayer.government.name.equals("Republic")) {
+				newCity = f;
 			}
 		}
 		if (newCity == null) {
@@ -463,21 +498,21 @@ public class Board extends JPanel {
 	public City goForResource(Tile tile, City city) {
 		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
 		playerOutskirtTiles.addAll(city.getOutskirts());
-		
-		for(Figure f : Board.this.currentPlayer.figures){
-			if(f.getClass().toString().equals("class Civ.Settler")){
+
+		for (Figure f : Board.this.currentPlayer.figures) {
+			if (f.getClass().toString().equals("class Civ.Settler")) {
 				playerOutskirtTiles.add(f.location);
 			}
 		}
-		
-		if(Board.this.currentPlayer.government.name.equals("Feudalism")){
-			for(City c: Board.this.currentPlayer.cities){
-				if(!c.equals(city)){
+
+		if (Board.this.currentPlayer.government.name.equals("Feudalism")) {
+			for (City c : Board.this.currentPlayer.cities) {
+				if (!c.equals(city)) {
 					playerOutskirtTiles.addAll(c.getOutskirts());
 				}
 			}
 		}
-		
+
 		if ((tile.getResource() != null && !tile.getResource().toString()
 				.equals("None"))
 				&& playerOutskirtTiles.contains(tile)) {
@@ -593,7 +628,7 @@ public class Board extends JPanel {
 							messages.getString("collectResourceOption"))) {
 						setGoingForResource(true);
 					} else if (items[i].getText().equals(
-							messages.getString("devoteArtsOption"))){
+							messages.getString("devoteArtsOption"))) {
 						collectCulture(Board.currentPlayer, Board.currentCity);
 					}
 					repaint();
@@ -601,13 +636,13 @@ public class Board extends JPanel {
 				}
 		}
 	}
-	
-	public void collectCulture(Player p, City c){
+
+	public void collectCulture(Player p, City c) {
 		p.culture += c.calcCulture();
-		if(p.government.name.equals("Communism")){
+		if (p.government.name.equals("Communism")) {
 			p.culture -= 1;
 		}
-		if(p.government.name.equals("Monarchy")){
+		if (p.government.name.equals("Monarchy")) {
 			p.culture += 1;
 		}
 		c.setHasAction(false);
@@ -662,23 +697,27 @@ public class Board extends JPanel {
 							}
 
 							if (enemy instanceof Settler) {
-								tile.getFigures().remove(0);
-								enemyPlayer.figures.remove(enemy);
-								if (enemy.getOwner() == null) {
-									Resource resource = Resource.values()[new Random()
-											.nextInt(4)];
-									currentPlayer.resources.add(resource);
-									JOptionPane
-											.showConfirmDialog(
-													null,
-													messages.getString("resourceObtained")
-															+ resource
-																	.toString(),
-													"Collect Resource",
-													JOptionPane.PLAIN_MESSAGE);
+								if (currentMovementFigure.takeHut(currentPlayer)) {
+									tile.getFigures().remove(0);
+									enemyPlayer.figures.remove(enemy);
+									if (enemy.getOwner() == null) {
+										Resource resource = Resource.values()[new Random()
+												.nextInt(4)];
+										currentPlayer.resources.add(resource);
+										JOptionPane
+												.showConfirmDialog(
+														null,
+														messages.getString("resourceObtained")
+																+ resource
+																		.toString(),
+														"Collect Resource",
+														JOptionPane.PLAIN_MESSAGE);
+									}
+									else return;
 								}
 							} else {
-								calcBattleHandSize(tile, currentPlayer, enemyPlayer);
+								calcBattleHandSize(tile, currentPlayer,
+										enemyPlayer);
 								p = new Combat(currentPlayer, enemyPlayer, 0);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -694,12 +733,16 @@ public class Board extends JPanel {
 									break;
 								}
 							}
-							if (attackingCity == null && !currentPlayer.government.name.equals("Democracy")) {
+							if (attackingCity == null
+									&& !currentPlayer.government.name
+											.equals("Democracy")) {
 								if (currentPlayer == player1) {
-									calcBattleHandSize(tile, currentPlayer, player2);
+									calcBattleHandSize(tile, currentPlayer,
+											player2);
 									p = new Combat(currentPlayer, player2, 12);
 								} else {
-									calcBattleHandSize(tile, currentPlayer, player1);
+									calcBattleHandSize(tile, currentPlayer,
+											player1);
 									p = new Combat(currentPlayer, player1, 12);
 								}
 								p.setLocation(10, 10);
@@ -737,35 +780,35 @@ public class Board extends JPanel {
 	private void calcBattleHandSize(Tile tile, Player attacker, Player defender) {
 		attacker.battleHandSize = 3;
 		defender.battleHandSize = 3;
-		
-		if(attacker.government.name.equals("Fundamentalism")){
+
+		if (attacker.government.name.equals("Fundamentalism")) {
 			attacker.battleHandSize++;
 		}
-		if(defender.government.name.equals("Fundamentalism")){
+		if (defender.government.name.equals("Fundamentalism")) {
 			defender.battleHandSize++;
 		}
-		
-		for(Figure f : tile.getFigures()){
-			if(f instanceof Army){
-				if(f.getOwner().equals(attacker)){
+
+		for (Figure f : tile.getFigures()) {
+			if (f instanceof Army) {
+				if (f.getOwner().equals(attacker)) {
 					attacker.battleHandSize += 2;
 				}
-				if(f.getOwner().equals(defender)){
-					defender.battleHandSize +=2;
+				if (f.getOwner().equals(defender)) {
+					defender.battleHandSize += 2;
 				}
 			}
 		}
-		
-		for(City c : defender.cities){
-			if(c.getLocation().equals(tile)){
+
+		for (City c : defender.cities) {
+			if (c.getLocation().equals(tile)) {
 				defender.battleHandSize += 3;
 			}
 		}
-		
-		//have to subtract because we "over counted" the first army
+
+		// have to subtract because we "over counted" the first army
 		attacker.battleHandSize -= 2;
 		defender.battleHandSize -= 2;
-		
+
 	}
 
 	private void finishCombat(Tile tile) {
@@ -955,14 +998,16 @@ public class Board extends JPanel {
 
 	public void research() {
 
-		final JFrame researchWindow = buildFrame(505, 380, messages.getString("research"));
-		
+		final JFrame researchWindow = buildFrame(505, 380,
+				messages.getString("research"));
+
 		JPanel tierOptions = buildJPanel(250, 50, 0, 0);
 		JPanel cardOptions = buildJPanel(250, 50, 250, 0);
 		JPanel description = buildJPanel(500, 200, 0, 50);
 		JPanel warningMessage = buildJPanel(500, 50, 0, 250);
 		JPanel buttons = buildJPanel(500, 50, 0, 300);
-		JPanel[] panels = {tierOptions, cardOptions, description, warningMessage, buttons};
+		JPanel[] panels = { tierOptions, cardOptions, description,
+				warningMessage, buttons };
 		String[] tiers = { "1", "2", "3", "4", "5" };
 		JLabel tierLabel = new JLabel(messages.getString("tier") + ": ");
 		final JComboBox<String> tierDropDown = new JComboBox<String>(tiers);
@@ -974,18 +1019,38 @@ public class Board extends JPanel {
 		final JComboBox<String> techCards = new JComboBox<String>();
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
 		tierCards[0] = new DefaultComboBoxModel<String>(new String[] {
-				messages.getString("codeOfLaws"), messages.getString("currency"), messages.getString("horsebackRiding"), messages.getString("masonry"),
-				messages.getString("metalWorking"), messages.getString("navigation"), messages.getString("philosophy"), messages.getString("pottery"),
-				messages.getString("writing") });
+				messages.getString("codeOfLaws"),
+				messages.getString("currency"),
+				messages.getString("horsebackRiding"),
+				messages.getString("masonry"),
+				messages.getString("metalWorking"),
+				messages.getString("navigation"),
+				messages.getString("philosophy"),
+				messages.getString("pottery"), messages.getString("writing") });
 		tierCards[1] = new DefaultComboBoxModel<String>(new String[] {
-				messages.getString("chivalry"), messages.getString("civilServices"), messages.getString("construction"), messages.getString("democracy"),
-				messages.getString("engineering"), messages.getString("irrigation"), messages.getString("mathematics"), messages.getString("monarchy"),
-				messages.getString("printingPress"), messages.getString("sailing") });
+				messages.getString("chivalry"),
+				messages.getString("civilServices"),
+				messages.getString("construction"),
+				messages.getString("democracy"),
+				messages.getString("engineering"),
+				messages.getString("irrigation"),
+				messages.getString("mathematics"),
+				messages.getString("monarchy"),
+				messages.getString("printingPress"),
+				messages.getString("sailing") });
 		tierCards[2] = new DefaultComboBoxModel<String>(new String[] {
-				messages.getString("banking"), messages.getString("biology"), messages.getString("communism"), messages.getString("gunpowder"), messages.getString("metalCasting"),
-				messages.getString("militaryScience"), messages.getString("railroad"), messages.getString("steamPower"), messages.getString("theology") });
+				messages.getString("banking"), messages.getString("biology"),
+				messages.getString("communism"),
+				messages.getString("gunpowder"),
+				messages.getString("metalCasting"),
+				messages.getString("militaryScience"),
+				messages.getString("railroad"),
+				messages.getString("steamPower"),
+				messages.getString("theology") });
 		tierCards[3] = new DefaultComboBoxModel<String>(new String[] {
-				messages.getString("ballistics"), messages.getString("combustion"), messages.getString("computers"), messages.getString("flight"),
+				messages.getString("ballistics"),
+				messages.getString("combustion"),
+				messages.getString("computers"), messages.getString("flight"),
 				messages.getString("replaceableParts") });
 		tierCards[4] = new DefaultComboBoxModel<String>(
 				new String[] { messages.getString("spaceFlight") });
@@ -994,13 +1059,20 @@ public class Board extends JPanel {
 		cardOptions.add(techCards);
 
 		description.setLayout(new GridLayout(3, 1));
-		final JLabel currentTrade = new JLabel(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
-		final JLabel cardName = new JLabel("     " + messages.getString("cardName") + ":    "
+		final JLabel currentTrade = new JLabel(
+				messages.getString("tierCardCost") + ": "
+						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
+						+ " , " + messages.getString("playerHas") + " "
+						+ currentPlayer.trade + " "
+						+ messages.getString("tradeAvailable"));
+		final JLabel cardName = new JLabel("     "
+				+ messages.getString("cardName") + ":    "
 				+ techCards.getItemAt(techCards.getSelectedIndex()));
-		final JTextArea cardDescription = new JTextArea(
-				"     " + messages.getString("cardDescription") + ":    "
-						+ cardDescriptions.get(techCards.getItemAt(techCards
-								.getSelectedIndex())));
+		final JTextArea cardDescription = new JTextArea("     "
+				+ messages.getString("cardDescription")
+				+ ":    "
+				+ cardDescriptions.get(techCards.getItemAt(techCards
+						.getSelectedIndex())));
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
 		description.add(currentTrade);
@@ -1030,8 +1102,9 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final JFrame treeWindow = buildFrame(525, 370, messages.getString("playerTechCardTree"));
-				
+				final JFrame treeWindow = buildFrame(525, 370,
+						messages.getString("playerTechCardTree"));
+
 				treeWindow.add(drawTechCardTree(currentPlayer));
 
 				JPanel button = buildJPanel(525, 50, 0, 290);
@@ -1057,10 +1130,17 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				currentTrade.setText(messages.getString("tierCardCost") + ": " + getTierCardCost(tierDropDown.getSelectedIndex() + 1) + " , " + messages.getString("playerHas") + " " + currentPlayer.trade + " " + messages.getString("tradeAvailable"));
-				cardName.setText("     " + messages.getString("cardName") + ":    "
+				currentTrade.setText(messages.getString("tierCardCost") + ": "
+						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
+						+ " , " + messages.getString("playerHas") + " "
+						+ currentPlayer.trade + " "
+						+ messages.getString("tradeAvailable"));
+				cardName.setText("     " + messages.getString("cardName")
+						+ ":    "
 						+ techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     " + messages.getString("cardDescription") + ":    "
+				cardDescription.setText("     "
+						+ messages.getString("cardDescription")
+						+ ":    "
 						+ cardDescriptions.get(techCards.getItemAt(techCards
 								.getSelectedIndex())));
 				if (!message.getText().equals(
@@ -1087,9 +1167,10 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				
+
 				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
-					message.setText(messages.getString("cannotBuyCardTierLevel"));
+					message.setText(messages
+							.getString("cannotBuyCardTierLevel"));
 					buy.setEnabled(false);
 				} else if (currentPlayer.techCards.contains(techCards
 						.getItemAt(techCards.getSelectedIndex()))) {
@@ -1115,7 +1196,8 @@ public class Board extends JPanel {
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				if(currentPlayer.techCards.contains(messages.getString("spaceFlight"))){
+				if (currentPlayer.techCards.contains(messages
+						.getString("spaceFlight"))) {
 					currentPlayer.hasWon = true;
 					currentPlayer.winCondition = "Tech";
 				}
@@ -1133,27 +1215,33 @@ public class Board extends JPanel {
 
 		});
 	}
-	
-	public JFrame buildFrame(int width, int height, String title){
+
+	public JFrame buildFrame(int width, int height, String title) {
 		JFrame frame = new JFrame(title);
 		frame.setSize(width, height);
 		frame.setLayout(null);
 		return frame;
 	}
-	
-	public static JPanel buildJPanel(int width, int height, int xLocation, int yLocation){
+
+	public static JPanel buildJPanel(int width, int height, int xLocation,
+			int yLocation) {
 		JPanel panel = new JPanel();
 		panel.setLocation(xLocation, yLocation);
 		panel.setSize(width, height);
 		return panel;
 	}
-	
-	public int getTierCardCost(int tier){
-		if(tier == 1) return 6;
-		else if(tier == 2) return 11;
-		else if(tier == 3) return 16;
-		else if(tier == 4) return 21;
-		else return 26;
+
+	public int getTierCardCost(int tier) {
+		if (tier == 1)
+			return 6;
+		else if (tier == 2)
+			return 11;
+		else if (tier == 3)
+			return 16;
+		else if (tier == 4)
+			return 21;
+		else
+			return 26;
 	}
 
 	public void updateValidTiersAndCards(int tier) {
@@ -1219,8 +1307,10 @@ public class Board extends JPanel {
 		tree.setLayout(null);
 		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
 				+ player.tier4Cards == 0) {
+
 			JLabel label = new JLabel(
 					messages.getString("noCards"));
+
 			label.setLocation(50, 145);
 			label.setSize(400, 20);
 			tree.add(label);
@@ -1310,36 +1400,40 @@ public class Board extends JPanel {
 	private Player playerConfig(String civ) {
 
 		Player tempPlayer = new Player();
-		
+
 		switch (civ) {
 		case "Egypt": // TODO check if needs internationalized
 			tempPlayer.techCards.add(new Construction());
-			//free wonder at start of game
-			//one free building each turn as an action
+			// free wonder at start of game
+			// one free building each turn as an action
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
-			tempPlayer.government = new Government(tempPlayer,"Communism");
+			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.stackSize = 3;
-			//one extra army
+			// one extra army
 			/*
-			 * once per turn the russians may move an army or scout into an enemy city and sacrifice that figure
-			 * to research a tech known by that civilization for free. armies sacrificed this way cannot also attack
+			 * once per turn the russians may move an army or scout into an
+			 * enemy city and sacrifice that figure to research a tech known by
+			 * that civilization for free. armies sacrificed this way cannot
+			 * also attack
 			 */
 			break;
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
-			tempPlayer.government = new Government(tempPlayer,"Republic");
+			tempPlayer.government = new Government(tempPlayer, "Republic");
 			/*
-			 * the romans advance one space on the culture track for free each time
-			 * they build a wonder or a city, and each time they conquer a city or village
+			 * the romans advance one space on the culture track for free each
+			 * time they build a wonder or a city, and each time they conquer a
+			 * city or village
 			 */
 			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
-			//free great person at start of game
+			// free great person at start of game
 			/*
-			 * each time the americans convert 3 trade into production, they recieve 2 production instead of 1
+			 * each time the americans convert 3 trade into production, they
+			 * recieve 2 production instead of 1
 			 */
 			break;
 		case "Germany":
@@ -1347,18 +1441,19 @@ public class Board extends JPanel {
 			tempPlayer.units.add(new Unit("Infantry", 1));
 			tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
-			 * after setup, each time the germans research a tech that upgrades or unlocks a unit, they build
-			 * one of that unit for free and gain one resource of their choice from the market
+			 * after setup, each time the germans research a tech that upgrades
+			 * or unlocks a unit, they build one of that unit for free and gain
+			 * one resource of their choice from the market
 			 */
-			
+
 			break;
 		case "China":
 			tempPlayer.techCards.add(new Writing());
 			/*
-			 * the chinese start with city walls in their capital.
-			 * the chinese gain 3 culture each time they explore a hut or conquer a village.
-			 * the chinese may save one of their killed units after each battle, returning it to
-			 * their standing forces.
+			 * the chinese start with city walls in their capital. the chinese
+			 * gain 3 culture each time they explore a hut or conquer a village.
+			 * the chinese may save one of their killed units after each battle,
+			 * returning it to their standing forces.
 			 */
 			break;
 		default:
@@ -1714,13 +1809,15 @@ public class Board extends JPanel {
 				for (City c : Board.this.currentPlayer.cities) {
 					Board.this.currentPlayer.trade += c.calcTrade();
 				}
-				if(Board.this.currentPlayer.government.name.equals("Democracy")){
+				if (Board.this.currentPlayer.government.name
+						.equals("Democracy")) {
 					Board.this.currentPlayer.trade += 2;
 				}
-				if(Board.this.currentPlayer.government.name.equals("Fundamentalism")){
+				if (Board.this.currentPlayer.government.name
+						.equals("Fundamentalism")) {
 					Board.this.currentPlayer.trade -= 2;
 				}
-				if(Board.this.currentPlayer.trade < 0){
+				if (Board.this.currentPlayer.trade < 0) {
 					Board.this.currentPlayer.trade = 0;
 				}
 			}
@@ -1735,7 +1832,7 @@ public class Board extends JPanel {
 				this.currentPhase = CITY_MANAGEMENT;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
-					if(this.currentPlayer.government.name.equals("Communism")){
+					if (this.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
 				}
@@ -1749,7 +1846,7 @@ public class Board extends JPanel {
 				currentCity = null;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
-					if(this.currentPlayer.government.name.equals("Communism")){
+					if (this.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
 				}
@@ -1900,41 +1997,41 @@ public class Board extends JPanel {
 			return player1;
 		return player2;
 	}
-	
-	public void isGameOver(){
+
+	public void isGameOver() {
 		boolean isOver = false;
-		for(Player p: this.players){
-			if(p.gold >= 15){
+		for (Player p : this.players) {
+			if (p.gold >= 15) {
 				p.winCondition = "Economic";
 				p.hasWon = true;
 			}
-			if(p.hasWon == true){
+			if (p.hasWon == true) {
 				isOver = true;
 			}
 		}
-		if(!isOver){
+		if (!isOver) {
 			return;
 		}
-		
+
 		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
-		for(Player p: this.players){
+		for (Player p : this.players) {
 			score.put(tieBreakerScore(p), p);
 		}
-		
+
 		int highestScore = 0;
-		for(Integer i : score.keySet()){
-			if(i > highestScore){
+		for (Integer i : score.keySet()) {
+			if (i > highestScore) {
 				highestScore = i;
 			}
 		}
-		
-		if(!score.isEmpty()){
+
+		if (!score.isEmpty()) {
 			Board.isGameOver = true;
 			Board.winners.add(score.get(highestScore));
 		}
 	}
-	
-	public int tieBreakerScore(Player p){
+
+	public int tieBreakerScore(Player p) {
 		int score = 0;
 		score += p.cultureTrackProgress;
 		score += p.techCards.size();

@@ -24,9 +24,8 @@ public class Army extends Figure {
 //	}
 
 	@Override
-	public void takeHut() {
-		// TODO Auto-generated method stub
-
+	public boolean takeHut(Player player) {
+		return true;
 	}
 
 	@Override

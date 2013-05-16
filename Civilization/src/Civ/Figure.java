@@ -92,7 +92,7 @@ public abstract class Figure implements Drawable {
 		return false;
 	}
 
-	public abstract void takeHut();
+	public abstract boolean takeHut(Player player);
 
 	public Player getOwner() {
 		return this.owner;
