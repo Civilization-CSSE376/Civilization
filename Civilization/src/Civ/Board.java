@@ -234,10 +234,10 @@ public class Board extends JPanel {
 		Board.player1.cities.add(city1);
 		Board.player2.cities.add(city2);
 
-		Board.player1.government = new Government(Board.player1, "Fundamentalism");
-		Board.player1.units.add(new Unit(messages.getString("infantry"), 1, messages)); // TODO check we already have this...
-		Board.player1.units.add(new Unit(messages.getString("cavalry"), 1, messages));
-		Board.player1.units.add(new Unit(messages.getString("artillery"), 1, messages));
+//		Board.player1.government = new Government(Board.player1, "Fundamentalism");
+//		Board.player1.units.add(new Unit(messages.getString("infantry"), 1, messages)); // TODO check we already have this...
+//		Board.player1.units.add(new Unit(messages.getString("cavalry"), 1, messages));
+//		Board.player1.units.add(new Unit(messages.getString("artillery"), 1, messages));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
@@ -785,7 +785,7 @@ public class Board extends JPanel {
 		} else if (option.equals(messages.getString("units"))) {
 			ArrayList<String> Choiceitems = new ArrayList<String>();
 			Choiceitems.add(messages.getString("infantry"));
-			Choiceitems.add(messages.getString("artillary"));
+			Choiceitems.add(messages.getString("artillery"));
 			Choiceitems.add(messages.getString("cavalry"));
 			if (currentPlayer.techCards.contains(Board.techCards.get(messages
 					.getString("flight")))) {
@@ -901,13 +901,14 @@ public class Board extends JPanel {
 										return;
 								}
 							} else {
+								finishCombat(tile);
 								calcBattleHandSize(tile, currentPlayer,
 										enemyPlayer);
 								p = new Combat(currentPlayer, enemyPlayer, 0, messages);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
 							}
-							finishCombat(tile);
+							
 							return;
 
 						} else if (tile.getCity() != null) {
