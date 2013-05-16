@@ -67,7 +67,7 @@ public class TechCardTest {
 		target.takeEffect(player);
 		assertEquals("Chivalry", target.name);
 		assertEquals(2, target.tier);
-		assertEquals(2, player.calvaryLevel);
+		assertEquals(2, player.cavalryLevel);
 		assertTrue(player.unlockedGovernments.contains("Feudalism"));
 	}
 	
@@ -99,7 +99,7 @@ public class TechCardTest {
 		target.takeEffect(player);
 		assertEquals("Combustion", target.name);
 		assertEquals(4, target.tier);
-		assertEquals(4, player.calvaryLevel);
+		assertEquals(4, player.cavalryLevel);
 	}
 	
 	@Test
@@ -301,7 +301,7 @@ public class TechCardTest {
 		target.takeEffect(player);
 		assertEquals("Railroad", target.name);
 		assertEquals(3, target.tier);
-		assertEquals(3, player.calvaryLevel);
+		assertEquals(3, player.cavalryLevel);
 		assertTrue(player.unlockedBuildings.contains("IronMine"));
 	}
 	

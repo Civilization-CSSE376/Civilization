@@ -13,8 +13,8 @@ public class Railroad extends TechCard {
 	@Override
 	public void takeEffect(Player player) {
 		player.unlockedBuildings.add("IronMine");
-		if(player.calvaryLevel < 3){
-			player.calvaryLevel = 3;
+		if(player.cavalryLevel < 3){
+			player.cavalryLevel = 3;
 		}
 
 	}

@@ -36,13 +36,11 @@ public class City implements Drawable{
 		this.outskirts = this.getOutskirts(location);
 		if (this.outskirts != null){
 			this.isValid = this.validOutskirts(player);
-		}else{
-			System.out.println("ITS OUTSKIRTS ARE NULL");
 		}
 	}
 
 	public int getProduction() {
-		return this.production;
+		return this.calcProduction();
 	}
 
 	public void setCapital() {
@@ -68,11 +66,18 @@ public class City implements Drawable{
 	 * 
 	 * @return totalProduction
 	 */
-	int calcProduction() {
+	public int calcProduction() {
+		this.outskirts = this.getOutskirts(this.location);
+		
 		int totalProduction = 0;
 
 		for (Tile t : this.outskirts) {
 			totalProduction += t.getProduction();
+		}
+		for(Figure f : Board.currentPlayer.figures){
+			if(f.getClass().toString().equals("class Civ.Settler")){
+				totalProduction += f.location.getProduction();
+			}
 		}
 		this.production = totalProduction;
 		return totalProduction;
@@ -83,7 +88,9 @@ public class City implements Drawable{
 	 * 
 	 * @return totalCulture
 	 */
-	int calcCulture() {
+	public int calcCulture() {
+		this.outskirts = this.getOutskirts(this.location);
+		
 		int totalCulture = 0;
 
 		for (Tile t : this.outskirts) {
@@ -98,7 +105,9 @@ public class City implements Drawable{
 	 * 
 	 * @return totalTrade
 	 */
-	int calcTrade() {
+	public int calcTrade() {
+		this.outskirts = this.getOutskirts(this.location);
+		
 		int totalTrade = 0;
 
 		for (Tile t : this.outskirts) {
@@ -412,6 +421,30 @@ public class City implements Drawable{
 			outskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
 			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
 		}
+		
+		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
+		
+		for(Player p : Board.players){
+			if(!p.cities.contains(this)){
+				enemyFigures.addAll(p.figures);
+			}
+		}
+		
+		for(int i = 0; i < outskirts.size() - 1; i++){
+			for(int j = 0; j < outskirts.get(i).getFigures().size() - 1; j++){
+				if(enemyFigures.contains(outskirts.get(i).getFigures().get(j))){
+					outskirts.remove(i);
+				}
+			}
+		}
+		//this for loop doesn't work because of a ConcurrentModificationException so the above loop was made
+//		for(Tile t : outskirts){
+//			for(Figure f : t.getFigures()){
+//				if(enemyFigures.contains(f)){
+//					outskirts.remove(t);
+//				}
+//			}
+//		}
 
 		return outskirts;
 	}
@@ -430,57 +463,35 @@ public class City implements Drawable{
 	 */
 	private boolean validOutskirts(Player buildingPlayer) {
 
-		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
-		ArrayList<Player> enemyPlayers = new ArrayList<Player>();
-		ArrayList<City> enemyCities = new ArrayList<City>();
-		ArrayList<Tile> enemyOutskirts = new ArrayList<Tile>();
 		HashSet<Tile> cityTiles = new HashSet<Tile>(this.outskirts);
 		cityTiles.add(this.location);
-
-		for (Player p : Board.players) {
-
-			enemyPlayers.add(p);
-			if (!p.equals(buildingPlayer)) {
-				enemyFigures.addAll(p.figures);
-			}
+		
+		ArrayList<City> gameCities = new ArrayList<City>();
+		ArrayList<Tile> gameOutskirts = new ArrayList<Tile>();
+		for(Player p : Board.players){
+				gameCities.addAll(p.cities);
 		}
-
-		for (Figure f : enemyFigures) {
-			if (cityTiles.contains(f.location)) {
+		gameCities.remove(this);
+		for(City c : gameCities){
+			gameOutskirts.addAll(c.getOutskirts(c.location));
+		}
+		
+		//too close to another city
+		for(Tile t : gameOutskirts){
+			if(cityTiles.contains(t)){
 				return false;
 			}
-		}
-
-		for (Player p : enemyPlayers) {
-			enemyCities.addAll(p.cities);
-		}
-
-		for (City c : enemyCities) {
-			enemyOutskirts.addAll(c.getOutskirts(c.location));
 		}
 
 		// water test
-		if (this.location.getTerrain().equals(Terrain.Water)) {
-			System.out.println("THERE IS WATER");
-			return false;
-		}
-
-		for (Tile t : cityTiles) {
-
-			// village test
-			// if(t.getFigure().contains(Village)){
-			// return false;
-			// }
-
-			// hut test
-			// if(t.getFigure().contains(Hut)){
-			// return false;
-			// }
-
-			// outskirts test
-			if (enemyOutskirts.contains(t)) {
-				System.out.println("THERE IS AN ENEMY");
-				return false;
+		if (this.location.getTerrain().equals(Terrain.Water)) return false;
+		
+		//enemy figures, villages, and huts test since huts and villages are just figures
+		for(Tile t : cityTiles){
+			for(Figure f : t.getFigures()){
+				if(!buildingPlayer.figures.contains(f)){
+					return false;
+				}
 			}
 		}
 
@@ -523,8 +534,7 @@ public class City implements Drawable{
 					checkLocation2 += 110;
 			}
 			this.screenLocation = new Point2D.Double(newX, newY);
-		} else
-			System.out.println("\nInvalid location -- cannot move player.");
+		} 
 	}
 
 	public boolean getHasAction() {

@@ -10,6 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
@@ -20,20 +23,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import Civ.Tile.Resource;
+
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
 	// Fields...
-	private JPanel buttons = new JPanel();
+	private JPanel buttons = makeJPanel(1800, 50, 0, 925);
 	private JPanel board = new JPanel();
 	private JPanel content = new JPanel();
-	private JButton rules = new JButton();
 	private JButton player1Details = new JButton();
 	private JButton player2Details = new JButton();
 	private JButton marketDetails = new JButton();
 	private JButton endPhase = new JButton();
 	private JButton quit = new JButton();
 	private JButton tradeCulture = new JButton();
+	private JButton tradeResource = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
 	
@@ -52,28 +57,25 @@ public class MainWindow extends JFrame {
 		this.setTitle("Civilization");
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
-		
 		this.player1Details.setText(messages.getString("player1Details"));
 		this.player2Details.setText(messages.getString("player2Details"));
 		this.marketDetails.setText(messages.getString("marketDetails"));
 		this.endPhase.setText(messages.getString("endPhase"));
-		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
 		this.tradeCulture.setText(messages.getString("tradeCulture"));
+		this.tradeResource.setText(messages.getString("tradeResource"));
 		
 		this.buttons.add(this.player1Details);
 		this.buttons.add(this.player2Details);
 		this.buttons.add(this.marketDetails);
 		this.buttons.add(this.endPhase);
 		this.buttons.add(this.tradeCulture);
-		this.buttons.add(this.rules);
+		this.buttons.add(this.tradeResource);
 		this.buttons.add(this.quit);
-
+		
 		this.content.add(this.board);
 		
 		this.buttons.setBackground(Color.BLACK);
-		this.buttons.setLocation(0, 925);
-		this.buttons.setSize(1800, 50);
 
 		this.add(this.buttons);
 		
@@ -99,24 +101,6 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				((Board) map).endPhase();
 			}
-		});
-			
-		this.rules.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				if (Desktop.isDesktopSupported()) {
-					try {
-						File rulespdf = new File("src/civilization-rules.pdf");
-						Desktop.getDesktop().open(rulespdf);
-					} catch (IOException ex) {
-						System.out.println("Failed to open pdf.");
-					}
-				}
-
-			}
-
 		});
 
 		this.quit.addActionListener(new ActionListener() {
@@ -209,6 +193,132 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
+		this.tradeResource.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				final JFrame tradeResourceWindow = makeNewWindow(400,200, messages.getString("tradeResource"));
+				tradeResourceWindow.setLayout(new BorderLayout());
+				final int wheatAmount = 1;
+				final int ironAmount = 1;
+				final int incenseAmount = 1;
+				final int silkAmount = 1;
+				final int goldAmount = 1;
+				final int unitAmount = 1;
+				final int cultureAmount = 2;
+				final int tradeAmount = 3;
+				JPanel buyPanel = new JPanel();
+				JButton wheatButton = new JButton(wheatAmount + " " + messages.getString("wheat")
+						+ " : " + goldAmount + " " + messages.getString("gold1"));
+				JButton ironButton = new JButton(ironAmount + " " + messages.getString("unit")
+						+ " : " + unitAmount + " " + messages.getString("unit"));
+				JButton incenseButton = new JButton(incenseAmount + " " + messages.getString("incense")
+						+ " : " + cultureAmount + " " + messages.getString("culture1"));
+				JButton silkButton = new JButton(silkAmount + " " + messages.getString("silk")
+						+ " : " + tradeAmount + " " + messages.getString("trade"));
+				JButton[] buttonList = {wheatButton, ironButton, incenseButton, silkButton};
+				buyPanel.setLayout(new GridLayout(2, 2));
+				for(JButton button : buttonList) buyPanel.add(button);
+				
+				JPanel closePanel = new JPanel();
+				JButton closeButton = new JButton(messages.getString("close"));
+				closePanel.add(closeButton, BorderLayout.EAST);
+				tradeResourceWindow.add(buyPanel, BorderLayout.CENTER);
+				tradeResourceWindow.add(closePanel, BorderLayout.SOUTH);
+				tradeResourceWindow.setVisible(true);
+				
+				closeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						MainWindow.this.setEnabled(true);
+						tradeResourceWindow.dispose();
+						
+					}
+					
+				});
+				
+				wheatButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Wheat");
+						boolean canBuy = amount >= wheatAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.gold += goldAmount;
+							Board.currentPlayer.resources.remove(Resource.Wheat);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				ironButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Iron");
+						boolean canBuy = amount >= ironAmount ? true : false;
+						List<Integer> randomChoices = Arrays.asList(1, 2, 3);
+
+						if(canBuy){
+							for(int i = 0; i < unitAmount; i++){
+								Collections.shuffle(randomChoices);
+								int random = randomChoices.get(0);
+								switch(random){
+								case 1:
+									Board.currentPlayer.units.add(new Unit("Infantry", Board.currentPlayer.infantryLevel));
+									break;
+								case 2:
+									Board.currentPlayer.units.add(new Unit("Cavalry", Board.currentPlayer.cavalryLevel));
+									break;
+								case 3:
+									Board.currentPlayer.units.add(new Unit("Artillery", Board.currentPlayer.artilleryLevel));
+									break;
+								default:
+									break;
+								}
+							}
+							Board.currentPlayer.resources.remove(Resource.Iron);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				incenseButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Incense");
+						boolean canBuy = amount >= incenseAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.culture += cultureAmount;
+							Board.currentPlayer.resources.remove(Resource.Incense);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				silkButton.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent arg0){
+						MainWindow.this.setEnabled(true);
+						int amount = Board.currentPlayer.getResourceAmount("Silk");
+						boolean canBuy = amount >= silkAmount ? true : false;
+
+						if(canBuy){
+							Board.currentPlayer.trade += tradeAmount;
+							Board.currentPlayer.resources.remove(Resource.Silk);
+							tradeResourceWindow.dispose();
+						}
+					}
+					});
+				
+				}	
+			});
+			
+				
 		this.marketDetails.addActionListener(new ActionListener() {
 
 			@Override
@@ -219,26 +329,18 @@ public class MainWindow extends JFrame {
 				final JFrame marketWindow = makeNewWindow(1225, 685, messages.getString("marketDetails"));
 				
 				JPanel marketBoard = makePicturePanel(0, -5, 1220, 625, "src/marketBoard.png");
-				JPanel buttonPanel = new JPanel();
+				JPanel buttonPanel = makeJPanel(1235, 40, 0, 620);
 				buttonPanel.setBackground(Color.BLACK);
 				JButton closeButton = new JButton(messages.getString("close"));
 				buttonPanel.add(closeButton);
-				buttonPanel.setLocation(0, 620);
-				buttonPanel.setSize(1235, 40);
 				
-				JPanel player1CultureLocation = new JPanel();
+				JPanel player1CultureLocation = makeJPanel(15, 25, cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540);
+				
 				player1CultureLocation.setBackground(Color.RED);
-				player1CultureLocation.setLocation(cultureLocations[Board.getPlayer(1).cultureTrackProgress], 540);
-				player1CultureLocation.setSize(15, 25);
-				JPanel player2CultureLocation = new JPanel();
+				JPanel player2CultureLocation = makeJPanel(15, 25, cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570);
 				player2CultureLocation.setBackground(Color.YELLOW);
-				player2CultureLocation.setLocation(cultureLocations[Board.getPlayer(2).cultureTrackProgress], 570);
-				player2CultureLocation.setSize(15, 25);
-				
-				marketWindow.add(player1CultureLocation);
-				marketWindow.add(player2CultureLocation);
-				marketWindow.add(marketBoard);
-				marketWindow.add(buttonPanel);
+				JPanel[] panelList = {player1CultureLocation, player2CultureLocation, marketBoard, buttonPanel};
+				for(JPanel panel : panelList) marketWindow.add(panel);
 				marketWindow.setVisible(true);
 				
 				closeButton.addActionListener(new ActionListener() {
@@ -276,9 +378,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	private JPanel makePicturePanel(int locationX, int locationY, int width, int height, String fileName){
-		JPanel picturePanel = new JPanel();
-		picturePanel.setLocation(locationX, locationY);
-		picturePanel.setSize(width, height);
+		JPanel picturePanel = makeJPanel(width, height, locationX, locationY);
 		JLabel picLabel;
 		try {
 			BufferedImage civPicture = ImageIO.read(new File(fileName));
@@ -299,11 +399,11 @@ public class MainWindow extends JFrame {
 		
 		final JFrame playerWindow = makeNewWindow(900, 565, windowName);
 		
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = makeJPanel(345, 40, 550, 500);
 		JPanel civPic = makePicturePanel(0, -6, 550, 565, "src/civs/" + playerCivilizationField + ".png");
-		JPanel info = new JPanel();
-		JPanel buffer = new JPanel();
-		
+		JPanel info = makeJPanel(295, 500, 600, 0);
+		JPanel buffer = makeJPanel(50, 500, 550, 0);
+		JPanel[] panelList = {buttonPanel, civPic, info, buffer};
 		info.setBackground(Color.BLACK);
 		buttonPanel.setBackground(Color.BLACK);
 		buffer.setBackground(Color.BLACK);
@@ -312,12 +412,7 @@ public class MainWindow extends JFrame {
 		JButton techTree = new JButton(messages.getString("playerTechTree"));
 		buttonPanel.add(closeButton);
 		buttonPanel.add(techTree);
-		
-		buttonPanel.setLocation(550, 500);
-		buttonPanel.setSize(345, 40);
-		
-		info.setLocation(600, 0);
-		info.setSize(295, 500);
+
 		info.setLayout(new GridLayout(6, 1));
 		String gov = "";
 		if(playerCivilizationField.equals("Rome")) gov = messages.getString("republic");
@@ -325,40 +420,26 @@ public class MainWindow extends JFrame {
 		else gov = messages.getString("despotism");
 		
 		JLabel government = new JLabel(messages.getString("government") + gov);
-		government.setForeground(Color.WHITE);
 		
 		JLabel governmentAbility = new JLabel(messages.getString("ability"));
-		governmentAbility.setForeground(Color.WHITE);
 		
 		JLabel trade = new JLabel(messages.getString("trade") + ": " + Board.getPlayer(playerNum).trade);
-		trade.setForeground(Color.WHITE);
 		
 		JLabel gold = new JLabel(messages.getString("gold") + Board.getPlayer(playerNum).gold);
-		gold.setForeground(Color.WHITE);
 		
 		JLabel culture = new JLabel(messages.getString("culture") + Board.getPlayer(playerNum).culture);
-		culture.setForeground(Color.WHITE);
 		
-		String resourceString = "";
-		resourceString = getResourceString(playerNum, messages);
+		String resourceString = getResourceString(playerNum, messages);
 		
 		JLabel resources = new JLabel(messages.getString("resources") + resourceString);
-		resources.setForeground(Color.WHITE);
-		
-		info.add(government);
-		info.add(governmentAbility);
-		info.add(trade);
-		info.add(gold);
-		info.add(resources);
-		info.add(culture);
-		
-		buffer.setLocation(550, 0);
-		buffer.setSize(50, 500);
-		
-		playerWindow.add(buttonPanel);
-		playerWindow.add(civPic);
-		playerWindow.add(info);
-		playerWindow.add(buffer);
+
+		JLabel[] labelList = {government, governmentAbility, trade, gold, resources, culture};
+		for(JLabel label : labelList) {
+			label.setForeground(Color.WHITE);
+			info.add(label);
+		}
+
+		for(JPanel panel : panelList) playerWindow.add(panel);
 		
 		playerWindow.setVisible(true);
 		
@@ -376,20 +457,15 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JFrame treeWindow = new JFrame(messages.getString("playerTechCardTree"));
-				treeWindow.setLayout(null);
-				treeWindow.setSize(525, 370);
+				final JFrame treeWindow = makeNewWindow(525, 370, messages.getString("playerTechCardTree"));
 				
 				treeWindow.add(Board.drawTechCardTree(Board.getPlayer(playerNum)));
 				
-				JPanel button = new JPanel();
-				button.setLocation(0, 290);
-				button.setSize(525, 50);
+				JPanel button = makeJPanel(525, 50, 0, 290);
 				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
 				
-				treeWindow.setAlwaysOnTop(true);
 				treeWindow.setVisible(true);
 				
 				close.addActionListener(new ActionListener(){
@@ -435,7 +511,7 @@ public class MainWindow extends JFrame {
 				resourceArray[3] += 1;
 				break;
 			default:
-				System.out.println("Unidentified resource: " + resource.toString());
+				// Unidentified resource... Wonderful
 				break;
 			}
 		}
@@ -473,5 +549,12 @@ public class MainWindow extends JFrame {
 			return true;
 		}
 		return false;
+	}
+	
+	public JPanel makeJPanel(int width, int height, int xLocation, int yLocation){
+		JPanel panel = new JPanel();
+		panel.setLocation(xLocation, yLocation);
+		panel.setSize(width, height);
+		return panel;
 	}
 }

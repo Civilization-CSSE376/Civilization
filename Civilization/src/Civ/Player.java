@@ -7,10 +7,6 @@ public class Player {
 
 	private Point2D.Double location;
 
-	// private enum Government {
-	// // fill me in
-	// }
-
 	public ArrayList<Tile.Resource> resources = new ArrayList<Tile.Resource>();
 	public ArrayList<Figure> figures = new ArrayList<Figure>();
 	public ArrayList<City> cities = new ArrayList<City>();
@@ -25,6 +21,7 @@ public class Player {
 	public int speed = 22;
 	public int handSize = 2;
 	public int stackSize = 2;
+	public int battleHandSize = 3;
 	public int trade = 0;
 	public int combatAdvantage = 0;
 	public int cultureTrackProgress = 0; 
@@ -41,17 +38,18 @@ public class Player {
 
 	public int artilleryLevel = 1;
 	public int infantryLevel = 1;
-	public int calvaryLevel = 1;
+	public int cavalryLevel = 1;
 	public int airplaneLevel = 1;
 	public ArrayList<String> unlockedBuildings = new ArrayList<String>();
 	public ArrayList<String> unlockedGovernments = new ArrayList<String>();
-	public String government = "Despotism";
+	public Government government;
 
 	public Player() {
 		this.location = new Point2D.Double(55, 55);
 		this.units.add(new Unit("Infantry", 1));
 		this.units.add(new Unit("Cavalry", 1));
 		this.units.add(new Unit("Artillery", 1));
+		this.government =  new Government(this);
 
 	}
 
@@ -100,9 +98,7 @@ public class Player {
 					checkLocation2 += 110;
 			}
 			this.location = new Point2D.Double(newX, newY);
-		} else
-			System.out.println("\nInvalid location -- cannot move player.");
-
+		} 
 	}
 
 	public int getSpeed() {
@@ -133,6 +129,16 @@ public class Player {
 			}
 		}
 		return temp;
+	}
+	
+	public int getResourceAmount(String type){
+		int amount = 0;
+		for(Tile.Resource r : this.resources){
+			if(r.toString().equals(type)){
+				amount++;
+			}
+		}
+		return amount;
 	}
 
 }

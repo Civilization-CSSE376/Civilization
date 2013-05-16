@@ -179,7 +179,7 @@ public class Board extends JPanel {
 	private String player1Civilization;
 	private String player2Civilization;
 
-	private ArrayList<Tile> validTiles = new ArrayList<Tile>();
+	public ArrayList<Tile> validTiles = new ArrayList<Tile>();
 	private static ResourceBundle messages;
 
 	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
@@ -200,7 +200,11 @@ public class Board extends JPanel {
 
 		this.player1 = new Player();
 		this.player2 = new Player();
-		player1.techCards.add(techCards.get(messages.getString("flight"))); // TODO Kill it with fire
+		player1.techCards.add(techCards.get(messages.getString("flight"))); // TODO
+																			// Kill
+																			// it
+																			// with
+																			// fire
 
 		players.add(this.player1);
 		players.add(this.player2);
@@ -241,6 +245,11 @@ public class Board extends JPanel {
 
 		this.player1.cities.add(city1);
 		this.player2.cities.add(city2);
+
+		this.player1.government = new Government(this.player1, "Fundamentalism");
+		this.player1.units.add(new Unit("Infantry", 1));
+		this.player1.units.add(new Unit("Cavalry", 1));
+		this.player1.units.add(new Unit("Artillery", 1));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
@@ -472,8 +481,7 @@ public class Board extends JPanel {
 		} else if (x < 1320) { // Panel 7
 			if (!map.get(6).getIsExplored())
 				map.get(6).changeIsExplored();
-		} else
-			System.out.println("Error.");
+		}
 	}
 
 	public void checkUnexploredPanelNew(int x, int y) {
@@ -518,7 +526,10 @@ public class Board extends JPanel {
 		for (Figure f : tile.getFigures()) {
 			if (f instanceof Settler && currentPlayer.figures.contains(f)) {
 				newCity = f;
-				break;
+			}
+			if (f instanceof Army && currentPlayer.figures.contains(f)
+					&& currentPlayer.government.name.equals("Republic")) {
+				newCity = f;
 			}
 		}
 		if (newCity == null) {
@@ -592,9 +603,26 @@ public class Board extends JPanel {
 	}
 
 	public City goForResource(Tile tile, City city) {
+		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
+		playerOutskirtTiles.addAll(city.getOutskirts());
+
+		for (Figure f : Board.this.currentPlayer.figures) {
+			if (f.getClass().toString().equals("class Civ.Settler")) {
+				playerOutskirtTiles.add(f.location);
+			}
+		}
+
+		if (Board.this.currentPlayer.government.name.equals("Feudalism")) {
+			for (City c : Board.this.currentPlayer.cities) {
+				if (!c.equals(city)) {
+					playerOutskirtTiles.addAll(c.getOutskirts());
+				}
+			}
+		}
+
 		if ((tile.getResource() != null && !tile.getResource().toString()
 				.equals("None"))
-				&& city.getOutskirts().contains(tile)) {
+				&& playerOutskirtTiles.contains(tile)) {
 			currentPlayer.resources.add(tile.getResource());
 			// check that there is enough of that resource left
 			city.setHasAction(false);
@@ -689,7 +717,8 @@ public class Board extends JPanel {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
 				if (e.getSource() == items[i]) {
-					handleBuild(items[i].getText(), Board.currentCity.getProduction());
+					handleBuild(items[i].getText(),
+							Board.currentCity.getProduction());
 					return;
 				}
 		}
@@ -710,6 +739,10 @@ public class Board extends JPanel {
 					// messages.getString("convertTradeOption")))
 							"convertTradeOption")) {
 						convertTradeToProduction(currentPlayer, currentCity);
+					} else if (items[i].getText().equals(
+							messages.getString("devoteArtsOption"))) {
+						collectCulture(Board.currentPlayer, Board.currentCity);
+
 					}
 					repaint();
 					return;
@@ -787,7 +820,7 @@ public class Board extends JPanel {
 		} else if (option.equals(messages.getString("artillary"))) {
 			level = player.artilleryLevel;
 		} else if (option.equals(messages.getString("cavalry"))) {
-			level = player.calvaryLevel;
+			level = player.cavalryLevel;
 		} else {
 			return false;
 		}
@@ -796,8 +829,20 @@ public class Board extends JPanel {
 			return false;
 		}
 		player.units.add(unit);
-		
+
 		return true;
+	}
+
+	public void collectCulture(Player p, City c) {
+		p.culture += c.calcCulture();
+		if (p.government.name.equals("Communism")) {
+			p.culture -= 1;
+		}
+		if (p.government.name.equals("Monarchy")) {
+			p.culture += 1;
+		}
+		c.setHasAction(false);
+		c = null;
 	}
 
 	public void movement(Tile tile, Panel panel) {
@@ -848,22 +893,28 @@ public class Board extends JPanel {
 							}
 
 							if (enemy instanceof Settler) {
-								tile.getFigures().remove(0);
-								enemyPlayer.figures.remove(enemy);
-								if (enemy.getOwner() == null) {
-									Resource resource = Resource.values()[new Random()
-											.nextInt(4)];
-									currentPlayer.resources.add(resource);
-									JOptionPane
-											.showConfirmDialog(
-													null,
-													messages.getString("resourceObtained")
-															+ resource
-																	.toString(),
-													"Collect Resource",
-													JOptionPane.PLAIN_MESSAGE);
+								if (currentMovementFigure
+										.takeHut(currentPlayer)) {
+									tile.getFigures().remove(0);
+									enemyPlayer.figures.remove(enemy);
+									if (enemy.getOwner() == null) {
+										Resource resource = Resource.values()[new Random()
+												.nextInt(4)];
+										currentPlayer.resources.add(resource);
+										JOptionPane
+												.showConfirmDialog(
+														null,
+														messages.getString("resourceObtained")
+																+ resource
+																		.toString(),
+														"Collect Resource",
+														JOptionPane.PLAIN_MESSAGE);
+									} else
+										return;
 								}
 							} else {
+								calcBattleHandSize(tile, currentPlayer,
+										enemyPlayer);
 								p = new Combat(currentPlayer, enemyPlayer, 0);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -879,11 +930,17 @@ public class Board extends JPanel {
 									break;
 								}
 							}
-							if (attackingCity == null) {
+							if (attackingCity == null
+									&& !currentPlayer.government.name
+											.equals("Democracy")) {
 								if (currentPlayer == player1) {
-									p = new Combat(currentPlayer, player2, 5);
+									calcBattleHandSize(tile, currentPlayer,
+											player2);
+									p = new Combat(currentPlayer, player2, 12);
 								} else {
-									p = new Combat(currentPlayer, player1, 5);
+									calcBattleHandSize(tile, currentPlayer,
+											player1);
+									p = new Combat(currentPlayer, player1, 12);
 								}
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -891,7 +948,6 @@ public class Board extends JPanel {
 
 							}
 						}
-						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);
 						Board.this.currentMovementFigure.setScreenLocation(tile
@@ -926,6 +982,40 @@ public class Board extends JPanel {
 		}
 	}
 
+	private void calcBattleHandSize(Tile tile, Player attacker, Player defender) {
+		attacker.battleHandSize = 3;
+		defender.battleHandSize = 3;
+
+		if (attacker.government.name.equals("Fundamentalism")) {
+			attacker.battleHandSize++;
+		}
+		if (defender.government.name.equals("Fundamentalism")) {
+			defender.battleHandSize++;
+		}
+
+		for (Figure f : tile.getFigures()) {
+			if (f instanceof Army) {
+				if (f.getOwner().equals(attacker)) {
+					attacker.battleHandSize += 2;
+				}
+				if (f.getOwner().equals(defender)) {
+					defender.battleHandSize += 2;
+				}
+			}
+		}
+
+		for (City c : defender.cities) {
+			if (c.getLocation().equals(tile)) {
+				defender.battleHandSize += 3;
+			}
+		}
+
+		// have to subtract because we "over counted" the first army
+		attacker.battleHandSize -= 2;
+		defender.battleHandSize -= 2;
+
+	}
+
 	private void finishCombat(Tile tile) {
 		Tile oldTile = currentMovementFigure.location;
 		oldTile.getFigures().remove(currentMovementFigure);
@@ -952,13 +1042,9 @@ public class Board extends JPanel {
 						if (!(i == x && j == y)) {
 							if (i != -1 && i != 4 && j != -1 && j != 4) {
 								tileToCheck = map.get(panelNumber).getTiles()[i][j];
-								// System.out.println(" " + i + " " + y + "  " +
-								// tileToCheck.getTerrain().toString());
 								if (!tileToCheck.getTerrain().toString()
 										.equals("Water")) {
 									Board.this.validTiles.add(tileToCheck);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (i == -1) {
 								if (panelNumber > 0 && panelNumber != 4) {
@@ -972,11 +1058,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -992,11 +1073,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -1012,11 +1088,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 
@@ -1033,11 +1104,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -1056,35 +1122,25 @@ public class Board extends JPanel {
 							if (i != -1 && i != 4 && j != -1 && j != 4) {
 								Board.this.validTiles.add(map.get(panelNumber)
 										.getTiles()[i][j]);
-								System.out.println("Adding tile... i = " + i
-										+ " and j = " + j);
 							} else if (i == -1) {
 								if (panelNumber > 0 && panelNumber != 4) {
 									Board.this.validTiles.add(map.get(
 											panelNumber - 1).getTiles()[3][j]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (i == 4) {
 								if (panelNumber < 7 && panelNumber != 3) {
 									Board.this.validTiles.add(map.get(
 											panelNumber + 1).getTiles()[0][j]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (j == -1) {
 								if (panelNumber > 3) {
 									Board.this.validTiles.add(map.get(
 											panelNumber - 4).getTiles()[i][3]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else {
 								if (panelNumber < 4) {
 									Board.this.validTiles.add(map.get(
 											panelNumber + 4).getTiles()[i][0]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							}
 
@@ -1093,8 +1149,6 @@ public class Board extends JPanel {
 				}
 			}
 		}
-
-		System.out.println("Array size: " + Board.this.validTiles.size());
 
 	}
 
@@ -1105,13 +1159,9 @@ public class Board extends JPanel {
 			int x = e.getX();
 			int y = e.getY();
 			Board.currentClick = new Point(x, y);
-			// System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
 			Panel panel = findPanel(x, y);
 			Tile tile = findTile(panel, x, y);
-			System.out.println("\nTile located at "
-					+ tile.getScreenLocation().x + " , "
-					+ tile.getScreenLocation().y);
 			Board.currentTile = tile;
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
@@ -1153,27 +1203,23 @@ public class Board extends JPanel {
 
 	public void research() {
 
-		final JFrame researchWindow = new JFrame(messages.getString("research"));
-		researchWindow.setSize(505, 380);
-		researchWindow.setLayout(null);
+		final JFrame researchWindow = buildFrame(505, 380,
+				messages.getString("research"));
 
-		JPanel tierOptions = new JPanel();
-		JPanel cardOptions = new JPanel();
-		JPanel description = new JPanel();
-		JPanel warningMessage = new JPanel();
-		JPanel buttons = new JPanel();
-
+		JPanel tierOptions = buildJPanel(250, 50, 0, 0);
+		JPanel cardOptions = buildJPanel(250, 50, 250, 0);
+		JPanel description = buildJPanel(500, 200, 0, 50);
+		JPanel warningMessage = buildJPanel(500, 50, 0, 250);
+		JPanel buttons = buildJPanel(500, 50, 0, 300);
+		JPanel[] panels = { tierOptions, cardOptions, description,
+				warningMessage, buttons };
 		String[] tiers = { "1", "2", "3", "4", "5" };
-		tierOptions.setLocation(0, 0);
-		tierOptions.setSize(250, 50);
 		JLabel tierLabel = new JLabel(messages.getString("tier") + ": ");
 		final JComboBox<String> tierDropDown = new JComboBox<String>(tiers);
 		tierDropDown.setSelectedIndex(0);
 		tierOptions.add(tierLabel);
 		tierOptions.add(tierDropDown);
 
-		cardOptions.setLocation(250, 0);
-		cardOptions.setSize(250, 50);
 		JLabel cardLabel = new JLabel(messages.getString("card") + ": ");
 		final JComboBox<String> techCards = new JComboBox<String>();
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
@@ -1217,8 +1263,6 @@ public class Board extends JPanel {
 		cardOptions.add(cardLabel);
 		cardOptions.add(techCards);
 
-		description.setLocation(0, 50);
-		description.setSize(500, 200);
 		description.setLayout(new GridLayout(3, 1));
 
 		final JLabel currentTrade = new JLabel(
@@ -1241,14 +1285,10 @@ public class Board extends JPanel {
 		description.add(cardName);
 		description.add(cardDescription);
 
-		warningMessage.setLocation(0, 250);
-		warningMessage.setSize(500, 50);
 		final JLabel message = new JLabel("");
 		message.setForeground(Color.RED);
 		warningMessage.add(message);
 
-		buttons.setLocation(0, 300);
-		buttons.setSize(500, 50);
 		final JButton buy = new JButton(messages.getString("buy"));
 		JButton cancel = new JButton(messages.getString("cancel"));
 		JButton tree = new JButton(messages.getString("playerTechCardTree"));
@@ -1268,16 +1308,13 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final JFrame treeWindow = new JFrame(messages
-						.getString("playerTechCardTree"));
-				treeWindow.setLayout(null);
-				treeWindow.setSize(525, 370);
+
+				final JFrame treeWindow = buildFrame(525, 370,
+						messages.getString("playerTechCardTree"));
 
 				treeWindow.add(drawTechCardTree(currentPlayer));
 
-				JPanel button = new JPanel();
-				button.setLocation(0, 290);
-				button.setSize(525, 50);
+				JPanel button = buildJPanel(525, 50, 0, 290);
 				JButton close = new JButton(messages.getString("close"));
 				button.add(close);
 				treeWindow.add(button);
@@ -1337,19 +1374,7 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				techCards.setModel(tierCards[tierDropDown.getSelectedIndex()]);
-				currentTrade.setText(messages.getString("tierCardCost") + ": "
-						+ getTierCardCost(tierDropDown.getSelectedIndex() + 1)
-						+ " , " + messages.getString("playerHas") + " "
-						+ currentPlayer.trade + " "
-						+ messages.getString("tradeAvailable"));
-				cardName.setText("     " + messages.getString("cardName")
-						+ ":    "
-						+ techCards.getItemAt(techCards.getSelectedIndex()));
-				cardDescription.setText("     "
-						+ messages.getString("cardDescription")
-						+ ":    "
-						+ cardDescriptions.get(techCards.getItemAt(techCards
-								.getSelectedIndex())));
+
 				if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
 					message.setText(messages
 							.getString("cannotBuyCardTierLevel"));
@@ -1374,15 +1399,10 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(techCards.getItemAt(techCards
-						.getSelectedIndex()));
 				currentPlayer.techCards.add(Board.techCards.get(techCards
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				Board.techCards.get(
-						techCards.getItemAt(techCards.getSelectedIndex()))
-						.takeEffect(currentPlayer);
 
 				if (currentPlayer.techCards.contains(messages
 						.getString("spaceFlight"))) {
@@ -1402,6 +1422,21 @@ public class Board extends JPanel {
 			}
 
 		});
+	}
+
+	public JFrame buildFrame(int width, int height, String title) {
+		JFrame frame = new JFrame(title);
+		frame.setSize(width, height);
+		frame.setLayout(null);
+		return frame;
+	}
+
+	public static JPanel buildJPanel(int width, int height, int xLocation,
+			int yLocation) {
+		JPanel panel = new JPanel();
+		panel.setLocation(xLocation, yLocation);
+		panel.setSize(width, height);
+		return panel;
 	}
 
 	public int getTierCardCost(int tier) {
@@ -1476,14 +1511,13 @@ public class Board extends JPanel {
 	}
 
 	public static JPanel drawTechCardTree(Player player) {
-		JPanel tree = new JPanel();
-		tree.setLocation(0, 0);
-		tree.setSize(510, 290);
+		JPanel tree = buildJPanel(510, 290, 0, 0);
 		tree.setLayout(null);
 		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
 				+ player.tier4Cards == 0) {
-			System.out.println("No cards!");
+
 			JLabel label = new JLabel(messages.getString("noCards"));
+
 			label.setLocation(50, 145);
 			label.setSize(400, 20);
 			tree.add(label);
@@ -1517,9 +1551,7 @@ public class Board extends JPanel {
 	}
 
 	public static JPanel makeCard(int x, int y) {
-		JPanel card = new JPanel();
-		card.setLocation(x, y);
-		card.setSize(50, 50);
+		JPanel card = buildJPanel(50, 50, x, y);
 		card.setBackground(Color.BLACK);
 		return card;
 
@@ -1584,7 +1616,7 @@ public class Board extends JPanel {
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
-			tempPlayer.government = "Communism";
+			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.stackSize = 3;
 			// one extra army
 			/*
@@ -1596,7 +1628,7 @@ public class Board extends JPanel {
 			break;
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
-			tempPlayer.government = "Republic";
+			tempPlayer.government = new Government(tempPlayer, "Republic");
 			/*
 			 * the romans advance one space on the culture track for free each
 			 * time they build a wonder or a city, and each time they conquer a
@@ -1628,7 +1660,9 @@ public class Board extends JPanel {
 			 * the chinese start with city walls in their capital. the chinese
 			 * gain 3 culture each time they explore a hut or conquer a village.
 			 * the chinese may save one of their killed units after each battle,
-			 * returning it to their staning forces.
+			 * <<<<<<< HEAD returning it to their staning forces. =======
+			 * returning it to their standing forces. >>>>>>>
+			 * a685e1d7cfca774b593082f85c41a5cdbba8ed0e
 			 */
 			break;
 		default:
@@ -1737,8 +1771,6 @@ public class Board extends JPanel {
 				} else {
 					String[] stringTiles;
 					stringTiles = text.split("_");
-					System.out.println(index + "   [" + (index % 4) + "] ["
-							+ (int) (Math.floor(index / 4)) + "]");
 					tiles[(index % 4)][(int) (Math.floor(index / 4))] = new Tile(
 							(index % 4), (int) (Math.floor(index / 4)),
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
@@ -1852,7 +1884,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	private String getPhaseText() {
+	public String getPhaseText() {
 		String phase = "";
 		switch (this.currentPhase) {
 		case START_OF_TURN:
@@ -1903,7 +1935,7 @@ public class Board extends JPanel {
 						break;
 					}
 				} catch (IOException e) {
-					System.out.println("did not load image correctly");
+					// Did not load image correctly
 					e.printStackTrace();
 				}
 			} else {
@@ -1932,7 +1964,7 @@ public class Board extends JPanel {
 						break;
 					}
 				} catch (IOException e) {
-					System.out.println("did not load image correctly");
+					// Did not load image correctly
 					e.printStackTrace();
 				}
 			}
@@ -1948,7 +1980,7 @@ public class Board extends JPanel {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 0, 0, null);
 		} catch (IOException e) {
-			System.out.println("did not load image correctly");
+			// Did not load image correctly
 			e.printStackTrace();
 		}
 
@@ -1962,7 +1994,7 @@ public class Board extends JPanel {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 1320, 440, null);
 		} catch (IOException e) {
-			System.out.println("did not load image correctly");
+			// Did not load image correctly
 			e.printStackTrace();
 		}
 
@@ -1986,7 +2018,17 @@ public class Board extends JPanel {
 				for (City c : Board.this.currentPlayer.cities) {
 					Board.this.currentPlayer.trade += c.calcTrade();
 				}
-				System.out.println(currentPlayer.trade);
+				if (Board.this.currentPlayer.government.name
+						.equals("Democracy")) {
+					Board.this.currentPlayer.trade += 2;
+				}
+				if (Board.this.currentPlayer.government.name
+						.equals("Fundamentalism")) {
+					Board.this.currentPlayer.trade -= 2;
+				}
+				if (Board.this.currentPlayer.trade < 0) {
+					Board.this.currentPlayer.trade = 0;
+				}
 			}
 		} else if (this.currentPhase.equals(TRADE)) {
 			if (this.currentPlayer == this.firstPlayer) {
@@ -1994,12 +2036,14 @@ public class Board extends JPanel {
 				for (City c : Board.this.currentPlayer.cities) {
 					Board.this.currentPlayer.trade += c.calcTrade();
 				}
-				System.out.println(currentPlayer.trade);
 			} else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
+					if (this.currentPlayer.government.name.equals("Communism")) {
+						c.setProduction(c.getProduction() + 2);
+					}
 				}
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
@@ -2011,6 +2055,9 @@ public class Board extends JPanel {
 				currentCity = null;
 				for (City c : this.currentPlayer.cities) {
 					c.calcProduction();
+					if (this.currentPlayer.government.name.equals("Communism")) {
+						c.setProduction(c.getProduction() + 2);
+					}
 				}
 			} else {
 				for (City c : this.currentPlayer.cities) {
@@ -2082,7 +2129,7 @@ public class Board extends JPanel {
 
 	// For testing...
 	public void setCurrentMovementFigure() {
-		this.currentMovementFigure = this.player1.figures.get(0);
+		this.currentMovementFigure = Board.player1.figures.get(0);
 	}
 
 	// For testing...
@@ -2112,6 +2159,12 @@ public class Board extends JPanel {
 	public void isGameOver() {
 		boolean isOver = false;
 		for (Player p : this.players) {
+
+			if (p.gold >= 15) {
+				p.winCondition = "Economic";
+				p.hasWon = true;
+			}
+
 			if (p.hasWon == true) {
 				isOver = true;
 			}

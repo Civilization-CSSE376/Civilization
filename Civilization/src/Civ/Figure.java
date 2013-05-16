@@ -20,8 +20,6 @@ public abstract class Figure implements Drawable {
 		// local.getyPos() * 440);
 		this.screenLocation = new Point2D.Double(local.getxPos() * 550 + 55,
 				local.getyPos() * 256 + 55);
-		System.out.println(local.getxPos());
-		System.out.println(local.getyPos());
 	}
 
 	public int getNumberOfMoves() {
@@ -85,8 +83,7 @@ public abstract class Figure implements Drawable {
 					checkLocation2 += 110;
 			}
 			this.screenLocation = new Point2D.Double(newX, newY);
-		} else
-			System.out.println("\nInvalid location -- cannot move player.");
+		} 
 	}
 
 	public abstract void move();
@@ -95,7 +92,7 @@ public abstract class Figure implements Drawable {
 		return false;
 	}
 
-	public abstract void takeHut();
+	public abstract boolean takeHut(Player player);
 
 	public Player getOwner() {
 		return this.owner;

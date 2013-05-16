@@ -102,7 +102,7 @@ public class CombatTest {
 		assertEquals(0, this.combat.currentPlayerFront.indexOf(unit));
 	}
 
-	@Test
+	@Test//this test is brittle due to the randomness
 	public void testAttackFrontNoTrump() {
 		this.combat.makeFront(combat.defender.units.get(0));
 		Unit attacking = combat.attacker.units.get(0);
@@ -113,7 +113,7 @@ public class CombatTest {
 		assertEquals(-1, combat.defenderFront.indexOf(defending));
 	}
 
-	@Test
+	@Test//this test is brittle due to the randomness
 	public void testAttackFrontAttackingFirst() {
 		this.combat.makeFront(combat.defender.units.get(1));
 		Unit attacking = combat.attacker.units.get(0);
@@ -124,7 +124,7 @@ public class CombatTest {
 		assertEquals(0, combat.defenderFront.indexOf(defending));
 	}
 
-	@Test
+	@Test//this test is brittle due to the randomness
 	public void testAttackFrontAttackingSecond() {
 		this.combat.makeFront(combat.defender.units.get(2));
 		Unit attacking = combat.attacker.units.get(0);
@@ -135,7 +135,7 @@ public class CombatTest {
 		assertEquals(-1, combat.defenderFront.indexOf(defending));
 	}
 
-	@Test
+	@Test//this test is brittle due to the randomness
 	public void testSuccessfulAttack() {
 		this.combat.attackerFront.add(this.combat.attackerHand.get(0));
 		this.combat.attackerFront.add(this.combat.attackerHand.get(1));

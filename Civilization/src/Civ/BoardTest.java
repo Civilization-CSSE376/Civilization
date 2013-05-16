@@ -18,23 +18,19 @@ public class BoardTest {
 
 	private static TestBoard board;
 	private static Locale currentLocale = new Locale("en", "US");
-	private static ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+	private static ResourceBundle messages = ResourceBundle.getBundle(
+			"MessagesBundle", currentLocale);
 
 	@BeforeClass
 	public static void setupLoadedTiles() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
-		
-//		File file = new File("src/Panel1.txt");
+		// File file = new File("src/Panel1.txt");
 		board = new TestBoard("America", "China", messages);
-//		board.readFromFile(file);
+		// board.readFromFile(file);
 		board.readFromFile();
 	}
 
 	@Test
 	public void testTestBoardInitializes() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		assertNotNull(target);
 	}
@@ -45,90 +41,91 @@ public class BoardTest {
 		assertNotNull(tile);
 	}
 
-	 @Test
-	 public void testLoadResources() {
-	 Tile wheatTile = board.map.get(0).getTiles()[3][3];
-	 Tile silkTile = board.map.get(0).getTiles()[1][1];
-	 Tile ironTile = board.map.get(0).getTiles()[0][0];
-	 Tile incenseTile = board.map.get(0).getTiles()[2][2];
-	 Tile emptyTile = board.map.get(0).getTiles()[0][1];
-	
-	 assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
-	 assertEquals(Tile.Resource.Silk, silkTile.getResource());
-	 assertEquals(Tile.Resource.Iron, ironTile.getResource());
-	 assertEquals(Tile.Resource.Incense, incenseTile.getResource());
-	 assertEquals(Tile.Resource.None, emptyTile.getResource());
-	 }
-//	
-//	 @Test
-//	 public void testLoadTerrain() {
-//	 Tile mountainTile = board.map.get(0).getTiles()[0][0];
-//	 Tile waterTile = board.map.get(0).getTiles()[1][0];
-//	 Tile forestTile = board.map.get(0).getTiles()[2][0];
-//	 Tile desertTile = board.map.get(0).getTiles()[3][0];
-//	 Tile grasslandTile = board.map.get(0).getTiles()[0][1];
-//	
-//	 assertEquals(Terrain.Mountain, mountainTile.getTerrain());
-//	 assertEquals(Terrain.Water, waterTile.getTerrain());
-//	 assertEquals(Terrain.Forest, forestTile.getTerrain());
-//	 assertEquals(Terrain.Desert, desertTile.getTerrain());
-//	 assertEquals(Terrain.Grassland, grasslandTile.getTerrain());
-//	 }
-//	
-//	 @Test
-//	 public void testLoadProduction() {
-//	 Tile noProductionTile = board.map.get(0).getTiles()[0][0];
-//	 Tile oneProductionTile = board.map.get(0).getTiles()[1][0];
-//	 Tile twoProductionTile = board.map.get(0).getTiles()[2][0];
-//	
-//	 assertEquals(0, noProductionTile.getProduction());
-//	 assertEquals(1, oneProductionTile.getProduction());
-//	 assertEquals(2, twoProductionTile.getProduction());
-//	 }
-//	
-//	 @Test
-//	 public void testLoadTrade() {
-//	 Tile noTradeTile = board.map.get(0).getTiles()[0][0];
-//	 Tile oneTradeTile = board.map.get(0).getTiles()[1][0];
-//	 Tile twoTradeTile = board.map.get(0).getTiles()[2][0];
-//	
-//	 assertEquals(0, noTradeTile.getTrade());
-//	 assertEquals(1, oneTradeTile.getTrade());
-//	 assertEquals(2, twoTradeTile.getTrade());
-//	 }
-//	
-//	 @Test
-//	 public void testLoadCulture() {
-//	 Tile noCultureTile = board.map.get(0).getTiles()[0][0];
-//	 Tile oneCultureTile = board.map.get(0).getTiles()[1][0];
-//	 Tile twoCultureTile = board.map.get(0).getTiles()[2][0];
-//	
-//	 assertEquals(0, noCultureTile.getCulture());
-//	 assertEquals(1, oneCultureTile.getCulture());
-//	 assertEquals(2, twoCultureTile.getCulture());
-//	 }
-//	
-//	 @Test
-//	 public void testLoadCoins() {
-//	 Tile noCoinTile = board.map.get(0).getTiles()[0][0];
-//	 Tile oneCoinTile = board.map.get(0).getTiles()[1][0];
-//	 Tile twoCoinTile = board.map.get(0).getTiles()[2][0];
-//	
-//	 assertEquals(0, noCoinTile.getCoins());
-//	 assertEquals(1, oneCoinTile.getCoins());
-//	 assertEquals(2, twoCoinTile.getCoins());
-//	 }
-//	
-//	 @Test
-//	 public void testLoadHutsandVillages() {
-//	 Tile hutTile = board.map.get(0).getTiles()[0][0];
-//	 Tile villageTile = board.map.get(0).getTiles()[1][0];
-//	 Tile blankTile = board.map.get(0).getTiles()[2][0];
-//	
-//	 assertEquals(Settler.class, hutTile.getFigure().get(0).getClass());
-//	 assertEquals(Army.class, villageTile.getFigure().get(0).getClass());
-//	 assertEquals(new ArrayList<Figure>(), blankTile.getFigure());
-//	 }
+	@Test
+	public void testLoadResources() {
+		Tile wheatTile = board.map.get(0).getTiles()[3][3];
+		Tile silkTile = board.map.get(0).getTiles()[1][1];
+		Tile ironTile = board.map.get(0).getTiles()[0][0];
+		Tile incenseTile = board.map.get(0).getTiles()[2][2];
+		Tile emptyTile = board.map.get(0).getTiles()[0][1];
+
+		assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
+		assertEquals(Tile.Resource.Silk, silkTile.getResource());
+		assertEquals(Tile.Resource.Iron, ironTile.getResource());
+		assertEquals(Tile.Resource.Incense, incenseTile.getResource());
+		assertEquals(Tile.Resource.None, emptyTile.getResource());
+	}
+
+	//
+	// @Test
+	// public void testLoadTerrain() {
+	// Tile mountainTile = board.map.get(0).getTiles()[0][0];
+	// Tile waterTile = board.map.get(0).getTiles()[1][0];
+	// Tile forestTile = board.map.get(0).getTiles()[2][0];
+	// Tile desertTile = board.map.get(0).getTiles()[3][0];
+	// Tile grasslandTile = board.map.get(0).getTiles()[0][1];
+	//
+	// assertEquals(Terrain.Mountain, mountainTile.getTerrain());
+	// assertEquals(Terrain.Water, waterTile.getTerrain());
+	// assertEquals(Terrain.Forest, forestTile.getTerrain());
+	// assertEquals(Terrain.Desert, desertTile.getTerrain());
+	// assertEquals(Terrain.Grassland, grasslandTile.getTerrain());
+	// }
+	//
+	// @Test
+	// public void testLoadProduction() {
+	// Tile noProductionTile = board.map.get(0).getTiles()[0][0];
+	// Tile oneProductionTile = board.map.get(0).getTiles()[1][0];
+	// Tile twoProductionTile = board.map.get(0).getTiles()[2][0];
+	//
+	// assertEquals(0, noProductionTile.getProduction());
+	// assertEquals(1, oneProductionTile.getProduction());
+	// assertEquals(2, twoProductionTile.getProduction());
+	// }
+	//
+	// @Test
+	// public void testLoadTrade() {
+	// Tile noTradeTile = board.map.get(0).getTiles()[0][0];
+	// Tile oneTradeTile = board.map.get(0).getTiles()[1][0];
+	// Tile twoTradeTile = board.map.get(0).getTiles()[2][0];
+	//
+	// assertEquals(0, noTradeTile.getTrade());
+	// assertEquals(1, oneTradeTile.getTrade());
+	// assertEquals(2, twoTradeTile.getTrade());
+	// }
+	//
+	// @Test
+	// public void testLoadCulture() {
+	// Tile noCultureTile = board.map.get(0).getTiles()[0][0];
+	// Tile oneCultureTile = board.map.get(0).getTiles()[1][0];
+	// Tile twoCultureTile = board.map.get(0).getTiles()[2][0];
+	//
+	// assertEquals(0, noCultureTile.getCulture());
+	// assertEquals(1, oneCultureTile.getCulture());
+	// assertEquals(2, twoCultureTile.getCulture());
+	// }
+	//
+	// @Test
+	// public void testLoadCoins() {
+	// Tile noCoinTile = board.map.get(0).getTiles()[0][0];
+	// Tile oneCoinTile = board.map.get(0).getTiles()[1][0];
+	// Tile twoCoinTile = board.map.get(0).getTiles()[2][0];
+	//
+	// assertEquals(0, noCoinTile.getCoins());
+	// assertEquals(1, oneCoinTile.getCoins());
+	// assertEquals(2, twoCoinTile.getCoins());
+	// }
+	//
+	// @Test
+	// public void testLoadHutsandVillages() {
+	// Tile hutTile = board.map.get(0).getTiles()[0][0];
+	// Tile villageTile = board.map.get(0).getTiles()[1][0];
+	// Tile blankTile = board.map.get(0).getTiles()[2][0];
+	//
+	// assertEquals(Settler.class, hutTile.getFigure().get(0).getClass());
+	// assertEquals(Army.class, villageTile.getFigure().get(0).getClass());
+	// assertEquals(new ArrayList<Figure>(), blankTile.getFigure());
+	// }
 
 	@Test
 	public void testPhaseChanges() {
@@ -238,8 +235,6 @@ public class BoardTest {
 
 	@Test
 	public void testCheckUnexploredPanel() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		assertTrue(TestBoard.map.get(0).getIsExplored());
 		assertFalse(TestBoard.map.get(1).getIsExplored());
@@ -498,8 +493,6 @@ public class BoardTest {
 
 	@Test
 	public void testCheckSpaceForEnemyFigures() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		assertFalse(target.checkSpaceForEnemyFigures(TestBoard.map.get(0)
 				.getTiles()[0][0]));
@@ -514,8 +507,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddFigure() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		String figure = "Settler";// (target.getCurrentPlayer(), new Tile());
 		TestBoard.currentClick = new Point(50, 50);
@@ -536,8 +527,6 @@ public class BoardTest {
 
 	@Test
 	public void testmovement() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		target.currentMovementFigure = TestBoard.map.get(0).getTiles()[0][0]
 				.getFigures().get(0);
@@ -547,8 +536,8 @@ public class BoardTest {
 		target.movement(tile, TestBoard.map.get(0));
 		assertEquals(0, TestBoard.map.get(0).getTiles()[0][0].getFigures()
 				.size());
-//		assertEquals(1, TestBoard.map.get(0).getTiles()[0][1].getFigures()
-//				.size());
+		// assertEquals(1, TestBoard.map.get(0).getTiles()[0][1].getFigures()
+		// .size());
 		target.currentMovementFigure = TestBoard.map.get(0).getTiles()[0][1]
 				.getFigures().get(0);
 		target.movement(TestBoard.map.get(0).getTiles()[0][1],
@@ -561,8 +550,6 @@ public class BoardTest {
 
 	@Test
 	public void handleBuild() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		TestBoard.currentCity = TestBoard.map.get(0).getTiles()[1][1].getCity();
 		TestBoard.currentCity.calcProduction();
@@ -574,19 +561,18 @@ public class BoardTest {
 		target.items[2] = new JRadioButtonMenuItem("Cancel");
 		TestBoard.currentFigure = null;
 		assertNull(TestBoard.currentFigure);
+
 		target.handleBuild("Settler", TestBoard.currentCity.getProduction());
-		assertNull(TestBoard.currentFigure);
-//		assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
-//				.size());
+		assertTrue(TestBoard.currentFigure);
+		// assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
+		// .size());
 		target.handleBuild("Army", TestBoard.currentCity.getProduction());
-		assertNotNull(TestBoard.currentFigure);
+		assertTrue(TestBoard.currentFigure);
 
 	}
 
 	@Test
 	public void testAddMarkerWonder() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
@@ -601,8 +587,6 @@ public class BoardTest {
 
 	@Test
 	public void testMakeBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		TestBoard.currentCity = TestBoard.map.get(0).getTiles()[1][1].getCity();
 		TestBoard.currentCity.calcProduction();
@@ -618,8 +602,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidWonder() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -632,8 +614,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
@@ -648,8 +628,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -663,8 +641,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainNotWater() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "F", 0, 0, "NONE", 0, "NONE", 0);
@@ -678,8 +654,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidTerrainNotWaterMarket() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -693,8 +667,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerInvalidNotOutskirts() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -707,8 +679,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodNotWaterBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
@@ -722,9 +692,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testAddMarkerInvalidHasStar() {		
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+	public void testAddMarkerInvalidHasStar() {
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "W", 0, 0, "NONE", 0, "NONE", 0);
@@ -741,8 +709,6 @@ public class BoardTest {
 
 	@Test
 	public void testAddMarkerGoodHasStarBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard target = new TestBoard("America", "China", messages);
 		City city = new City(new Tile());
 		Tile tile = new Tile(0, 0, "G", 0, 0, "NONE", 0, "NONE", 0);
@@ -760,8 +726,6 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewSettler() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
@@ -784,8 +748,6 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewArmy() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
@@ -808,8 +770,6 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementNewBuilding() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setTerrain("G");
@@ -832,8 +792,6 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementBadResource() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setResource(Tile.Resource.None);
@@ -851,8 +809,6 @@ public class BoardTest {
 
 	@Test
 	public void testCityManagementGoodResource() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setResource(Tile.Resource.Iron);
@@ -871,8 +827,6 @@ public class BoardTest {
 
 	@Test
 	public void testStartTurnTryToBuildCityGood() {
-		Locale currentLocale = new Locale("en", "US");
-		ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		TestBoard board = new TestBoard("America", "China", messages);
 		Tile tile = new Tile();
 		tile.setScreenLocation(0, 0);
@@ -886,20 +840,20 @@ public class BoardTest {
 		assertTrue(board.getCurrentPlayer().cities.contains(city));
 		assertFalse(board.getCurrentPlayer().figures.contains(newCity));
 	}
-	
-//	@Test
-//	public void testStartTurn(){
-//		Board board = new TestBoard("America", "China");
-//		Tile tile = board.map.get(0).getTiles()[]
-//		Settler newCity = new Settler(board.getCurrentPlayer(), tile);
-//		tile.getFigures().add(newCity);
-//		board.getCurrentPlayer().figures.add(newCity);
-//		board.startOfTurn(tile);
-//		
-//	}
-	
+
+	// @Test
+	// public void testStartTurn(){
+	// Board board = new TestBoard("America", "China");
+	// Tile tile = board.map.get(0).getTiles()[]
+	// Settler newCity = new Settler(board.getCurrentPlayer(), tile);
+	// tile.getFigures().add(newCity);
+	// board.getCurrentPlayer().figures.add(newCity);
+	// board.startOfTurn(tile);
+	//
+	// }
+
 	@Test
-	public void testGetTierCardCost(){
+	public void testGetTierCardCost() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		assertEquals(6, board.getTierCardCost(1));
 		assertEquals(11, board.getTierCardCost(2));
@@ -907,12 +861,13 @@ public class BoardTest {
 		assertEquals(21, board.getTierCardCost(4));
 		assertEquals(26, board.getTierCardCost(5));
 	}
-	
+
 	@Test
-	public void testCheckPlayerHasEnoughTrade(){
+	public void testCheckPlayerHasEnoughTrade() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Board.currentPlayer.trade = 3;
-		assertFalse(board.checkPlayerHasEnoughTrade(1));
+		for (int i = 1; i < 6; i++)
+			assertFalse(board.checkPlayerHasEnoughTrade(i));
 		Board.currentPlayer.trade = 6;
 		assertTrue(board.checkPlayerHasEnoughTrade(1));
 		Board.currentPlayer.trade = 11;
@@ -924,9 +879,9 @@ public class BoardTest {
 		Board.currentPlayer.trade = 26;
 		assertTrue(board.checkPlayerHasEnoughTrade(5));
 	}
-	
+
 	@Test
-	public void testHandleUnitInfantry(){
+	public void testHandleUnitInfantry() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player();
 		assertEquals(3, p1.units.size());
@@ -937,22 +892,22 @@ public class BoardTest {
 		assertFalse(board.handleUnit("Infantry", 5, p1));
 		assertEquals(4, p1.units.size());
 	}
-	
+
 	@Test
-	public void testHandleUnitCavalry(){
+	public void testHandleUnitCavalry() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player();
 		assertEquals(3, p1.units.size());
 		assertTrue(board.handleUnit("Cavalry", 5, p1));
 		assertEquals(4, p1.units.size());
 		assertEquals("Cavalry", p1.units.get(3).type);
-		p1.calvaryLevel = 2;
+		p1.cavalryLevel = 2;
 		assertFalse(board.handleUnit("Cavalry", 5, p1));
 		assertEquals(4, p1.units.size());
 	}
-	
+
 	@Test
-	public void testHandleUnitArtillary(){
+	public void testHandleUnitArtillary() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player();
 		assertEquals(3, p1.units.size());
@@ -963,9 +918,9 @@ public class BoardTest {
 		assertFalse(board.handleUnit("Artillary", 5, p1));
 		assertEquals(4, p1.units.size());
 	}
-	
+
 	@Test
-	public void testHandleUnitAirplane(){
+	public void testHandleUnitAirplane() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player();
 		assertEquals(3, p1.units.size());
@@ -973,14 +928,71 @@ public class BoardTest {
 		assertEquals(4, p1.units.size());
 		assertEquals("Airplane", p1.units.get(3).type);
 	}
-	
+
 	@Test
-	public void testHandleUnit(){
+	public void testHandleUnit() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player();
 		assertEquals(3, p1.units.size());
 		assertFalse(board.handleUnit("Cancel", 12, p1));
 		assertEquals(3, p1.units.size());
+	}
+
+	public void testGetPhaseText() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		String[] phases = { "Start of Turn", "Start of Turn", "Trade", "Trade",
+				"City Management", "City Management", "Movement", "Movement",
+				"Research", "Research", "Start of Turn" };
+
+		for (int i = 0; i < phases.length; i++) {
+			assertEquals(phases[i], board.getPhaseText());
+			board.endPhase();
+		}
+	}
+
+	@Test
+	public void testPlayerTieBreakerScore() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertEquals(0, board.tieBreakerScore(board.getPlayer1()));
+		assertEquals(0, board.tieBreakerScore(board.getPlayer2()));
+	}
+
+	@Test
+	public void testGetPlayer() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertEquals(board.getPlayer1(), Board.getPlayer(1));
+		assertEquals(board.getPlayer2(), Board.getPlayer(2));
+	}
+
+	@Test
+	public void testCheckValidTier() {
+		TestBoard board = new TestBoard("America", "China", messages);
+		assertTrue(board.checkValidTier(1));
+		for (int i = 2; i < 6; i++)
+			assertFalse(board.checkValidTier(i));
+		Board.currentPlayer.canBuyTier2TechCard = true;
+		Board.currentPlayer.canBuyTier3TechCard = true;
+		Board.currentPlayer.canBuyTier4TechCard = true;
+		Board.currentPlayer.canBuyTier5TechCard = true;
+		for (int i = 2; i < 6; i++)
+			assertTrue(board.checkValidTier(i));
+	}
+
+	@Test
+	public void testUpdateValidTiersAndCards() {
+		assertEquals(0, board.getPlayer1().tier1Cards);
+		assertEquals(0, board.getPlayer1().tier2Cards);
+		assertEquals(0, board.getPlayer1().tier3Cards);
+		assertEquals(0, board.getPlayer1().tier4Cards);
+		for (int i = 1; i < 5; i++)
+			board.updateValidTiersAndCards(i);
+		board.getPlayer1().tier1Cards = 8;
+		board.getPlayer1().tier2Cards = 6;
+		board.getPlayer1().tier3Cards = 4;
+		board.getPlayer1().tier4Cards = 2;
+		for (int i = 1; i < 5; i++)
+			board.updateValidTiersAndCards(i);
+	
 	}
 
 }
