@@ -34,9 +34,11 @@ public class Settler extends Figure {
 	}
 
 	@Override
-	public void takeHut() {
-		// TODO Auto-generated method stub
-
+	public boolean takeHut(Player player) {
+		if(player.government.name.equals("Republic")){
+			return true;
+		}
+		return false;
 	}
 
 	@Override
