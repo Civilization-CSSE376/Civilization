@@ -225,6 +225,14 @@ public class Combat extends JFrame {
 		this.currentPlayerFront.add(unit);
 		this.currentPlayerHand.remove(unit);
 		switchCurrentPlayer();
+		if(currentPlayerHand.size() == 0){
+			if(attackerHand.size() == 0 && defenderHand.size() == 0){
+				this.dispose();
+			}
+			else{
+				switchCurrentPlayer();
+			}
+		}
 	}
 
 	public void attackFront(Unit attacking, Unit defending) {
@@ -258,6 +266,15 @@ public class Combat extends JFrame {
 					switchCurrentPlayer();// attacker
 					this.currentPlayerFront.add(attacking);
 				}
+			}
+		}
+		
+		if(currentPlayerHand.size() == 0){
+			if(attackerHand.size() == 0 && defenderHand.size() == 0){
+				this.dispose();
+			}
+			else{
+				switchCurrentPlayer();
 			}
 		}
 	}
