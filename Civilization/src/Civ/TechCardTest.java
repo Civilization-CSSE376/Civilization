@@ -2,6 +2,9 @@ package Civ;
 
 import static org.junit.Assert.*;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,12 +12,15 @@ import Civ.Player;
 import TechCards.*;
 
 public class TechCardTest {
+	private static Locale currentLocale = new Locale("en", "US");
+	private static ResourceBundle messages = ResourceBundle.getBundle(
+			"MessagesBundle", currentLocale);
 	
 	Player player;
 
 	@Before
 	public void setUp() throws Exception {
-		player = new Player();
+		player = new Player(messages);
 		player.speed = 2;
 	}
 

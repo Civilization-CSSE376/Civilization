@@ -235,9 +235,9 @@ public class Board extends JPanel {
 		Board.player2.cities.add(city2);
 
 		Board.player1.government = new Government(Board.player1, "Fundamentalism");
-		Board.player1.units.add(new Unit("Infantry", 1));
-		Board.player1.units.add(new Unit("Cavalry", 1));
-		Board.player1.units.add(new Unit("Artillery", 1));
+		Board.player1.units.add(new Unit(messages.getString("infantry"), 1, messages)); // TODO check we already have this...
+		Board.player1.units.add(new Unit(messages.getString("cavalry"), 1, messages));
+		Board.player1.units.add(new Unit(messages.getString("artillery"), 1, messages));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
@@ -812,7 +812,7 @@ public class Board extends JPanel {
 		} else {
 			return false;
 		}
-		Unit unit = new Unit(option, level);
+		Unit unit = new Unit(option, level, messages);
 		if (unit.cost > production) {
 			return false;
 		}
@@ -877,7 +877,7 @@ public class Board extends JPanel {
 							Figure enemy = tile.getFigures().get(0);
 							Player enemyPlayer = enemy.getOwner();
 							if (enemyPlayer == null) {
-								enemyPlayer = new Player();
+								enemyPlayer = new Player(messages);
 							}
 
 							if (enemy instanceof Settler) {
@@ -903,7 +903,7 @@ public class Board extends JPanel {
 							} else {
 								calcBattleHandSize(tile, currentPlayer,
 										enemyPlayer);
-								p = new Combat(currentPlayer, enemyPlayer, 0);
+								p = new Combat(currentPlayer, enemyPlayer, 0, messages);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
 							}
@@ -924,11 +924,11 @@ public class Board extends JPanel {
 								if (currentPlayer == player1) {
 									calcBattleHandSize(tile, currentPlayer,
 											player2);
-									p = new Combat(currentPlayer, player2, 12);
+									p = new Combat(currentPlayer, player2, 12, messages);
 								} else {
 									calcBattleHandSize(tile, currentPlayer,
 											player1);
-									p = new Combat(currentPlayer, player1, 12);
+									p = new Combat(currentPlayer, player1, 12, messages);
 								}
 								p.setLocation(10, 10);
 								this.setEnabled(false);
@@ -1410,7 +1410,7 @@ public class Board extends JPanel {
 				if (checkIfPlayerHasCard(messages
 						.getString("spaceFlight"))) {
 					currentPlayer.hasWon = true;
-					currentPlayer.winCondition = "Tech";
+					currentPlayer.winCondition = messages.getString("tech");
 				}
 				researchWindow.dispose();
 			}
@@ -1614,7 +1614,7 @@ public class Board extends JPanel {
 
 	private Player playerConfig(String civ) {
 
-		Player tempPlayer = new Player();
+		Player tempPlayer = new Player(messages);
 
 		switch (civ) {
 		case "Egypt": // TODO check if needs internationalized
@@ -2184,7 +2184,7 @@ public class Board extends JPanel {
 		for (Player p : Board.players) {
 
 			if (p.gold >= 15) {
-				p.winCondition = "Economic";
+				p.winCondition = messages.getString("econ");
 				p.hasWon = true;
 			}
 
@@ -2225,7 +2225,7 @@ public class Board extends JPanel {
 		JFrame winWindow = buildFrame(500, 200, messages.getString("gameOver"));
 		winWindow.setLayout(new GridLayout(2, 0));
 		JPanel textPanel = buildJPanel(500, 200, 0, 0);
-		JLabel text = new JLabel(messages.getString("gameOneWinner"));
+		JLabel text = new JLabel(messages.getString("gameOneWinner") + " Player has won due to " + Board.winners.get(0).winCondition);
 		JButton close = new JButton(messages.getString("close"));
 		if(Board.winners.size() == 2){
 			text.setText("gameTie");
@@ -2243,9 +2243,6 @@ public class Board extends JPanel {
 			}
 			
 		});
-		// look at Board.winners;
-		// display who won and how with Player.winCondition
-		// exit game
 	}
 
 	public static int tieBreakerScore(Player p) {

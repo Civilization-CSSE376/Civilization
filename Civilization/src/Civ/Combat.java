@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -35,8 +36,10 @@ public class Combat extends JFrame {
 	private JPanel enemyFrontManager = new JPanel();
 	private JPanel playerHandManager = new JPanel();
 	private ArrayList<Unit> enemyFront;
+	private static ResourceBundle messages;
 
-	public Combat(Player attacker, Player defender, int defenderBonus) {
+	public Combat(Player attacker, Player defender, int defenderBonus, ResourceBundle messages) {
+		Combat.messages = messages;
 		this.defenderBonus = defenderBonus;
 		this.attacker = attacker;
 		this.defender = defender;
@@ -58,27 +61,27 @@ public class Combat extends JFrame {
 
 	private void drawCombatWindow(Player attacker) {
 		this.setLayout(null);
-		this.setTitle("Combat!");
+		this.setTitle(messages.getString("combat"));
 		ImageIcon icon = new ImageIcon("src/civilizationicon.jpg");
 		this.setIconImage(icon.getImage());
 
 		this.setLayout(new GridLayout(7, 1));
 
-		JButton attack = new JButton("Attack");
+		JButton attack = new JButton(messages.getString("attack"));
 		attack.addActionListener(new attackButtonListener());
 
-		JButton front = new JButton("Front");
+		JButton front = new JButton(messages.getString("front"));
 		front.addActionListener(new frontButtonListener());
 
 		if (this.attacker == attacker) {
-			this.add(new JLabel("Attacker's turn", JLabel.CENTER));
+			this.add(new JLabel(messages.getString("attackTurn"), JLabel.CENTER));
 		} else {
-			this.add(new JLabel("Defender's turn", JLabel.CENTER));
+			this.add(new JLabel(messages.getString("defendTurn"), JLabel.CENTER));
 		}
-		this.add(new JLabel("Player Hand"), JLabel.CENTER);
+		this.add(new JLabel(messages.getString("playerHand")), JLabel.CENTER);
 		drawHand(this.currentPlayerHand);
 		this.add(this.playerHandManager);
-		this.add(new JLabel("Enemy Front"), JLabel.CENTER);
+		this.add(new JLabel(messages.getString("enemyFront")), JLabel.CENTER);
 		drawFront(this.enemyFront);
 		this.add(this.enemyFrontManager);
 		this.add(front);
@@ -269,23 +272,44 @@ public class Combat extends JFrame {
 	public Unit determineTrump(Unit attacking, Unit defending) {
 		switch (attacking.type) {
 		case "Infantry":
-			if (defending.type.equals("Cavalry")) {
+			if (defending.type.equals(messages.getString("cavalry"))) {
 				return attacking;
-			} else if (defending.type.equals("Artillery")) {
+			} else if (defending.type.equals(messages.getString("artillery"))) {
+				return defending;
+			}
+			break;
+		case "Infantería":
+			if (defending.type.equals(messages.getString("cavalry"))) {
+				return attacking;
+			} else if (defending.type.equals(messages.getString("artillery"))) {
 				return defending;
 			}
 			break;
 		case "Cavalry":
-			if (defending.type.equals("Artillery")) {
+			if (defending.type.equals(messages.getString("artillery"))) {
 				return attacking;
-			} else if (defending.type.equals("Infantry")) {
+			} else if (defending.type.equals(messages.getString("infantry"))) {
+				return defending;
+			}
+			break;
+		case "Caballería":
+			if (defending.type.equals(messages.getString("artillery"))) {
+				return attacking;
+			} else if (defending.type.equals(messages.getString("infantry"))) {
 				return defending;
 			}
 			break;
 		case "Artillery":
-			if (defending.type.equals("Infantry")) {
+			if (defending.type.equals(messages.getString("infantry"))) {
 				return attacking;
-			} else if (defending.type.equals("Cavalry")) {
+			} else if (defending.type.equals(messages.getString("cavalry"))) {
+				return defending;
+			}
+			break;
+		case "Artillería":
+			if (defending.type.equals(messages.getString("infantry"))) {
+				return attacking;
+			} else if (defending.type.equals(messages.getString("cavalry"))) {
 				return defending;
 			}
 			break;
@@ -315,7 +339,7 @@ public class Combat extends JFrame {
 		if(attackingStrength > defendingStrength){
 			if(this.defenderBonus == 12 || this.defenderBonus == 16){
 				this.attacker.hasWon = true;
-				this.attacker.winCondition = "Military";
+				this.attacker.winCondition = messages.getString("military");
 				Board.isGameOver = true;
 				Board.winners.add(this.attacker);
 				Board.isGameOver();

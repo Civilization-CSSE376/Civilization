@@ -3,29 +3,34 @@ package Civ;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class CombatTest {
+	private static Locale currentLocale = new Locale("en", "US");
+	private static ResourceBundle messages = ResourceBundle.getBundle(
+			"MessagesBundle", currentLocale);
 
 	Combat combat;
 
 	@Before
 	public void setup() {
 		ArrayList<Unit> p1Units = new ArrayList<Unit>();
-		p1Units.add(new Unit("Cavalry", 2));
-		p1Units.add(new Unit("Artillery", 3));
-		p1Units.add(new Unit("Infantry", 1));
-		Player player1 = new Player();
+		p1Units.add(new Unit("Cavalry", 2, messages));
+		p1Units.add(new Unit("Artillery", 3, messages));
+		p1Units.add(new Unit("Infantry", 1, messages));
+		Player player1 = new Player(messages);
 		// player1.units = p1Units;
 		ArrayList<Unit> p2Units = new ArrayList<Unit>();
-		p2Units.add(new Unit("Cavalry", 2));
-		p2Units.add(new Unit("Artillery", 3));
-		p2Units.add(new Unit("Infantry", 1));
-		Player player2 = new Player();
+		p2Units.add(new Unit("Cavalry", 2, messages));
+		p2Units.add(new Unit("Artillery", 3, messages));
+		p2Units.add(new Unit("Infantry", 1, messages));
+		Player player2 = new Player(messages);
 		// player2.units = p2Units;
-		this.combat = new Combat(player1, player2, 0);
+		this.combat = new Combat(player1, player2, 0, messages);
 		this.combat.attacker.units = p1Units;
 		this.combat.defender.units = p2Units;
 

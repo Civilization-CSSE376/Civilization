@@ -256,13 +256,13 @@ public class MainWindow extends JFrame {
 								int random = randomChoices.get(0);
 								switch(random){
 								case 1:
-									Board.currentPlayer.units.add(new Unit("Infantry", Board.currentPlayer.infantryLevel));
+									Board.currentPlayer.units.add(new Unit(messages.getString("infantry"), Board.currentPlayer.infantryLevel, messages));
 									break;
 								case 2:
-									Board.currentPlayer.units.add(new Unit("Cavalry", Board.currentPlayer.cavalryLevel));
+									Board.currentPlayer.units.add(new Unit(messages.getString("cavalry"), Board.currentPlayer.cavalryLevel, messages));
 									break;
 								case 3:
-									Board.currentPlayer.units.add(new Unit("Artillery", Board.currentPlayer.artilleryLevel));
+									Board.currentPlayer.units.add(new Unit(messages.getString("artillery"), Board.currentPlayer.artilleryLevel, messages));
 									break;
 								default:
 									break;

@@ -103,9 +103,9 @@ public abstract class Figure implements Drawable {
 	}
 
 	public static Figure getFigure(Player p, String figureName, Tile tile) {
-		if (figureName.equals("Army"))
+		if (figureName.equals("Army") || figureName.equals("Ejército"))
 			return new Army(p, tile);
-		else if (figureName.equals("Settler"))
+		else if (figureName.equals("Settler") || figureName.equals("Colono"))
 			return new Settler(p, tile);
 		else
 			return null;

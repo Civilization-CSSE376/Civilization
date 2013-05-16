@@ -879,7 +879,7 @@ public class BoardTest {
 	@Test
 	public void testHandleUnitInfantry() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		Player p1 = new Player();
+		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
 		assertTrue(board.handleUnit("Infantry", 5, p1));
 		assertEquals(4, p1.units.size());
@@ -892,7 +892,7 @@ public class BoardTest {
 	@Test
 	public void testHandleUnitCavalry() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		Player p1 = new Player();
+		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
 		assertTrue(board.handleUnit("Cavalry", 5, p1));
 		assertEquals(4, p1.units.size());
@@ -905,7 +905,7 @@ public class BoardTest {
 	@Test
 	public void testHandleUnitArtillary() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		Player p1 = new Player();
+		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
 		assertTrue(board.handleUnit("Artillary", 5, p1));
 		assertEquals(4, p1.units.size());
@@ -918,7 +918,7 @@ public class BoardTest {
 	@Test
 	public void testHandleUnitAirplane() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		Player p1 = new Player();
+		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
 		assertTrue(board.handleUnit("Airplane", 12, p1));
 		assertEquals(4, p1.units.size());
@@ -928,7 +928,7 @@ public class BoardTest {
 	@Test
 	public void testHandleUnit() {
 		TestBoard board = new TestBoard("America", "China", messages);
-		Player p1 = new Player();
+		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
 		assertFalse(board.handleUnit("Cancel", 12, p1));
 		assertEquals(3, p1.units.size());
