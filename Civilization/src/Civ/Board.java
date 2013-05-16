@@ -102,8 +102,8 @@ public class Board extends JPanel {
 
 		setPanelNeighbors();
 
-		this.player1 = new Player();
-		this.player2 = new Player();
+		this.player1 = playerConfig(this.player1Civilization);
+		this.player2 = playerConfig(this.player2Civilization);
 
 		players.add(this.player1);
 		players.add(this.player2);
@@ -1404,12 +1404,14 @@ public class Board extends JPanel {
 		switch (civ) {
 		case "Egypt": // TODO check if needs internationalized
 			tempPlayer.techCards.add(new Construction());
+			tempPlayer.tier1Cards +=1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Russia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
+			tempPlayer.tier1Cards += 1;
 //			tempPlayer.stackSize = 3;
 			// one extra army
 			/*
@@ -1422,6 +1424,7 @@ public class Board extends JPanel {
 		case "Rome":
 			tempPlayer.techCards.add(new CodeOfLaws());
 			tempPlayer.government = new Government(tempPlayer, "Republic");
+			tempPlayer.tier1Cards +=1;
 			/*
 			 * the romans advance one space on the culture track for free each
 			 * time they build a wonder or a city, and each time they conquer a
@@ -1430,6 +1433,7 @@ public class Board extends JPanel {
 			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
+			tempPlayer.tier1Cards +=1;
 			// free great person at start of game
 			/*
 			 * each time the americans convert 3 trade into production, they
@@ -1438,6 +1442,7 @@ public class Board extends JPanel {
 			break;
 		case "Germany":
 			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.tier1Cards +=1;
 //			tempPlayer.units.add(new Unit("Infantry", 1));
 //			tempPlayer.units.add(new Unit("Infantry", 1));
 			/*
@@ -1449,6 +1454,7 @@ public class Board extends JPanel {
 			break;
 		case "China":
 			tempPlayer.techCards.add(new Writing());
+			tempPlayer.tier1Cards +=1;
 			/*
 			 * the chinese start with city walls in their capital. the chinese
 			 * gain 3 culture each time they explore a hut or conquer a village.
