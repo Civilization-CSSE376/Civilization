@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 
 import org.junit.Before;
@@ -18,7 +17,6 @@ import org.junit.Test;
 
 public class CityTest {
 	
-	private Board board;
 	private Hashtable<String, Panel> map;
 	private Player player;
 	private Player enemyPlayer;
@@ -121,8 +119,6 @@ public class CityTest {
 		ArrayList<Player> players = new ArrayList<Player>();
 		players.add(this.player);
 		players.add(this.enemyPlayer);
-		this.board = new Board(this.map, players);
-//		this.board = new Board(this.map);
 		
 		this.city = new City(this.startTile);
 		this.player.cities.add(this.city);
@@ -236,6 +232,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);
 		
 		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
@@ -254,6 +252,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
@@ -272,6 +272,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(topLeft.getTiles()[3][2]));
@@ -290,6 +292,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(topRight.getTiles()[0][2]));
@@ -308,6 +312,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(bottomRight.getTiles()[0][3]));
@@ -326,6 +332,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(topLeft.getTiles()[3][2]));
@@ -344,6 +352,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(bottomLeft.getTiles()[0][0]));
@@ -362,6 +372,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(topRight.getTiles()[3][3]));
@@ -380,6 +392,8 @@ public class CityTest {
 		
 		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
 		method.setAccessible(true);
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
 		
 		assertTrue(output.contains(bottomRight.getTiles()[0][0]));

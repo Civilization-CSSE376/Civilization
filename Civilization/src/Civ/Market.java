@@ -9,14 +9,14 @@ import java.util.Stack;
 
 public class Market {
 	
-	private static final int MARKET_QUANTITY = 5;
-	private static final int TEMPLE_QUANTITY = 5;
-	private static final int GRANARY_QUANTITY = 6;
-	private static final int LIBRARY_QUANTITY = 6;
-	private static final int BARRACKS_QUANTITY = 5;
-	private static final int WORKSHOP_QUANTITY = 6;
-	private static final int TRADINGPOST_QUANTITY = 6;
-	private static final int HARBOR_QUANTITY = 10;
+//	private static final int MARKET_QUANTITY = 5;
+//	private static final int TEMPLE_QUANTITY = 5;
+//	private static final int GRANARY_QUANTITY = 6;
+//	private static final int LIBRARY_QUANTITY = 6;
+//	private static final int BARRACKS_QUANTITY = 5;
+//	private static final int WORKSHOP_QUANTITY = 6;
+//	private static final int TRADINGPOST_QUANTITY = 6;
+//	private static final int HARBOR_QUANTITY = 10;
 	
 	private static List<String> ancientWonders = 
 			Arrays.asList("Stonehenge", "TheOracle", "TheHangingGardens", "TheColossus");
@@ -35,8 +35,8 @@ public class Market {
 	 * -8 = great person
 	 * 9001 = victory 
 	 */
-	private static final int[] cultureTrack =
-		{0,1,1,-8,1,1,1,-8,2,2,2,2,-8,2,2,3,3,3,-8,3,3,9001};
+//	private static final int[] cultureTrack =
+//		{0,1,1,-8,1,1,1,-8,2,2,2,2,-8,2,2,3,3,3,-8,3,3,9001};
 	
 	
 	public Market(){

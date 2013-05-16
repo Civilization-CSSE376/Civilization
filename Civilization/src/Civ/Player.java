@@ -53,7 +53,7 @@ public class Player {
 
 	}
 
-	private void setCapital(City capital) {
+	public void setCapital(City capital) {
 
 		boolean alreadyHave = false;
 

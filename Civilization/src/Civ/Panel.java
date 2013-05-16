@@ -1,20 +1,7 @@
 package Civ;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 
-import javax.swing.JPanel;
-
-@SuppressWarnings("serial")
 public class Panel {
 
 	private Tile[][] tiles;
