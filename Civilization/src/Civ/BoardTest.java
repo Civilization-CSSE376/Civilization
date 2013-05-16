@@ -3,14 +3,12 @@ package Civ;
 import static org.junit.Assert.*;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.JRadioButtonMenuItem;
 
-import org.hamcrest.core.IsNull;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,11 +40,11 @@ public class BoardTest {
 
 	 @Test
 	 public void testLoadResources() {
-	 Tile wheatTile = board.map.get(0).getTiles()[3][3];
-	 Tile silkTile = board.map.get(0).getTiles()[1][1];
-	 Tile ironTile = board.map.get(0).getTiles()[0][0];
-	 Tile incenseTile = board.map.get(0).getTiles()[2][2];
-	 Tile emptyTile = board.map.get(0).getTiles()[0][1];
+	 Tile wheatTile = Board.map.get(0).getTiles()[3][3];
+	 Tile silkTile = Board.map.get(0).getTiles()[1][1];
+	 Tile ironTile = Board.map.get(0).getTiles()[0][0];
+	 Tile incenseTile = Board.map.get(0).getTiles()[2][2];
+	 Tile emptyTile = Board.map.get(0).getTiles()[0][1];
 	
 	 assertEquals(Tile.Resource.Wheat, wheatTile.getResource());
 	 assertEquals(Tile.Resource.Silk, silkTile.getResource());
@@ -233,7 +231,6 @@ public class BoardTest {
 
 	@Test
 	public void testCheckUnexploredPanel() {
-		TestBoard target = new TestBoard("America", "China", messages);
 		assertTrue(TestBoard.map.get(0).getIsExplored());
 		assertFalse(TestBoard.map.get(1).getIsExplored());
 		assertFalse(TestBoard.map.get(2).getIsExplored());

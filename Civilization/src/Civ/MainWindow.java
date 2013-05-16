@@ -138,15 +138,12 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				final JFrame tradeCultureWindow = makeNewWindow(250,100, messages.getString("tradeCulture"));
 				tradeCultureWindow.setLayout(new BorderLayout());
-				int[] cost = MainWindow.this.cultureTradeCost();
-				int cultureCost = cost[0];
-				int tradeCost = cost[1];
+				int cultureCost = MainWindow.this.cultureTradeCost()[0];
+				int tradeCost = MainWindow.this.cultureTradeCost()[1];
 				final JLabel text = new JLabel(messages.getString("itWillCost") + " " + messages.getString("culture") + cultureCost + " and " + 
 						messages.getString("trade1") + " " + tradeCost, SwingConstants.CENTER);
 				int progress = Board.currentPlayer.cultureTrackProgress;
-				if(progress == 3 || progress == 7 || progress == 12 || progress == 18){
-					text.setText(text.getText() + " " + messages.getString("getGreatPerson"));
-				}
+				if(progress == 3 || progress == 7 || progress == 12 || progress == 18) text.setText(text.getText() + " " + messages.getString("getGreatPerson"));
 				tradeCultureWindow.add(text, BorderLayout.PAGE_START);
 				JPanel buttonPanel = new JPanel();
 				JButton buyButton = new JButton(messages.getString("buy"));
@@ -163,9 +160,8 @@ public class MainWindow extends JFrame {
 						boolean canBuy = MainWindow.this.canBuy(MainWindow.this.cultureTradeCost());
 						boolean getsGreatPerson = false;
 						int progress = Board.currentPlayer.cultureTrackProgress;
-						if(progress == 3 || progress == 7 || progress == 12 || progress == 18){
-							getsGreatPerson = true;
-						}
+						if(progress == 3 || progress == 7 || progress == 12 || progress == 18) getsGreatPerson = true;
+
 						if(canBuy && getsGreatPerson){
 							Board.currentPlayer.greatPeople.add(new GreatPerson(messages));
 							tradeCultureWindow.dispose();
@@ -199,23 +195,17 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				final JFrame tradeResourceWindow = makeNewWindow(400,200, messages.getString("tradeResource"));
 				tradeResourceWindow.setLayout(new BorderLayout());
-				final int wheatAmount = 1;
-				final int ironAmount = 1;
-				final int incenseAmount = 1;
-				final int silkAmount = 1;
-				final int goldAmount = 1;
-				final int unitAmount = 1;
-				final int cultureAmount = 2;
-				final int tradeAmount = 3;
+				// Wheat, iron, incense, silk, gold, unit, culture, trade
+				final int[] amounts = {1, 1, 1, 1, 1, 1, 2, 3};
 				JPanel buyPanel = new JPanel();
-				JButton wheatButton = new JButton(wheatAmount + " " + messages.getString("wheat")
-						+ " : " + goldAmount + " " + messages.getString("gold1"));
-				JButton ironButton = new JButton(ironAmount + " " + messages.getString("unit")
-						+ " : " + unitAmount + " " + messages.getString("unit"));
-				JButton incenseButton = new JButton(incenseAmount + " " + messages.getString("incense")
-						+ " : " + cultureAmount + " " + messages.getString("culture1"));
-				JButton silkButton = new JButton(silkAmount + " " + messages.getString("silk")
-						+ " : " + tradeAmount + " " + messages.getString("trade"));
+				JButton wheatButton = new JButton(amounts[0] + " " + messages.getString("wheat")
+						+ " : " + amounts[4] + " " + messages.getString("gold1"));
+				JButton ironButton = new JButton(amounts[1] + " " + messages.getString("unit")
+						+ " : " + amounts[5] + " " + messages.getString("unit"));
+				JButton incenseButton = new JButton(amounts[2] + " " + messages.getString("incense")
+						+ " : " + amounts[6] + " " + messages.getString("culture1"));
+				JButton silkButton = new JButton(amounts[3] + " " + messages.getString("silk")
+						+ " : " + amounts[7] + " " + messages.getString("trade"));
 				JButton[] buttonList = {wheatButton, ironButton, incenseButton, silkButton};
 				buyPanel.setLayout(new GridLayout(2, 2));
 				for(JButton button : buttonList) buyPanel.add(button);
@@ -243,10 +233,10 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Wheat");
-						boolean canBuy = amount >= wheatAmount ? true : false;
+						boolean canBuy = amount >= amounts[0] ? true : false;
 
 						if(canBuy){
-							Board.currentPlayer.gold += goldAmount;
+							Board.currentPlayer.gold += amounts[4];
 							Board.currentPlayer.resources.remove(Resource.Wheat);
 							tradeResourceWindow.dispose();
 						}
@@ -258,11 +248,11 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Iron");
-						boolean canBuy = amount >= ironAmount ? true : false;
+						boolean canBuy = amount >= amounts[1] ? true : false;
 						List<Integer> randomChoices = Arrays.asList(1, 2, 3);
 
 						if(canBuy){
-							for(int i = 0; i < unitAmount; i++){
+							for(int i = 0; i < amounts[5]; i++){
 								Collections.shuffle(randomChoices);
 								int random = randomChoices.get(0);
 								switch(random){
@@ -290,10 +280,10 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Incense");
-						boolean canBuy = amount >= incenseAmount ? true : false;
+						boolean canBuy = amount >= amounts[2] ? true : false;
 
 						if(canBuy){
-							Board.currentPlayer.culture += cultureAmount;
+							Board.currentPlayer.culture += amounts[6];
 							Board.currentPlayer.resources.remove(Resource.Incense);
 							tradeResourceWindow.dispose();
 						}
@@ -305,10 +295,10 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0){
 						MainWindow.this.setEnabled(true);
 						int amount = Board.currentPlayer.getResourceAmount("Silk");
-						boolean canBuy = amount >= silkAmount ? true : false;
+						boolean canBuy = amount >= amounts[3] ? true : false;
 
 						if(canBuy){
-							Board.currentPlayer.trade += tradeAmount;
+							Board.currentPlayer.trade += amounts[7];
 							Board.currentPlayer.resources.remove(Resource.Silk);
 							tradeResourceWindow.dispose();
 						}

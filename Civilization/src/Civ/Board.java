@@ -17,18 +17,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -37,7 +33,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import java.util.Hashtable;
 
@@ -60,9 +55,7 @@ public class Board extends JPanel {
 	final String MOVEMENT = "Movement";
 	final String RESEARCH = "Research";
 	private String currentPhase;
-	public String currentChoice;
-
-	private File file = new File("src/1stEight.txt");
+	public String currentChoice;;
 
 	private static Player player1;
 	private static Player player2;
@@ -87,7 +80,7 @@ public class Board extends JPanel {
 	private static ResourceBundle messages;
 
 	public Board(String p1Civ, String p2Civ, ResourceBundle messages) {
-		this.messages = messages;
+		Board.messages = messages;
 		this.player1Civilization = p1Civ;
 		this.player2Civilization = p2Civ;
 
@@ -102,11 +95,11 @@ public class Board extends JPanel {
 
 		setPanelNeighbors();
 
-		this.player1 = new Player();
-		this.player2 = new Player();
+		Board.player1 = new Player();
+		Board.player2 = new Player();
 
-		players.add(this.player1);
-		players.add(this.player2);
+		players.add(Board.player1);
+		players.add(Board.player2);
 
 		Settler settler1 = new Settler(player1, map.get(0).getTiles()[0][0]);
 		Settler settler2 = new Settler(player2, map.get(7).getTiles()[3][3]);
@@ -126,8 +119,8 @@ public class Board extends JPanel {
 		army2.setScreenLocation((map.get(0).getTiles()[0][1]
 				.getScreenLocation()));
 
-		this.player1.figures.add(settler1);
-		this.player2.figures.add(settler2);
+		Board.player1.figures.add(settler1);
+		Board.player2.figures.add(settler2);
 		// this.player1.figures.add(army1);
 		// this.player2.figures.add(army2);
 
@@ -136,35 +129,35 @@ public class Board extends JPanel {
 		// map.get(0).getTiles()[1][0].getFigures().add(army1);
 		// map.get(0).getTiles()[0][1].getFigures().add(army2);
 
-		City city1 = new City(map.get(0).getTiles()[1][1], this.player1);
-		City city2 = new City(map.get(7).getTiles()[2][2], this.player2);
+		City city1 = new City(map.get(0).getTiles()[1][1], Board.player1);
+		City city2 = new City(map.get(7).getTiles()[2][2], Board.player2);
 
 		city1.setLocation(130, 130);
 		city2.setLocation((440 * 4) - 115, 750);
 
-		this.player1.cities.add(city1);
-		this.player2.cities.add(city2);
+		Board.player1.cities.add(city1);
+		Board.player2.cities.add(city2);
 
-		this.player1.government = new Government(this.player1, "Fundamentalism");
-		this.player1.units.add(new Unit("Infantry", 1));
-		this.player1.units.add(new Unit("Cavalry", 1));
-		this.player1.units.add(new Unit("Artillery", 1));
+		Board.player1.government = new Government(Board.player1, "Fundamentalism");
+		Board.player1.units.add(new Unit("Infantry", 1));
+		Board.player1.units.add(new Unit("Cavalry", 1));
+		Board.player1.units.add(new Unit("Artillery", 1));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
 
 		this.currentPhase = START_OF_TURN;
 
-		this.firstPlayer = player1;
-		this.currentPlayer = player1;
+		Board.firstPlayer = player1;
+		Board.currentPlayer = player1;
 		this.phase = 1;
 
 		// TODO make this more efficient. quickly copied/pasted initially
-		for (City c : this.player1.cities) {
-			this.player1.trade += c.calcTrade();
+		for (City c : Board.player1.cities) {
+			Board.player1.trade += c.calcTrade();
 		}
-		for (City c : this.player2.cities) {
-			this.player2.trade += c.calcTrade();
+		for (City c : Board.player2.cities) {
+			Board.player2.trade += c.calcTrade();
 		}
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
@@ -499,14 +492,14 @@ public class Board extends JPanel {
 		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
 		playerOutskirtTiles.addAll(city.getOutskirts());
 
-		for (Figure f : Board.this.currentPlayer.figures) {
+		for (Figure f : Board.currentPlayer.figures) {
 			if (f.getClass().toString().equals("class Civ.Settler")) {
 				playerOutskirtTiles.add(f.location);
 			}
 		}
 
-		if (Board.this.currentPlayer.government.name.equals("Feudalism")) {
-			for (City c : Board.this.currentPlayer.cities) {
+		if (Board.currentPlayer.government.name.equals("Feudalism")) {
+			for (City c : Board.currentPlayer.cities) {
 				if (!c.equals(city)) {
 					playerOutskirtTiles.addAll(c.getOutskirts());
 				}
@@ -678,7 +671,7 @@ public class Board extends JPanel {
 			if (!figures.isEmpty()) {
 				Figure figure = figures.get(0);
 				if (figure.getOwner() != null) {
-					if (figure.getOwner().equals(Board.this.currentPlayer)
+					if (figure.getOwner().equals(Board.currentPlayer)
 							&& !figure.getUsedThisTurn()) {
 						makeMovementWindow(figures);
 						getValidTiles(panel, tile);
@@ -1017,6 +1010,8 @@ public class Board extends JPanel {
 
 		JLabel cardLabel = new JLabel(messages.getString("card") + ": ");
 		final JComboBox<String> techCards = new JComboBox<String>();
+		
+		@SuppressWarnings("unchecked")
 		final ComboBoxModel<String>[] tierCards = new ComboBoxModel[5];
 		tierCards[0] = new DefaultComboBoxModel<String>(new String[] {
 				messages.getString("codeOfLaws"),
@@ -1073,6 +1068,7 @@ public class Board extends JPanel {
 				+ ":    "
 				+ cardDescriptions.get(techCards.getItemAt(techCards
 						.getSelectedIndex())));
+		
 		cardDescription.setBackground(getBackground());
 		cardDescription.setLineWrap(true);
 		description.add(currentTrade);
@@ -1086,15 +1082,29 @@ public class Board extends JPanel {
 		final JButton buy = new JButton(messages.getString("buy"));
 		JButton cancel = new JButton(messages.getString("cancel"));
 		JButton tree = new JButton(messages.getString("playerTechCardTree"));
+		
+		if (!checkValidTier(tierDropDown.getSelectedIndex() + 1)) {
+			message.setText(messages
+					.getString("cannotBuyCardTierLevel"));
+			buy.setEnabled(false);
+		} else if (checkIfPlayerHasCard(techCards
+				.getItemAt(techCards.getSelectedIndex()))) {
+			message.setText(messages.getString("cardAlreadyOwned"));
+			buy.setEnabled(false);
+		} else if (!checkPlayerHasEnoughTrade(tierDropDown
+				.getSelectedIndex() + 1)) {
+			message.setText(messages.getString("notEnoughTrade"));
+			buy.setEnabled(false);
+		} else {
+			buy.setEnabled(true);
+			message.setText("");
+		}
+		
 		buttons.add(tree);
 		buttons.add(buy);
 		buttons.add(cancel);
 
-		researchWindow.add(tierOptions);
-		researchWindow.add(cardOptions);
-		researchWindow.add(description);
-		researchWindow.add(warningMessage);
-		researchWindow.add(buttons);
+		for(JPanel panel : panels) researchWindow.add(panel);
 
 		researchWindow.setVisible(true);
 
@@ -1145,8 +1155,7 @@ public class Board extends JPanel {
 								.getSelectedIndex())));
 				if (!message.getText().equals(
 						messages.getString("cannotBuyCardTierLevel"))) {
-					if (currentPlayer.techCards.contains(techCards
-							.getItemAt(techCards.getSelectedIndex()))) {
+					if (checkIfPlayerHasCard(techCards.getItemAt(techCards.getSelectedIndex()))) {
 						message.setText(messages.getString("cardAlreadyOwned"));
 						buy.setEnabled(false);
 					} else if (!checkPlayerHasEnoughTrade(tierDropDown
@@ -1172,7 +1181,7 @@ public class Board extends JPanel {
 					message.setText(messages
 							.getString("cannotBuyCardTierLevel"));
 					buy.setEnabled(false);
-				} else if (currentPlayer.techCards.contains(techCards
+				} else if (checkIfPlayerHasCard(techCards
 						.getItemAt(techCards.getSelectedIndex()))) {
 					message.setText(messages.getString("cardAlreadyOwned"));
 					buy.setEnabled(false);
@@ -1196,7 +1205,7 @@ public class Board extends JPanel {
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
 				currentPlayer.trade = 0;
-				if (currentPlayer.techCards.contains(messages
+				if (checkIfPlayerHasCard(messages
 						.getString("spaceFlight"))) {
 					currentPlayer.hasWon = true;
 					currentPlayer.winCondition = "Tech";
@@ -1214,6 +1223,11 @@ public class Board extends JPanel {
 			}
 
 		});
+	}
+	
+	public boolean checkIfPlayerHasCard(String name){
+		for(TechCard card : currentPlayer.techCards) if(card.name.equals(name)) return true;
+		return false;
 	}
 
 	public JFrame buildFrame(int width, int height, String title) {
@@ -1394,7 +1408,7 @@ public class Board extends JPanel {
 	// Move to unit class.
 	public void setPlayerLocation(int x, int y) {
 
-		this.player1.setLocation(x, y);
+		Board.player1.setLocation(x, y);
 	}
 
 	private Player playerConfig(String civ) {
@@ -1635,7 +1649,7 @@ public class Board extends JPanel {
 		g2.drawString(messages.getString("currentPhase") + getPhaseText(), 50,
 				900);
 
-		if (this.currentPlayer == this.player1) {
+		if (Board.currentPlayer == Board.player1) {
 			g2.setColor(Color.RED);
 			g2.drawString(messages.getString("player1Turn"), 500, 900);
 		} else {
@@ -1792,66 +1806,66 @@ public class Board extends JPanel {
 	}
 
 	public void changePlayerTurn() {
-		if (this.currentPlayer == this.player1)
-			this.currentPlayer = this.player2;
+		if (Board.currentPlayer == Board.player1)
+			Board.currentPlayer = Board.player2;
 		else
-			this.currentPlayer = this.player1;
+			Board.currentPlayer = Board.player1;
 	}
 
 	public void endPhase() {
 
 		if (this.currentPhase.equals(START_OF_TURN)) {
-			if (this.currentPlayer == this.firstPlayer)
+			if (Board.currentPlayer == Board.firstPlayer)
 				this.changePlayerTurn();
 			else {
 				this.changePlayerTurn();
 				this.currentPhase = TRADE;
-				for (City c : Board.this.currentPlayer.cities) {
-					Board.this.currentPlayer.trade += c.calcTrade();
+				for (City c : Board.currentPlayer.cities) {
+					Board.currentPlayer.trade += c.calcTrade();
 				}
-				if (Board.this.currentPlayer.government.name
+				if (Board.currentPlayer.government.name
 						.equals("Democracy")) {
-					Board.this.currentPlayer.trade += 2;
+					Board.currentPlayer.trade += 2;
 				}
-				if (Board.this.currentPlayer.government.name
+				if (Board.currentPlayer.government.name
 						.equals("Fundamentalism")) {
-					Board.this.currentPlayer.trade -= 2;
+					Board.currentPlayer.trade -= 2;
 				}
-				if (Board.this.currentPlayer.trade < 0) {
-					Board.this.currentPlayer.trade = 0;
+				if (Board.currentPlayer.trade < 0) {
+					Board.currentPlayer.trade = 0;
 				}
 			}
 		} else if (this.currentPhase.equals(TRADE)) {
-			if (this.currentPlayer == this.firstPlayer) {
+			if (Board.currentPlayer == Board.firstPlayer) {
 				this.changePlayerTurn();
-				for (City c : Board.this.currentPlayer.cities) {
-					Board.this.currentPlayer.trade += c.calcTrade();
+				for (City c : Board.currentPlayer.cities) {
+					Board.currentPlayer.trade += c.calcTrade();
 				}
 			} else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
-				for (City c : this.currentPlayer.cities) {
+				for (City c : Board.currentPlayer.cities) {
 					c.calcProduction();
-					if (this.currentPlayer.government.name.equals("Communism")) {
+					if (Board.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
 				}
 			}
 		} else if (this.currentPhase.equals(CITY_MANAGEMENT)) {
-			if (this.currentPlayer == this.firstPlayer) {
-				for (City c : this.currentPlayer.cities) {
+			if (Board.currentPlayer == Board.firstPlayer) {
+				for (City c : Board.currentPlayer.cities) {
 					c.setHasAction(true);
 				}
 				this.changePlayerTurn();
 				currentCity = null;
-				for (City c : this.currentPlayer.cities) {
+				for (City c : Board.currentPlayer.cities) {
 					c.calcProduction();
-					if (this.currentPlayer.government.name.equals("Communism")) {
+					if (Board.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
 				}
 			} else {
-				for (City c : this.currentPlayer.cities) {
+				for (City c : Board.currentPlayer.cities) {
 					c.setHasAction(true);
 				}
 				this.changePlayerTurn();
@@ -1863,7 +1877,7 @@ public class Board extends JPanel {
 				f.setUsedThisTurn(false);
 			}
 			this.currentMovementFigure = null;
-			if (this.currentPlayer == this.firstPlayer)
+			if (Board.currentPlayer == Board.firstPlayer)
 				this.changePlayerTurn();
 			else {
 				this.changePlayerTurn();
@@ -1878,14 +1892,14 @@ public class Board extends JPanel {
 
 			this.validTiles.clear();
 		} else {
-			if (this.currentPlayer == this.firstPlayer) {
+			if (Board.currentPlayer == Board.firstPlayer) {
 				this.changePlayerTurn();
 				research();
 			} else {
-				if (this.firstPlayer == this.player1)
-					this.firstPlayer = this.player2;
+				if (Board.firstPlayer == Board.player1)
+					Board.firstPlayer = Board.player2;
 				else
-					this.firstPlayer = this.player1;
+					Board.firstPlayer = Board.player1;
 				this.currentPhase = START_OF_TURN;
 			}
 		}
@@ -2000,7 +2014,7 @@ public class Board extends JPanel {
 
 	public void isGameOver() {
 		boolean isOver = false;
-		for (Player p : this.players) {
+		for (Player p : Board.players) {
 			if (p.gold >= 15) {
 				p.winCondition = "Economic";
 				p.hasWon = true;
@@ -2014,7 +2028,7 @@ public class Board extends JPanel {
 		}
 
 		HashMap<Integer, Player> score = new HashMap<Integer, Player>();
-		for (Player p : this.players) {
+		for (Player p : Board.players) {
 			score.put(tieBreakerScore(p), p);
 		}
 
