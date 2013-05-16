@@ -560,11 +560,11 @@ public class BoardTest {
 		TestBoard.currentFigure = null;
 		assertNull(TestBoard.currentFigure);
 		target.handleBuild(0, TestBoard.currentCity);
-		assertNull(TestBoard.currentFigure);
+		assertTrue(TestBoard.currentFigure);
 //		assertEquals(0, TestBoard.map.get(0).getTiles()[0][1].getFigures()
 //				.size());
 		target.handleBuild(1, TestBoard.currentCity);
-		assertNotNull(TestBoard.currentFigure);
+		assertTrue(TestBoard.currentFigure);
 
 	}
 

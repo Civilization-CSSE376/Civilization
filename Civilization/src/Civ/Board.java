@@ -462,6 +462,7 @@ public class Board extends JPanel {
 
 	public City goForResource(Tile tile, City city) {
 		ArrayList<Tile> playerOutskirtTiles = new ArrayList<Tile>();
+		playerOutskirtTiles.addAll(city.getOutskirts());
 		
 		for(Figure f : Board.this.currentPlayer.figures){
 			if(f.getClass().toString().equals("class Civ.Settler")){
@@ -471,7 +472,9 @@ public class Board extends JPanel {
 		
 		if(Board.this.currentPlayer.government.name.equals("Feudalism")){
 			for(City c: Board.this.currentPlayer.cities){
-				playerOutskirtTiles.addAll(c.getOutskirts());
+				if(!c.equals(city)){
+					playerOutskirtTiles.addAll(c.getOutskirts());
+				}
 			}
 		}
 		
