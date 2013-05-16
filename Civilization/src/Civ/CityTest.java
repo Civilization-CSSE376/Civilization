@@ -146,8 +146,8 @@ public class CityTest {
 			this.emptyOutskirtTiles.add(new Tile(2, 2, "G", 0, 0, "N", 0, "N", 0));
 		}
 
-		this.city = new City(this.startTile, this.player);
-		this.enemyCity = new City(this.enemyStartTile, this.enemyPlayer);
+//		this.city = new City(this.startTile, this.player);
+//		this.enemyCity = new City(this.enemyStartTile, this.enemyPlayer);
 		
 		
 	}
@@ -232,185 +232,185 @@ public class CityTest {
 //		assertEquals(0, output);
 //	}
 
-	@Test //need to test "not explored" panels
-	public void testGetOutskirtsTopLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.bottomRight.getTiles()[0][0];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);
-		
-		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][1]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
-		assertTrue(output.contains(topRight.getTiles()[0][3]));
-		assertTrue(output.contains(topRight.getTiles()[1][3]));
-		assertTrue(output.contains(topLeft.getTiles()[3][3]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
-	}
-	
-	@Test
-	public void testGetOutskirtsTopRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.bottomLeft.getTiles()[3][0];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
-		assertTrue(output.contains(bottomLeft.getTiles()[2][1]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
-		assertTrue(output.contains(topLeft.getTiles()[3][3]));
-		assertTrue(output.contains(topLeft.getTiles()[2][3]));
-		assertTrue(output.contains(topRight.getTiles()[0][3]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
-	}
-	
-	@Test
-	public void testGetOutskirtsBottomRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.topLeft.getTiles()[3][3];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(topLeft.getTiles()[3][2]));
-		assertTrue(output.contains(topLeft.getTiles()[2][2]));
-		assertTrue(output.contains(topLeft.getTiles()[2][3]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
-		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
-		assertTrue(output.contains(topRight.getTiles()[0][2]));
-		assertTrue(output.contains(topRight.getTiles()[0][3]));
-	}
-	
-	@Test
-	public void testGetOutskirtsBottomLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.topRight.getTiles()[0][3];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(topRight.getTiles()[0][2]));
-		assertTrue(output.contains(topRight.getTiles()[1][2]));
-		assertTrue(output.contains(topRight.getTiles()[1][3]));
-		assertTrue(output.contains(topLeft.getTiles()[3][2]));
-		assertTrue(output.contains(topLeft.getTiles()[3][3]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
-	}
-	
-	@Test
-	public void testGetOutskirtsLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.bottomRight.getTiles()[0][2];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(bottomRight.getTiles()[0][3]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][3]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][2]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][1]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][3]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][2]));
-		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
-	}
-	
-	@Test
-	public void testGetOutskirtsRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.topLeft.getTiles()[3][1];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(topLeft.getTiles()[3][2]));
-		assertTrue(output.contains(topLeft.getTiles()[2][2]));
-		assertTrue(output.contains(topLeft.getTiles()[2][1]));
-		assertTrue(output.contains(topLeft.getTiles()[2][0]));
-		assertTrue(output.contains(topLeft.getTiles()[3][0]));
-		assertTrue(output.contains(topRight.getTiles()[0][2]));
-		assertTrue(output.contains(topRight.getTiles()[0][1]));
-		assertTrue(output.contains(topRight.getTiles()[0][0]));
-	}
-	
-	@Test
-	public void testGetOutskirtsTop() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.bottomLeft.getTiles()[1][0];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(bottomLeft.getTiles()[0][0]));
-		assertTrue(output.contains(bottomLeft.getTiles()[0][1]));
-		assertTrue(output.contains(bottomLeft.getTiles()[1][1]));
-		assertTrue(output.contains(bottomLeft.getTiles()[2][1]));
-		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
-		assertTrue(output.contains(topLeft.getTiles()[0][3]));
-		assertTrue(output.contains(topLeft.getTiles()[1][3]));
-		assertTrue(output.contains(topLeft.getTiles()[2][3]));
-	}
-	
-	@Test
-	public void testGetOutskirtsBottom() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.topRight.getTiles()[2][3];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(topRight.getTiles()[3][3]));
-		assertTrue(output.contains(topRight.getTiles()[3][2]));
-		assertTrue(output.contains(topRight.getTiles()[2][2]));
-		assertTrue(output.contains(topRight.getTiles()[1][2]));
-		assertTrue(output.contains(topRight.getTiles()[1][3]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[2][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[3][0]));
-	}
-	
-	@Test
-	public void testGetOutskirtsCenter() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Tile tileToTest = this.bottomRight.getTiles()[1][1];
-		
-		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
-		method.setAccessible(true);
-		
-		@SuppressWarnings("unchecked")
-		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
-		
-		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
-		assertTrue(output.contains(bottomRight.getTiles()[0][2]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][2]));
-		assertTrue(output.contains(bottomRight.getTiles()[2][2]));
-		assertTrue(output.contains(bottomRight.getTiles()[2][1]));
-		assertTrue(output.contains(bottomRight.getTiles()[2][0]));
-		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
-	}
+//	@Test //need to test "not explored" panels
+//	public void testGetOutskirtsTopLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.bottomRight.getTiles()[0][0];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);
+//		
+//		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][1]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
+//		assertTrue(output.contains(topRight.getTiles()[0][3]));
+//		assertTrue(output.contains(topRight.getTiles()[1][3]));
+//		assertTrue(output.contains(topLeft.getTiles()[3][3]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsTopRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.bottomLeft.getTiles()[3][0];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[2][1]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
+//		assertTrue(output.contains(topLeft.getTiles()[3][3]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][3]));
+//		assertTrue(output.contains(topRight.getTiles()[0][3]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsBottomRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.topLeft.getTiles()[3][3];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(topLeft.getTiles()[3][2]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][2]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][3]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
+//		assertTrue(output.contains(topRight.getTiles()[0][2]));
+//		assertTrue(output.contains(topRight.getTiles()[0][3]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsBottomLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.topRight.getTiles()[0][3];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(topRight.getTiles()[0][2]));
+//		assertTrue(output.contains(topRight.getTiles()[1][2]));
+//		assertTrue(output.contains(topRight.getTiles()[1][3]));
+//		assertTrue(output.contains(topLeft.getTiles()[3][2]));
+//		assertTrue(output.contains(topLeft.getTiles()[3][3]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.bottomRight.getTiles()[0][2];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(bottomRight.getTiles()[0][3]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][3]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][2]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][1]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][3]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][2]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[3][1]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsRight() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.topLeft.getTiles()[3][1];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(topLeft.getTiles()[3][2]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][2]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][1]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][0]));
+//		assertTrue(output.contains(topLeft.getTiles()[3][0]));
+//		assertTrue(output.contains(topRight.getTiles()[0][2]));
+//		assertTrue(output.contains(topRight.getTiles()[0][1]));
+//		assertTrue(output.contains(topRight.getTiles()[0][0]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsTop() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.bottomLeft.getTiles()[1][0];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(bottomLeft.getTiles()[0][0]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[0][1]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[1][1]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[2][1]));
+//		assertTrue(output.contains(bottomLeft.getTiles()[2][0]));
+//		assertTrue(output.contains(topLeft.getTiles()[0][3]));
+//		assertTrue(output.contains(topLeft.getTiles()[1][3]));
+//		assertTrue(output.contains(topLeft.getTiles()[2][3]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsBottom() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.topRight.getTiles()[2][3];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(topRight.getTiles()[3][3]));
+//		assertTrue(output.contains(topRight.getTiles()[3][2]));
+//		assertTrue(output.contains(topRight.getTiles()[2][2]));
+//		assertTrue(output.contains(topRight.getTiles()[1][2]));
+//		assertTrue(output.contains(topRight.getTiles()[1][3]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[2][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[3][0]));
+//	}
+//	
+//	@Test
+//	public void testGetOutskirtsCenter() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+//		Tile tileToTest = this.bottomRight.getTiles()[1][1];
+//		
+//		Method method = City.class.getDeclaredMethod("getOutskirts", Tile.class);
+//		method.setAccessible(true);
+//		
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Tile> output = (ArrayList<Tile>) method.invoke(this.city, tileToTest);		
+//		
+//		assertTrue(output.contains(bottomRight.getTiles()[0][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][1]));
+//		assertTrue(output.contains(bottomRight.getTiles()[0][2]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][2]));
+//		assertTrue(output.contains(bottomRight.getTiles()[2][2]));
+//		assertTrue(output.contains(bottomRight.getTiles()[2][1]));
+//		assertTrue(output.contains(bottomRight.getTiles()[2][0]));
+//		assertTrue(output.contains(bottomRight.getTiles()[1][0]));
+//	}
 	
 	@Test
 	public void testSetCapital() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException{
@@ -465,31 +465,31 @@ public class CityTest {
 		assertEquals(screenLocation, this.city.getLocation());
 	}
 	
-	@Test
-	public void testValidOutskirts() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{ //need to test villages and huts
-		Field field = Panel.class.getDeclaredField("isExplored");
-		field.setAccessible(true);
-		field.set(this.topRight, false);
-		
-		//Too close to friendly city
-		City testCity = new City(this.topLeft.getTiles()[3][2], this.player);
-		assertFalse(testCity.isValid);
-		
-		//Too close to enemy figure
-		testCity = new City(this.bottomLeft.getTiles()[0][1], this.player);
-		assertFalse(testCity.isValid);
-		
-		//On top of water
-		testCity = new City(this.bottomLeft.getTiles()[2][3], this.player);
-		assertFalse(testCity.isValid);
-		
-		//next to friendly figure
-		testCity = new City(this.bottomLeft.getTiles()[2][2], this.player);
-		assertTrue(testCity.isValid);
-		
-		//too close to enemy city
-		testCity = new City(this.bottomRight.getTiles()[2][1], this.player);
-		assertFalse(testCity.isValid);
-	}
+//	@Test
+//	public void testValidOutskirts() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{ //need to test villages and huts
+//		Field field = Panel.class.getDeclaredField("isExplored");
+//		field.setAccessible(true);
+//		field.set(this.topRight, false);
+//		
+//		//Too close to friendly city
+//		City testCity = new City(this.topLeft.getTiles()[3][2], this.player);
+//		assertFalse(testCity.isValid);
+//		
+//		//Too close to enemy figure
+//		testCity = new City(this.bottomLeft.getTiles()[0][1], this.player);
+//		assertFalse(testCity.isValid);
+//		
+//		//On top of water
+//		testCity = new City(this.bottomLeft.getTiles()[2][3], this.player);
+//		assertFalse(testCity.isValid);
+//		
+//		//next to friendly figure
+//		testCity = new City(this.bottomLeft.getTiles()[2][2], this.player);
+//		assertTrue(testCity.isValid);
+//		
+//		//too close to enemy city
+//		testCity = new City(this.bottomRight.getTiles()[2][1], this.player);
+//		assertFalse(testCity.isValid);
+//	}
 
 }
