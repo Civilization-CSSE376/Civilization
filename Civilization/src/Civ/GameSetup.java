@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class GameSetup extends JFrame {
@@ -36,11 +37,11 @@ public class GameSetup extends JFrame {
 		this.setLayout(new GridLayout(7, 1));
 
 		JLabel languageSelection = new JLabel("Language (Idioma) :",
-				JLabel.CENTER);
+				SwingConstants.CENTER);
 		JLabel player1CivilizationSelection = new JLabel(
-				"Player 1, Choose your civilization. (Jugador 1, Elige tu civilización)", JLabel.CENTER);
+				"Player 1, Choose your civilization. (Jugador 1, Elige tu civilización)", SwingConstants.CENTER);
 		JLabel player2CivilizationSelection = new JLabel(
-				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización)", JLabel.CENTER);
+				"Player 2, Choose your civilization. (Jugador 2, Elige tu civilización)", SwingConstants.CENTER);
 
 		JButton done = new JButton("Play! / Jugar!");
 

@@ -28,6 +28,7 @@ public class Building extends Marker {
 		this.createBuilding(this.name, this.messages);
 	}
 
+	@Override
 	public boolean isValid(Tile tile, City city) {
 		for (Tile t : city.getOutskirts()) {
 			if (t.getMarker() instanceof Building && t.getMarker().hasStar) {
