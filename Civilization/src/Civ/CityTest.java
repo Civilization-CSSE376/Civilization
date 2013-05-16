@@ -49,6 +49,7 @@ public class CityTest {
 	
 	@Before
 	public void setUp() throws Exception{
+		Board board = new Board("America", "China", messages);
 		this.topLeft = new Panel();
 		this.topRight = new Panel();
 		this.bottomLeft = new Panel();

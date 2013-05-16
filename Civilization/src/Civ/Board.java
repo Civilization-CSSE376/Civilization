@@ -805,7 +805,7 @@ public class Board extends JPanel {
 			level = player.airplaneLevel;
 		} else if (option.equals(messages.getString("infantry"))) {
 			level = player.infantryLevel;
-		} else if (option.equals(messages.getString("artillary"))) {
+		} else if (option.equals(messages.getString("artillery"))) {
 			level = player.artilleryLevel;
 		} else if (option.equals(messages.getString("cavalry"))) {
 			level = player.cavalryLevel;

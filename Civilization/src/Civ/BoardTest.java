@@ -126,6 +126,7 @@ public class BoardTest {
 
 	@Test
 	public void testPhaseChanges() {
+		Board test = new Board("America", "China", messages);
 		assertEquals(board.getPlayer1(), board.getCurrentPlayer());
 		board.endPhase();
 		assertEquals(board.getPlayer2(), board.getCurrentPlayer());
@@ -903,15 +904,15 @@ public class BoardTest {
 	}
 
 	@Test
-	public void testHandleUnitArtillary() {
+	public void testHandleUnitArtillery() {
 		TestBoard board = new TestBoard("America", "China", messages);
 		Player p1 = new Player(messages);
 		assertEquals(3, p1.units.size());
-		assertTrue(board.handleUnit("Artillary", 5, p1));
+		assertTrue(board.handleUnit("Artillery", 5, p1));
 		assertEquals(4, p1.units.size());
-		assertEquals("Artillary", p1.units.get(3).type);
+		assertEquals("Artillery", p1.units.get(3).type);
 		p1.artilleryLevel = 2;
-		assertFalse(board.handleUnit("Artillary", 5, p1));
+		assertFalse(board.handleUnit("Artillery", 5, p1));
 		assertEquals(4, p1.units.size());
 	}
 
