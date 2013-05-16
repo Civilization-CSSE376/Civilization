@@ -32,7 +32,6 @@ public class MainWindow extends JFrame {
 	private JPanel buttons = makeJPanel(1800, 50, 0, 925);
 	private JPanel board = new JPanel();
 	private JPanel content = new JPanel();
-	private JButton rules = new JButton();
 	private JButton player1Details = new JButton();
 	private JButton player2Details = new JButton();
 	private JButton marketDetails = new JButton();
@@ -62,7 +61,6 @@ public class MainWindow extends JFrame {
 		this.player2Details.setText(messages.getString("player2Details"));
 		this.marketDetails.setText(messages.getString("marketDetails"));
 		this.endPhase.setText(messages.getString("endPhase"));
-		this.rules.setText(messages.getString("rules"));
 		this.quit.setText(messages.getString("quit"));
 		this.tradeCulture.setText(messages.getString("tradeCulture"));
 		this.tradeResource.setText(messages.getString("tradeResource"));
@@ -73,7 +71,6 @@ public class MainWindow extends JFrame {
 		this.buttons.add(this.endPhase);
 		this.buttons.add(this.tradeCulture);
 		this.buttons.add(this.tradeResource);
-		this.buttons.add(this.rules);
 		this.buttons.add(this.quit);
 		
 		this.content.add(this.board);
@@ -104,24 +101,6 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				((Board) map).endPhase();
 			}
-		});
-			
-		this.rules.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				if (Desktop.isDesktopSupported()) {
-					try {
-						File rulespdf = new File("src/civilization-rules.pdf");
-						Desktop.getDesktop().open(rulespdf);
-					} catch (IOException ex) {
-						System.out.println("Failed to open pdf.");
-					}
-				}
-
-			}
-
 		});
 
 		this.quit.addActionListener(new ActionListener() {
@@ -542,7 +521,7 @@ public class MainWindow extends JFrame {
 				resourceArray[3] += 1;
 				break;
 			default:
-				System.out.println("Unidentified resource: " + resource.toString());
+				// Unidentified resource
 				break;
 			}
 		}

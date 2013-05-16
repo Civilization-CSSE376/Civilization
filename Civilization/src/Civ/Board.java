@@ -348,8 +348,7 @@ public class Board extends JPanel {
 		} else if (x < 1320) { // Panel 7
 			if (!map.get(6).getIsExplored())
 				map.get(6).changeIsExplored();
-		} else
-			System.out.println("Error.");
+		}
 	}
 
 	public void checkUnexploredPanelNew(int x, int y) {
@@ -706,7 +705,6 @@ public class Board extends JPanel {
 
 							}
 						}
-						System.out.println("Tile valid! Moving figure.");
 						Tile oldTile = currentMovementFigure.location;
 						oldTile.getFigures().remove(currentMovementFigure);
 						Board.this.currentMovementFigure.setScreenLocation(tile
@@ -793,13 +791,9 @@ public class Board extends JPanel {
 						if (!(i == x && j == y)) {
 							if (i != -1 && i != 4 && j != -1 && j != 4) {
 								tileToCheck = map.get(panelNumber).getTiles()[i][j];
-								// System.out.println(" " + i + " " + y + "  " +
-								// tileToCheck.getTerrain().toString());
 								if (!tileToCheck.getTerrain().toString()
 										.equals("Water")) {
 									Board.this.validTiles.add(tileToCheck);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (i == -1) {
 								if (panelNumber > 0 && panelNumber != 4) {
@@ -813,11 +807,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -833,11 +822,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -853,11 +837,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 
@@ -874,11 +853,6 @@ public class Board extends JPanel {
 												.toString().equals("Water")) {
 											Board.this.validTiles
 													.add(tileToCheck);
-											System.out
-													.println("Adding tile... i = "
-															+ i
-															+ " and j = "
-															+ j);
 										}
 									}
 								}
@@ -897,35 +871,25 @@ public class Board extends JPanel {
 							if (i != -1 && i != 4 && j != -1 && j != 4) {
 								Board.this.validTiles.add(map.get(panelNumber)
 										.getTiles()[i][j]);
-								System.out.println("Adding tile... i = " + i
-										+ " and j = " + j);
 							} else if (i == -1) {
 								if (panelNumber > 0 && panelNumber != 4) {
 									Board.this.validTiles.add(map.get(
 											panelNumber - 1).getTiles()[3][j]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (i == 4) {
 								if (panelNumber < 7 && panelNumber != 3) {
 									Board.this.validTiles.add(map.get(
 											panelNumber + 1).getTiles()[0][j]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else if (j == -1) {
 								if (panelNumber > 3) {
 									Board.this.validTiles.add(map.get(
 											panelNumber - 4).getTiles()[i][3]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							} else {
 								if (panelNumber < 4) {
 									Board.this.validTiles.add(map.get(
 											panelNumber + 4).getTiles()[i][0]);
-									System.out.println("Adding tile... i = "
-											+ i + " and j = " + j);
 								}
 							}
 
@@ -934,8 +898,6 @@ public class Board extends JPanel {
 				}
 			}
 		}
-
-		System.out.println("Array size: " + Board.this.validTiles.size());
 
 	}
 
@@ -946,13 +908,9 @@ public class Board extends JPanel {
 			int x = e.getX();
 			int y = e.getY();
 			Board.currentClick = new Point(x, y);
-			// System.out.printf("\nMouse clicked at %d, %d\n", x, y);
 
 			Panel panel = findPanel(x, y);
 			Tile tile = findTile(panel, x, y);
-			System.out.println("\nTile located at "
-					+ tile.getScreenLocation().x + " , "
-					+ tile.getScreenLocation().y);
 			Board.currentTile = tile;
 
 			if (Board.this.currentPhase.equals(START_OF_TURN)) {
@@ -1150,8 +1108,6 @@ public class Board extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(techCards.getItemAt(techCards
-						.getSelectedIndex()));
 				currentPlayer.techCards.add(Board.techCards.get(techCards
 						.getItemAt(techCards.getSelectedIndex())));
 				updateValidTiersAndCards(tierDropDown.getSelectedIndex() + 1);
@@ -1260,7 +1216,6 @@ public class Board extends JPanel {
 		tree.setLayout(null);
 		if (player.tier1Cards + player.tier2Cards + player.tier3Cards
 				+ player.tier4Cards == 0) {
-			System.out.println("No cards!");
 			JLabel label = new JLabel(
 					messages.getString("noCards"));
 			label.setLocation(50, 145);
@@ -1509,8 +1464,6 @@ public class Board extends JPanel {
 				} else {
 					String[] stringTiles;
 					stringTiles = text.split("_");
-					System.out.println(index + "   [" + (index % 4) + "] ["
-							+ (int) (Math.floor(index / 4)) + "]");
 					tiles[(index % 4)][(int) (Math.floor(index / 4))] = new Tile(
 							(index % 4), (int) (Math.floor(index / 4)),
 							stringTiles[0], Integer.parseInt(stringTiles[1]),
@@ -1675,7 +1628,7 @@ public class Board extends JPanel {
 						break;
 					}
 				} catch (IOException e) {
-					System.out.println("did not load image correctly");
+					// Did not load image correctly
 					e.printStackTrace();
 				}
 			} else {
@@ -1704,7 +1657,7 @@ public class Board extends JPanel {
 						break;
 					}
 				} catch (IOException e) {
-					System.out.println("did not load image correctly");
+					// Did not load image correctly
 					e.printStackTrace();
 				}
 			}
@@ -1720,7 +1673,7 @@ public class Board extends JPanel {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 0, 0, null);
 		} catch (IOException e) {
-			System.out.println("did not load image correctly");
+			// Did not load image correctly
 			e.printStackTrace();
 		}
 
@@ -1734,7 +1687,7 @@ public class Board extends JPanel {
 			BufferedImage image = ImageIO.read(new File(filename));
 			g2.drawImage(image, 1320, 440, null);
 		} catch (IOException e) {
-			System.out.println("did not load image correctly");
+			// Did not load image correctly
 			e.printStackTrace();
 		}
 
@@ -1767,7 +1720,6 @@ public class Board extends JPanel {
 				if(Board.this.currentPlayer.trade < 0){
 					Board.this.currentPlayer.trade = 0;
 				}
-				System.out.println(currentPlayer.trade);
 			}
 		} else if (this.currentPhase.equals(TRADE)) {
 			if (this.currentPlayer == this.firstPlayer) {
@@ -1775,7 +1727,6 @@ public class Board extends JPanel {
 				for (City c : Board.this.currentPlayer.cities) {
 					Board.this.currentPlayer.trade += c.calcTrade();
 				}
-				System.out.println(currentPlayer.trade);
 			} else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;

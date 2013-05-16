@@ -174,7 +174,7 @@ public class Building extends Marker {
 			g2.drawImage(buildingImage, (int)this.getScreenLocation().x - 42, (int)this.getScreenLocation().y - 42, null);
 		}
 		catch (IOException e){
-			System.out.println("did not load building image correctly");
+			// Did not load building image correctly
 			e.printStackTrace();
 		}
 	}

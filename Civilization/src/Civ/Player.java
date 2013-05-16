@@ -98,9 +98,7 @@ public class Player {
 					checkLocation2 += 110;
 			}
 			this.location = new Point2D.Double(newX, newY);
-		} else
-			System.out.println("\nInvalid location -- cannot move player.");
-
+		} 
 	}
 
 	public int getSpeed() {
