@@ -1,14 +1,12 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class AtomicTheory extends TechCard {
 
-	public AtomicTheory(ResourceBundle messages) {
-		super(messages.getString("atomicTheory"));
+	public AtomicTheory() {
+		super("AtomicTheory");
 		this.tier = 4;
 	}
 

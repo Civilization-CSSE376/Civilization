@@ -1,23 +1,18 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class Chivalry extends TechCard {
 
-	private static ResourceBundle messages;
-	
-	public Chivalry(ResourceBundle messages) {
-		super(messages.getString("chivalry"));
-		Chivalry.messages = messages;
+	public Chivalry() {
+		super("Chivalry");
 		this.tier = 2;
 	}
 
 	@Override
 	public void takeEffect(Player player) {
-		player.unlockedGovernments.add(messages.getString("feudalism"));
+		player.unlockedGovernments.add("Feudalism");
 		if(player.cavalryLevel < 2){
 			player.cavalryLevel = 2;
 		}

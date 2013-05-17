@@ -26,7 +26,7 @@ public class TechCardTest {
 
 	@Test
 	public void animalHusbandryTest() {
-		TechCard target = new AnimalHusbandry(messages);
+		TechCard target = new AnimalHusbandry();
 		target.takeEffect(player);
 		assertEquals("AnimalHusbandry", target.name);
 		assertEquals(1, target.tier);
@@ -34,7 +34,7 @@ public class TechCardTest {
 	
 	@Test
 	public void atomicTheoryTest(){
-		TechCard target = new AtomicTheory(messages);
+		TechCard target = new AtomicTheory();
 		target.takeEffect(player);
 		assertEquals("AtomicTheory", target.name);
 		assertEquals(4, target.tier);
@@ -42,7 +42,7 @@ public class TechCardTest {
 	
 	@Test
 	public void ballisticsTest(){
-		TechCard target = new Ballistics(messages);
+		TechCard target = new Ballistics();
 		target.takeEffect(player);
 		assertEquals("Ballistics", target.name);
 		assertEquals(4, target.tier);
@@ -51,7 +51,7 @@ public class TechCardTest {
 	
 	@Test
 	public void bankingTest(){
-		TechCard target = new Banking(messages);
+		TechCard target = new Banking();
 		target.takeEffect(player);
 		assertEquals("Banking", target.name);
 		assertEquals(3, target.tier);
@@ -60,7 +60,7 @@ public class TechCardTest {
 	
 	@Test
 	public void biologyTest(){
-		TechCard target = new Biology(messages);
+		TechCard target = new Biology();
 		target.takeEffect(player);
 		assertEquals("Biology", target.name);
 		assertEquals(3, target.tier);
@@ -69,7 +69,7 @@ public class TechCardTest {
 	
 	@Test
 	public void chivalryTest(){
-		TechCard target = new Chivalry(messages);
+		TechCard target = new Chivalry();
 		target.takeEffect(player);
 		assertEquals("Chivalry", target.name);
 		assertEquals(2, target.tier);
@@ -79,7 +79,7 @@ public class TechCardTest {
 	
 	@Test
 	public void civilServicesTest(){
-		TechCard target = new CivilServices(messages);
+		TechCard target = new CivilServices();
 		int handsize = player.handSize;
 		int gold = player.gold;
 		target.takeEffect(player);
@@ -91,7 +91,7 @@ public class TechCardTest {
 	
 	@Test
 	public void codeOfLawsTest(){
-		TechCard target = new CodeOfLaws(messages);
+		TechCard target = new CodeOfLaws();
 		target.takeEffect(player);
 		assertEquals("CodeOfLaws", target.name);
 		assertEquals(1, target.tier);
@@ -101,7 +101,7 @@ public class TechCardTest {
 	
 	@Test
 	public void combustionTest(){
-		TechCard target = new Combustion(messages);
+		TechCard target = new Combustion();
 		target.takeEffect(player);
 		assertEquals("Combustion", target.name);
 		assertEquals(4, target.tier);
@@ -110,7 +110,7 @@ public class TechCardTest {
 	
 	@Test
 	public void communsimTest(){
-		TechCard target = new Communism(messages);
+		TechCard target = new Communism();
 		target.takeEffect(player);
 		assertEquals("Communism", target.name);
 		assertEquals(3, target.tier);
@@ -119,7 +119,7 @@ public class TechCardTest {
 	
 	@Test
 	public void computersTest(){
-		TechCard target = new Computers(messages);
+		TechCard target = new Computers();
 		int gold = player.gold;
 		target.takeEffect(player);
 		assertEquals("Computers", target.name);
@@ -129,7 +129,7 @@ public class TechCardTest {
 	
 	@Test
 	public void constructionTest(){
-		TechCard target = new Construction(messages);
+		TechCard target = new Construction();
 		target.takeEffect(player);
 		assertEquals("Construction", target.name);
 		assertEquals(2, target.tier);
@@ -138,7 +138,7 @@ public class TechCardTest {
 	
 	@Test
 	public void currencyTest(){
-		TechCard target = new Currency(messages);
+		TechCard target = new Currency();
 		target.takeEffect(player);
 		assertEquals("Currency", target.name);
 		assertEquals(1, target.tier);
@@ -147,7 +147,7 @@ public class TechCardTest {
 	
 	@Test
 	public void democracyTest(){
-		TechCard target = new Democracy(messages);
+		TechCard target = new Democracy();
 		target.takeEffect(player);
 		assertEquals("Democracy", target.name);
 		assertEquals(2, target.tier);
@@ -157,7 +157,7 @@ public class TechCardTest {
 	
 	@Test
 	public void engineeringTest(){
-		TechCard target = new Engineering(messages);
+		TechCard target = new Engineering();
 		target.takeEffect(player);
 		assertEquals("Engineering", target.name);
 		assertEquals(2, target.tier);
@@ -166,7 +166,7 @@ public class TechCardTest {
 	
 	@Test
 	public void flightTest(){
-		TechCard target = new Flight(messages);
+		TechCard target = new Flight();
 		target.takeEffect(player);
 		assertEquals("Flight", target.name);
 		assertEquals(4, target.tier);
@@ -175,7 +175,7 @@ public class TechCardTest {
 	
 	@Test
 	public void gunpowderTest(){
-		TechCard target = new Gunpowder(messages);
+		TechCard target = new Gunpowder();
 		target.takeEffect(player);
 		assertEquals("Gunpowder", target.name);
 		assertEquals(3, target.tier);
@@ -184,7 +184,7 @@ public class TechCardTest {
 	
 	@Test
 	public void horsebackRidingTest(){
-		TechCard target = new HorsebackRiding(messages);
+		TechCard target = new HorsebackRiding();
 		target.takeEffect(player);
 		assertEquals("HorsebackRiding", target.name);
 		assertEquals(1, target.tier);
@@ -193,7 +193,7 @@ public class TechCardTest {
 	
 	@Test
 	public void irrigationTest(){
-		TechCard target = new Irrigation(messages);
+		TechCard target = new Irrigation();
 		target.takeEffect(player);
 		assertEquals("Irrigation", target.name);
 		assertEquals(2, target.tier);
@@ -202,7 +202,7 @@ public class TechCardTest {
 	
 	@Test
 	public void masonryTest(){
-		TechCard target = new Masonry(messages);
+		TechCard target = new Masonry();
 		target.takeEffect(player);
 		assertEquals("Masonry", target.name);
 		assertEquals(1, target.tier);
@@ -211,7 +211,7 @@ public class TechCardTest {
 	
 	@Test
 	public void massMediaTest(){
-		TechCard target = new MassMedia(messages);
+		TechCard target = new MassMedia();
 		target.takeEffect(player);
 		assertEquals("MassMedia", target.name);
 		assertEquals(4, target.tier);
@@ -219,7 +219,7 @@ public class TechCardTest {
 	
 	@Test
 	public void mathematicsTest(){
-		TechCard target = new Mathematics(messages);
+		TechCard target = new Mathematics();
 		target.takeEffect(player);
 		assertEquals("Mathematics", target.name);
 		assertEquals(2, target.tier);
@@ -228,7 +228,7 @@ public class TechCardTest {
 	
 	@Test
 	public void metalCastingTest(){
-		TechCard target = new MetalCasting(messages);
+		TechCard target = new MetalCasting();
 		int gold = player.gold;
 		target.takeEffect(player);
 		assertEquals("MetalCasting", target.name);
@@ -239,7 +239,7 @@ public class TechCardTest {
 	
 	@Test
 	public void metalWorkingTest(){
-		TechCard target = new MetalWorking(messages);
+		TechCard target = new MetalWorking();
 		target.takeEffect(player);
 		assertEquals("MetalWorking", target.name);
 		assertEquals(1, target.tier);
@@ -248,7 +248,7 @@ public class TechCardTest {
 	
 	@Test
 	public void militaryScienceTest(){
-		TechCard target = new MilitaryScience(messages);
+		TechCard target = new MilitaryScience();
 		target.takeEffect(player);
 		assertEquals("MilitaryScience", target.name);
 		assertEquals(3, target.tier);
@@ -257,7 +257,7 @@ public class TechCardTest {
 	
 	@Test
 	public void monarchyTest(){
-		TechCard target = new Monarchy(messages);
+		TechCard target = new Monarchy();
 		target.takeEffect(player);
 		assertEquals("Monarchy", target.name);
 		assertEquals(2, target.tier);
@@ -266,7 +266,7 @@ public class TechCardTest {
 	
 	@Test
 	public void navigationTest(){
-		TechCard target = new Navigation(messages);
+		TechCard target = new Navigation();
 		target.takeEffect(player);
 		assertEquals("Navigation", target.name);
 		assertEquals(1, target.tier);
@@ -275,7 +275,7 @@ public class TechCardTest {
 	
 	@Test
 	public void philosophyTest(){
-		TechCard target = new Philosophy(messages);
+		TechCard target = new Philosophy();
 		target.takeEffect(player);
 		assertEquals("Philosophy", target.name);
 		assertEquals(1, target.tier);
@@ -284,7 +284,7 @@ public class TechCardTest {
 	
 	@Test
 	public void potteryTest(){
-		TechCard target = new Pottery(messages);
+		TechCard target = new Pottery();
 		target.takeEffect(player);
 		assertEquals("Pottery", target.name);
 		assertEquals(1, target.tier);
@@ -293,7 +293,7 @@ public class TechCardTest {
 	
 	@Test
 	public void printingPressTest(){
-		TechCard target = new PrintingPress(messages);
+		TechCard target = new PrintingPress();
 		target.takeEffect(player);
 		assertEquals("PrintingPress", target.name);
 		assertEquals(2, target.tier);
@@ -303,7 +303,7 @@ public class TechCardTest {
 	
 	@Test
 	public void railroadsTest(){
-		TechCard target = new Railroad(messages);
+		TechCard target = new Railroad();
 		target.takeEffect(player);
 		assertEquals("Railroad", target.name);
 		assertEquals(3, target.tier);
@@ -313,7 +313,7 @@ public class TechCardTest {
 	
 	@Test
 	public void replaceablePartsTest(){
-		TechCard target = new ReplaceableParts(messages);
+		TechCard target = new ReplaceableParts();
 		target.takeEffect(player);
 		assertEquals("ReplaceableParts", target.name);
 		assertEquals(4, target.tier);
@@ -323,7 +323,7 @@ public class TechCardTest {
 	
 	@Test
 	public void sailingTest(){
-		TechCard target = new Sailing(messages);
+		TechCard target = new Sailing();
 		target.takeEffect(player);
 		assertEquals("Sailing", target.name);
 		assertEquals(2, target.tier);
@@ -332,7 +332,7 @@ public class TechCardTest {
 	
 	@Test
 	public void steamPowerTest(){
-		TechCard target = new SteamPower(messages);
+		TechCard target = new SteamPower();
 		target.takeEffect(player);
 		assertEquals("SteamPower", target.name);
 		assertEquals(3, target.tier);
@@ -341,7 +341,7 @@ public class TechCardTest {
 	
 	@Test
 	public void theologyTest(){
-		TechCard target = new Theology(messages);
+		TechCard target = new Theology();
 		int handsize = player.handSize;
 		target.takeEffect(player);
 		assertEquals("Theology", target.name);
@@ -353,7 +353,7 @@ public class TechCardTest {
 	
 	@Test
 	public void writingTest(){
-		TechCard target = new Writing(messages);
+		TechCard target = new Writing();
 		target.takeEffect(player);
 		assertEquals("Writing", target.name);
 		assertEquals(1, target.tier);

@@ -1,14 +1,12 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class Gunpowder extends TechCard {
 
-	public Gunpowder(ResourceBundle messages) {
-		super(messages.getString("gunpowder"));
+	public Gunpowder() {
+		super("Gunpowder");
 		this.tier = 3;
 	}
 

@@ -1,14 +1,12 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class Computers extends TechCard {
 
-	public Computers(ResourceBundle messages) {
-		super(messages.getString("computers"));
+	public Computers() {
+		super("Computers");
 		this.tier = 4;
 	}
 

@@ -1,14 +1,12 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class Combustion extends TechCard {
 
-	public Combustion(ResourceBundle messages) {
-		super(messages.getString("combustion"));
+	public Combustion() {
+		super("Combustion");
 		this.tier = 4;
 	}
 

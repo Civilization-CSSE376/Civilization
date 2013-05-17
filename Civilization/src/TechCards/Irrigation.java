@@ -1,14 +1,12 @@
 package TechCards;
 
-import java.util.ResourceBundle;
-
 import Civ.Player;
 import Civ.TechCard;
 
 public class Irrigation extends TechCard {
 
-	public Irrigation(ResourceBundle messages) {
-		super(messages.getString("irrigation"));
+	public Irrigation() {
+		super("Irrigation");
 		this.tier = 2;
 	}
 
