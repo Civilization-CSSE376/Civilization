@@ -73,7 +73,7 @@ public class CityTest {
 		this.bottomLeft.getTiles()[1][0].setTerrain("F");
 		this.bottomLeft.getTiles()[0][3].setTerrain("F");
 		this.bottomLeft.getTiles()[2][2].setTerrain("F");
-		this.bottomLeft.getTiles()[2][3].setTerrain("W");//this one is the for the "water test" of validOutskirts
+		this.bottomLeft.getTiles()[2][3].setTerrain("W");//this one is for the "water test" of validOutskirts
 		this.bottomLeft.getTiles()[3][2].setTerrain("F");
 		this.bottomRight.getTiles()[2][1].setTerrain("F");
 		this.bottomRight.getTiles()[2][2].setTerrain("F");

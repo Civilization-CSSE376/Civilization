@@ -7,6 +7,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 public class City implements Drawable{
 
@@ -73,11 +74,14 @@ public class City implements Drawable{
 		for (Tile t : this.outskirts) {
 			totalProduction += t.getProduction();
 		}
+		System.out.println("the current player name is" + Board.currentPlayer.government.name + Math.random());
 		for(Figure f : Board.currentPlayer.figures){
 			if(f.getClass().toString().equals("class Civ.Settler")){
 				totalProduction += f.location.getProduction();
 			}
 		}
+		
+		System.out.println("The player has this many cities " + Board.currentPlayer.cities.size());
 		this.production = totalProduction;
 		return totalProduction;
 	}
@@ -131,7 +135,7 @@ public class City implements Drawable{
 		Panel startPanel = Board.findPanel(startTile);
 		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
-		ArrayList<Tile> outskirts = new ArrayList<Tile>();
+		ArrayList<Tile> myOutskirts = new ArrayList<Tile>();
 
 		Panel westPanel = new Panel();
 		Panel eastPanel = new Panel();
@@ -185,26 +189,26 @@ public class City implements Drawable{
 			}
 
 			// west panel
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY]);
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY + 1]);
 
 			// south panel
-			outskirts
+			myOutskirts
 					.add(southPanel.getTiles()[startX][southPanel.getTiles()[0].length - 1]);
-			outskirts.add(southPanel.getTiles()[startX + 1][southPanel
+			myOutskirts.add(southPanel.getTiles()[startX + 1][southPanel
 					.getTiles()[0].length - 1]);
 
 			// southWest panel
-			outskirts
+			myOutskirts
 					.add(southWestPanel.getTiles()[southWestPanel.getTiles().length - 1][southWestPanel
 							.getTiles().length - 1]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
 
 		} else if (startX + 2 > startPanel.getTiles().length && startY - 1 < 0) {
 			// bottom right corner
@@ -228,23 +232,23 @@ public class City implements Drawable{
 			}
 
 			// east panel
-			outskirts.add(eastPanel.getTiles()[0][startY]);
-			outskirts.add(eastPanel.getTiles()[0][startY + 1]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY + 1]);
 
 			// south panel
-			outskirts.add(southPanel.getTiles()[startX - 1][southPanel
+			myOutskirts.add(southPanel.getTiles()[startX - 1][southPanel
 					.getTiles()[0].length - 1]);
-			outskirts
+			myOutskirts
 					.add(southPanel.getTiles()[startX][southPanel.getTiles()[0].length - 1]);
 
 			// southEast panel
-			outskirts.add(southEastPanel.getTiles()[0][southEastPanel
+			myOutskirts.add(southEastPanel.getTiles()[0][southEastPanel
 					.getTiles().length - 1]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
 		} else if (startX - 1 < 0
 				&& startY + 2 > startPanel.getTiles()[0].length) {
 			// top left corner
@@ -268,23 +272,23 @@ public class City implements Drawable{
 			}
 
 			// west panel
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY - 1]);
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY]);
 
 			// north panel
-			outskirts.add(northPanel.getTiles()[startX][0]);
-			outskirts.add(northPanel.getTiles()[startX + 1][0]);
+			myOutskirts.add(northPanel.getTiles()[startX][0]);
+			myOutskirts.add(northPanel.getTiles()[startX + 1][0]);
 
 			// northWest panel
-			outskirts
+			myOutskirts
 					.add(northWestPanel.getTiles()[northWestPanel.getTiles().length - 1][0]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
 		} else if (startX + 2 > startPanel.getTiles().length
 				&& startY + 2 > startPanel.getTiles()[0].length) {
 			// top right corner
@@ -308,20 +312,20 @@ public class City implements Drawable{
 			}
 
 			// east panel
-			outskirts.add(eastPanel.getTiles()[0][startY - 1]);
-			outskirts.add(eastPanel.getTiles()[0][startY]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY - 1]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY]);
 
 			// north panel
-			outskirts.add(northPanel.getTiles()[startX - 1][0]);
-			outskirts.add(northPanel.getTiles()[startX][0]);
+			myOutskirts.add(northPanel.getTiles()[startX - 1][0]);
+			myOutskirts.add(northPanel.getTiles()[startX][0]);
 
 			// northEast panel
-			outskirts.add(northEastPanel.getTiles()[0][0]);
+			myOutskirts.add(northEastPanel.getTiles()[0][0]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
 		} else if (startX - 1 < 0) {
 			// west edge
 
@@ -330,19 +334,19 @@ public class City implements Drawable{
 			}
 
 			// west panel
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY - 1]);
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY]);
-			outskirts
+			myOutskirts
 					.add(westPanel.getTiles()[westPanel.getTiles().length - 1][startY + 1]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
 
 		} else if (startX + 2 > startPanel.getTiles().length) {
 			// east edge
@@ -352,16 +356,16 @@ public class City implements Drawable{
 			}
 
 			// east panel
-			outskirts.add(eastPanel.getTiles()[0][startY - 1]);
-			outskirts.add(eastPanel.getTiles()[0][startY]);
-			outskirts.add(eastPanel.getTiles()[0][startY + 1]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY - 1]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY]);
+			myOutskirts.add(eastPanel.getTiles()[0][startY + 1]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
 
 		} else if (startY - 1 < 0) {
 			// south edge
@@ -371,19 +375,19 @@ public class City implements Drawable{
 			}
 
 			// south panel
-			outskirts.add(southPanel.getTiles()[startX - 1][southPanel
+			myOutskirts.add(southPanel.getTiles()[startX - 1][southPanel
 					.getTiles()[0].length - 1]);
-			outskirts
+			myOutskirts
 					.add(southPanel.getTiles()[startX][southPanel.getTiles()[0].length - 1]);
-			outskirts.add(southPanel.getTiles()[startX + 1][southPanel
+			myOutskirts.add(southPanel.getTiles()[startX + 1][southPanel
 					.getTiles()[0].length - 1]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
 
 		} else if (startY + 2 > startPanel.getTiles()[0].length) {
 			// north edge
@@ -393,16 +397,16 @@ public class City implements Drawable{
 			}
 
 			// north panel
-			outskirts.add(northPanel.getTiles()[startX - 1][0]);
-			outskirts.add(northPanel.getTiles()[startX][0]);
-			outskirts.add(northPanel.getTiles()[startX + 1][0]);
+			myOutskirts.add(northPanel.getTiles()[startX - 1][0]);
+			myOutskirts.add(northPanel.getTiles()[startX][0]);
+			myOutskirts.add(northPanel.getTiles()[startX + 1][0]);
 
 			// start panel
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
 
 		} else {
 			// start panel
@@ -411,14 +415,14 @@ public class City implements Drawable{
 				return null;
 			}
 
-			outskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY]);
-			outskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
-			outskirts.add(startPanel.getTiles()[startX - 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY + 1]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY]);
+			myOutskirts.add(startPanel.getTiles()[startX + 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY - 1]);
+			myOutskirts.add(startPanel.getTiles()[startX - 1][startY]);
 		}
 		
 		ArrayList<Figure> enemyFigures = new ArrayList<Figure>();
@@ -429,10 +433,10 @@ public class City implements Drawable{
 			}
 		}
 		
-		for(int i = 0; i < outskirts.size() - 1; i++){
-			for(int j = 0; j < outskirts.get(i).getFigures().size() - 1; j++){
-				if(enemyFigures.contains(outskirts.get(i).getFigures().get(j))){
-					outskirts.remove(i);
+		for(int i = 0; i < myOutskirts.size() - 1; i++){
+			for(int j = 0; j < myOutskirts.get(i).getFigures().size() - 1; j++){
+				if(enemyFigures.contains(myOutskirts.get(i).getFigures().get(j))){
+					myOutskirts.remove(i);
 				}
 			}
 		}
@@ -445,7 +449,7 @@ public class City implements Drawable{
 //			}
 //		}
 
-		return outskirts;
+		return myOutskirts;
 	}
 
 	/**

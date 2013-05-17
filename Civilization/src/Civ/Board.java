@@ -234,10 +234,10 @@ public class Board extends JPanel {
 		Board.player1.cities.add(city1);
 		Board.player2.cities.add(city2);
 
-		Board.player1.government = new Government(Board.player1, "Fundamentalism");
-		Board.player1.units.add(new Unit(messages.getString("infantry"), 1, messages)); // TODO check we already have this...
-		Board.player1.units.add(new Unit(messages.getString("cavalry"), 1, messages));
-		Board.player1.units.add(new Unit(messages.getString("artillery"), 1, messages));
+//		Board.player1.government = new Government(Board.player1, "Fundamentalism");
+//		Board.player1.units.add(new Unit(messages.getString("infantry"), 1, messages)); // TODO check we already have this...
+//		Board.player1.units.add(new Unit(messages.getString("cavalry"), 1, messages));
+//		Board.player1.units.add(new Unit(messages.getString("artillery"), 1, messages));
 
 		map.get(0).getTiles()[1][1].setCity(city1);
 		map.get(7).getTiles()[2][2].setCity(city2);
@@ -805,7 +805,7 @@ public class Board extends JPanel {
 			level = player.airplaneLevel;
 		} else if (option.equals(messages.getString("infantry"))) {
 			level = player.infantryLevel;
-		} else if (option.equals(messages.getString("artillary"))) {
+		} else if (option.equals(messages.getString("artillery"))) {
 			level = player.artilleryLevel;
 		} else if (option.equals(messages.getString("cavalry"))) {
 			level = player.cavalryLevel;
