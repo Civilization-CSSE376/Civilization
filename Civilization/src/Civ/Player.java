@@ -19,11 +19,11 @@ public class Player {
 	public int cityLimit = 2;
 	public int culture = 0;
 	public int gold = 0;
-	public int speed = 22;
+	public int speed = 2;
 	public int handSize = 2;
 	public int stackSize = 2;
 	public int battleHandSize = 3;
-	public int trade = 0;
+	public int trade = 26;
 	public int combatAdvantage = 0;
 	public int cultureTrackProgress = 0; 
 	public boolean canBuyTier2TechCard = false;
