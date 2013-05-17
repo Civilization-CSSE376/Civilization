@@ -40,6 +40,7 @@ public class MainWindow extends JFrame {
 	private JButton tradeResource = new JButton();
 	private String p1Civilization;
 	private String p2Civilization;
+	private static ResourceBundle messages;
 	
 	public MainWindow(String languageChosen, String player1CivilizationChosen, String player2CivilizationChosen) {
 		Locale currentLocale;
@@ -48,6 +49,7 @@ public class MainWindow extends JFrame {
 		else currentLocale = new Locale("sp", "SP");
 		
 		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		MainWindow.messages = messages;
 		this.setLayout(null);
 		
 		this.p1Civilization = player1CivilizationChosen;
@@ -527,7 +529,7 @@ public class MainWindow extends JFrame {
 			cost[0] = 7;
 			cost[1] = 5;
 			Board.currentPlayer.hasWon = true;
-			Board.currentPlayer.winCondition = "Culture";
+			Board.currentPlayer.winCondition = messages.getString("culture");
 		}
 		return cost;
 	}
