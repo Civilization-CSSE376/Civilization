@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class MassMedia extends TechCard {
 
-	public MassMedia() {
-		super("MassMedia");
+	public MassMedia(ResourceBundle messages) {
+		super(messages.getString("massMedia"));
 		this.tier = 4;
 	}
 

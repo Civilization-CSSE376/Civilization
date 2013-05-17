@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class ReplaceableParts extends TechCard {
 
-	public ReplaceableParts() {
-		super("ReplaceableParts");
+	public ReplaceableParts(ResourceBundle messages) {
+		super(messages.getString("replaceableParts"));
 		this.tier = 4;
 	}
 

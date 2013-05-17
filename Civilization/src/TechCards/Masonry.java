@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class Masonry extends TechCard {
 
-	public Masonry() {
-		super("Masonry");
+	public Masonry(ResourceBundle messages) {
+		super(messages.getString("masonry"));
 		this.tier = 1;
 	}
 

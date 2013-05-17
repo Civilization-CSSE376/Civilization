@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class Flight extends TechCard {
 
-	public Flight() {
-		super("Flight");
+	public Flight(ResourceBundle messages) {
+		super(messages.getString("flight"));
 		this.tier = 4;
 	}
 

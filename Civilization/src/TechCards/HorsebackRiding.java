@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class HorsebackRiding extends TechCard {
 
-	public HorsebackRiding() {
-		super("HorsebackRiding");
+	public HorsebackRiding(ResourceBundle messages) {
+		super(messages.getString("horsebackRiding"));
 		this.tier = 1;
 	}
 

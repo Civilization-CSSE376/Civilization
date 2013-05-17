@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class MetalCasting extends TechCard {
 
-	public MetalCasting() {
-		super("MetalCasting");
+	public MetalCasting(ResourceBundle messages) {
+		super(messages.getString("metalCasting"));
 		this.tier = 3;
 	}
 

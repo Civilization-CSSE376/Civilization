@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class SteamPower extends TechCard {
 
-	public SteamPower() {
-		super("SteamPower");
+	public SteamPower(ResourceBundle messages) {
+		super(messages.getString("steamPower"));
 		this.tier = 3;
 	}
 

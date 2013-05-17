@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class Biology extends TechCard {
 
-	public Biology() {
-		super("Biology");
+	public Biology(ResourceBundle messages) {
+		super(messages.getString("biology"));
 		this.tier = 3;
 	}
 

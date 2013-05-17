@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class AnimalHusbandry extends TechCard {
 
-	public AnimalHusbandry() {
-		super("AnimalHusbandry");
+	public AnimalHusbandry(ResourceBundle messages) {
+		super(messages.getString("animalHusbandry"));
 		this.tier = 1;
 	}
 

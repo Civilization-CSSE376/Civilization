@@ -1,12 +1,14 @@
 package TechCards;
 
+import java.util.ResourceBundle;
+
 import Civ.Player;
 import Civ.TechCard;
 
 public class Ballistics extends TechCard {
 
-	public Ballistics() {
-		super("Ballistics");
+	public Ballistics(ResourceBundle messages) {
+		super(messages.getString("ballistics"));
 		this.tier = 4;
 	}
 

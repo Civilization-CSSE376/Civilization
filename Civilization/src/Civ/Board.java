@@ -106,42 +106,42 @@ public class Board extends JPanel {
 
 	public static Map<String, TechCard> techCards = new HashMap<String, TechCard>() {
 		{
-			put("AnimalHusbandry", new AnimalHusbandry());
-			put("AtomicTheory", new AtomicTheory());
-			put("Ballistics", new Ballistics());
-			put("Banking", new Banking());
-			put("Biology", new Biology());
-			put("Chivalry", new Chivalry());
-			put("CivilServices", new CivilServices());
-			put("CodeOfLaws", new CodeOfLaws());
-			put("Combustion", new Combustion());
-			put("Communism", new Communism());
-			put("Computers", new Computers());
-			put("Construction", new Construction());
-			put("Currency", new Currency());
-			put("Democracy", new Democracy());
-			put("Engineering", new Engineering());
-			put("Flight", new Flight());
-			put("Gunpowder", new Gunpowder());
-			put("HorsebackRiding", new HorsebackRiding());
-			put("Irrigation", new Irrigation());
-			put("Masonry", new Masonry());
-			put("MassMedia", new MassMedia());
-			put("Mathematics", new Mathematics());
-			put("MetalCasting", new MetalCasting());
-			put("MetalWorking", new MetalWorking());
-			put("MilitaryScience", new MilitaryScience());
-			put("Monarchy", new Monarchy());
-			put("Navigation", new Navigation());
-			put("Philosophy", new Philosophy());
-			put("Pottery", new Pottery());
-			put("PrintingPress", new PrintingPress());
-			put("Railroad", new Railroad());
-			put("ReplaceableParts", new ReplaceableParts());
-			put("Sailing", new Sailing());
-			put("SteamPower", new SteamPower());
-			put("Theology", new Theology());
-			put("Writing", new Writing());
+			put("AnimalHusbandry", new AnimalHusbandry(messages));
+			put("AtomicTheory", new AtomicTheory(messages));
+			put("Ballistics", new Ballistics(messages));
+			put("Banking", new Banking(messages));
+			put("Biology", new Biology(messages));
+			put("Chivalry", new Chivalry(messages));
+			put("CivilServices", new CivilServices(messages));
+			put("CodeOfLaws", new CodeOfLaws(messages));
+			put("Combustion", new Combustion(messages));
+			put("Communism", new Communism(messages));
+			put("Computers", new Computers(messages));
+			put("Construction", new Construction(messages));
+			put("Currency", new Currency(messages));
+			put("Democracy", new Democracy(messages));
+			put("Engineering", new Engineering(messages));
+			put("Flight", new Flight(messages));
+			put("Gunpowder", new Gunpowder(messages));
+			put("HorsebackRiding", new HorsebackRiding(messages));
+			put("Irrigation", new Irrigation(messages));
+			put("Masonry", new Masonry(messages));
+			put("MassMedia", new MassMedia(messages));
+			put("Mathematics", new Mathematics(messages));
+			put("MetalCasting", new MetalCasting(messages));
+			put("MetalWorking", new MetalWorking(messages));
+			put("MilitaryScience", new MilitaryScience(messages));
+			put("Monarchy", new Monarchy(messages));
+			put("Navigation", new Navigation(messages));
+			put("Philosophy", new Philosophy(messages));
+			put("Pottery", new Pottery(messages));
+			put("PrintingPress", new PrintingPress(messages));
+			put("Railroad", new Railroad(messages));
+			put("ReplaceableParts", new ReplaceableParts(messages));
+			put("Sailing", new Sailing(messages));
+			put("SteamPower", new SteamPower(messages));
+			put("Theology", new Theology(messages));
+			put("Writing", new Writing(messages));
 		}
 	};
 
@@ -264,42 +264,42 @@ public class Board extends JPanel {
 	public void writeTechCards() {
 		techCards = new HashMap<String, TechCard>() {
 			{
-				put(messages.getString("ballistics"), new Ballistics());
-				put(messages.getString("banking"), new Banking());
-				put(messages.getString("biology"), new Biology());
-				put(messages.getString("chivalry"), new Chivalry());
-				put(messages.getString("civilServices"), new CivilServices());
-				put(messages.getString("codeOfLaws"), new CodeOfLaws());
-				put(messages.getString("combustion"), new Combustion());
-				put(messages.getString("communism"), new Communism());
-				put(messages.getString("computers"), new Computers());
-				put(messages.getString("construction"), new Construction());
-				put(messages.getString("currency"), new Currency());
-				put(messages.getString("democracy"), new Democracy());
-				put(messages.getString("engineering"), new Engineering());
-				put(messages.getString("flight"), new Flight());
-				put(messages.getString("gunpowder"), new Gunpowder());
+				put(messages.getString("ballistics"), new Ballistics(messages));
+				put(messages.getString("banking"), new Banking(messages));
+				put(messages.getString("biology"), new Biology(messages));
+				put(messages.getString("chivalry"), new Chivalry(messages));
+				put(messages.getString("civilServices"), new CivilServices(messages));
+				put(messages.getString("codeOfLaws"), new CodeOfLaws(messages));
+				put(messages.getString("combustion"), new Combustion(messages));
+				put(messages.getString("communism"), new Communism(messages));
+				put(messages.getString("computers"), new Computers(messages));
+				put(messages.getString("construction"), new Construction(messages));
+				put(messages.getString("currency"), new Currency(messages));
+				put(messages.getString("democracy"), new Democracy(messages));
+				put(messages.getString("engineering"), new Engineering(messages));
+				put(messages.getString("flight"), new Flight(messages));
+				put(messages.getString("gunpowder"), new Gunpowder(messages));
 				put(messages.getString("horsebackRiding"),
-						new HorsebackRiding());
-				put(messages.getString("irrigation"), new Irrigation());
-				put(messages.getString("masonry"), new Masonry());
-				put(messages.getString("mathematics"), new Mathematics());
-				put(messages.getString("metalCasting"), new MetalCasting());
-				put(messages.getString("metalWorking"), new MetalWorking());
+						new HorsebackRiding(messages));
+				put(messages.getString("irrigation"), new Irrigation(messages));
+				put(messages.getString("masonry"), new Masonry(messages));
+				put(messages.getString("mathematics"), new Mathematics(messages));
+				put(messages.getString("metalCasting"), new MetalCasting(messages));
+				put(messages.getString("metalWorking"), new MetalWorking(messages));
 				put(messages.getString("militaryScience"),
-						new MilitaryScience());
-				put(messages.getString("monarchy"), new Monarchy());
-				put(messages.getString("navigation"), new Navigation());
-				put(messages.getString("philosophy"), new Philosophy());
-				put(messages.getString("pottery"), new Pottery());
-				put(messages.getString("printingPress"), new PrintingPress());
-				put(messages.getString("railroad"), new Railroad());
+						new MilitaryScience(messages));
+				put(messages.getString("monarchy"), new Monarchy(messages));
+				put(messages.getString("navigation"), new Navigation(messages));
+				put(messages.getString("philosophy"), new Philosophy(messages));
+				put(messages.getString("pottery"), new Pottery(messages));
+				put(messages.getString("printingPress"), new PrintingPress(messages));
+				put(messages.getString("railroad"), new Railroad(messages));
 				put(messages.getString("replaceableParts"),
-						new ReplaceableParts());
-				put(messages.getString("sailing"), new Sailing());
-				put(messages.getString("steamPower"), new SteamPower());
-				put(messages.getString("theology"), new Theology());
-				put(messages.getString("writing"), new Writing());
+						new ReplaceableParts(messages));
+				put(messages.getString("sailing"), new Sailing(messages));
+				put(messages.getString("steamPower"), new SteamPower(messages));
+				put(messages.getString("theology"), new Theology(messages));
+				put(messages.getString("writing"), new Writing(messages));
 			}
 		};
 	}
@@ -1622,19 +1622,19 @@ public class Board extends JPanel {
 
 		switch (civ) {
 		case "Egypt":
-			tempPlayer.techCards.add(new Construction());
+			tempPlayer.techCards.add(new Construction(messages));
 			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Egipto":
-			tempPlayer.techCards.add(new Construction());
+			tempPlayer.techCards.add(new Construction(messages));
 			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Russia":
-			tempPlayer.techCards.add(new Communism());
+			tempPlayer.techCards.add(new Communism(messages));
 			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.stackSize = 3;
@@ -1647,7 +1647,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "Rusia":
-			tempPlayer.techCards.add(new Communism());
+			tempPlayer.techCards.add(new Communism(messages));
 			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.stackSize = 3;
@@ -1660,7 +1660,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "Rome":
-			tempPlayer.techCards.add(new CodeOfLaws());
+			tempPlayer.techCards.add(new CodeOfLaws(messages));
 			tempPlayer.government = new Government(tempPlayer, "Republic");
 			tempPlayer.tier1Cards += 1;
 			/*
@@ -1670,7 +1670,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "Roma":
-			tempPlayer.techCards.add(new CodeOfLaws());
+			tempPlayer.techCards.add(new CodeOfLaws(messages));
 			tempPlayer.government = new Government(tempPlayer, "Republic");
 			tempPlayer.tier1Cards += 1;
 			/*
@@ -1680,7 +1680,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "America":
-			tempPlayer.techCards.add(new Currency());
+			tempPlayer.techCards.add(new Currency(messages));
 			tempPlayer.tier1Cards += 1;
 			// free great person at start of game
 			/*
@@ -1689,7 +1689,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "América":
-			tempPlayer.techCards.add(new Currency());
+			tempPlayer.techCards.add(new Currency(messages));
 			tempPlayer.tier1Cards += 1;
 			// free great person at start of game
 			/*
@@ -1698,7 +1698,7 @@ public class Board extends JPanel {
 			 */
 			break;
 		case "Germany":
-			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.techCards.add(new MetalWorking(messages));
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.units.add(new Unit("Infantry", 1));
 			// tempPlayer.units.add(new Unit("Infantry", 1));
@@ -1710,7 +1710,7 @@ public class Board extends JPanel {
 
 			break;
 		case "Alemania":
-			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.techCards.add(new MetalWorking(messages));
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.units.add(new Unit("Infantry", 1));
 			// tempPlayer.units.add(new Unit("Infantry", 1));
@@ -1722,15 +1722,13 @@ public class Board extends JPanel {
 
 			break;
 		case "China":
-			tempPlayer.techCards.add(new Writing());
+			tempPlayer.techCards.add(new Writing(messages));
 			tempPlayer.tier1Cards += 1;
 			/*
 			 * the chinese start with city walls in their capital. the chinese
 			 * gain 3 culture each time they explore a hut or conquer a village.
 			 * the chinese may save one of their killed units after each battle,
-			 * <<<<<<< HEAD returning it to their staning forces. =======
-			 * returning it to their standing forces. >>>>>>>
-			 * a685e1d7cfca774b593082f85c41a5cdbba8ed0e
+			 * returning it to their standing forces.
 			 */
 			break;
 		default:
