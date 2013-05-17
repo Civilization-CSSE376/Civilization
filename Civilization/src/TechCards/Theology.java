@@ -1,5 +1,6 @@
 package TechCards;
 
+import Civ.Government;
 import Civ.Player;
 import Civ.TechCard;
 
@@ -15,6 +16,8 @@ public class Theology extends TechCard {
 		player.handSize += 1;
 		player.unlockedBuildings.add("Cathedral");
 		player.unlockedGovernments.add("Fundamentalism");
+		
+		player.government = new Government(player, "Fundamentalism");
 
 	}
 

@@ -1,5 +1,6 @@
 package TechCards;
 
+import Civ.Government;
 import Civ.Player;
 import Civ.TechCard;
 
@@ -16,6 +17,8 @@ public class Democracy extends TechCard {
 		if(player.infantryLevel < 2){
 			player.infantryLevel = 2;
 		}
+		
+		player.government = new Government(player, "Democracy");
 
 	}
 

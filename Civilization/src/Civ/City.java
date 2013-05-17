@@ -40,7 +40,7 @@ public class City implements Drawable{
 	}
 
 	public int getProduction() {
-		return this.calcProduction();
+		return this.production;//iffy
 	}
 
 	public void setCapital() {
@@ -66,7 +66,7 @@ public class City implements Drawable{
 	 * 
 	 * @return totalProduction
 	 */
-	public int calcProduction() {
+	public int calcProduction(Board board) {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalProduction = 0;
@@ -91,7 +91,7 @@ public class City implements Drawable{
 	 * 
 	 * @return totalCulture
 	 */
-	public int calcCulture() {
+	public int calcCulture(Board board) {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalCulture = 0;
@@ -108,7 +108,7 @@ public class City implements Drawable{
 	 * 
 	 * @return totalTrade
 	 */
-	public int calcTrade() {
+	public int calcTrade(Board board) {
 		this.outskirts = this.getOutskirts(this.location);
 		
 		int totalTrade = 0;
@@ -133,7 +133,6 @@ public class City implements Drawable{
 		 * Written assuming normal math (x,y) plot but needs to be upsidedown computer science (x,y) plot so North and South get switched
 		 */
 		Panel startPanel = Board.findPanel(startTile);
-		
 		HashMap<String, Panel> neighbors = startPanel.getNeighbors();
 		ArrayList<Tile> myOutskirts = new ArrayList<Tile>();
 

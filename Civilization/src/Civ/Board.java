@@ -215,10 +215,10 @@ public class Board extends JPanel {
 		army2.setScreenLocation((map.get(7).getTiles()[2][3]
 				.getScreenLocation()));
 
-		this.player1.figures.add(settler1);
-		this.player2.figures.add(settler2);
-		 this.player1.figures.add(army1);
-		 this.player2.figures.add(army2);
+		Board.player1.figures.add(settler1);
+		Board.player2.figures.add(settler2);
+		 Board.player1.figures.add(army1);
+		 Board.player2.figures.add(army2);
 
 		map.get(0).getTiles()[0][0].getFigures().add(settler1);
 		map.get(7).getTiles()[3][3].getFigures().add(settler2);
@@ -250,10 +250,10 @@ public class Board extends JPanel {
 
 		// TODO make this more efficient. quickly copied/pasted initially
 		for (City c : Board.player1.cities) {
-			Board.player1.trade += c.calcTrade();
+			Board.player1.trade += c.calcTrade(this);
 		}
 		for (City c : Board.player2.cities) {
-			Board.player2.trade += c.calcTrade();
+			Board.player2.trade += c.calcTrade(this);
 		}
 
 		EnvironmentHandler mouseHandler = new EnvironmentHandler();
@@ -488,7 +488,7 @@ public class Board extends JPanel {
 				null,
 				messages.getString("askToMoveUnit")
 						+ figures.get(0).getNumberOfMoves()
-						+ messages.getString("numMovesLeft"), "Movement",
+						+ messages.getString("numMovesLeft"), messages.getString("movement"),
 				JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) {
 			currentMovementFigure = figures.get(0);
@@ -552,8 +552,7 @@ public class Board extends JPanel {
 					messages.getString("collectResourceOption"),
 					messages.getString("devoteArtsOption"),
 
-					"convertTradeOption" };// TODO
-											// messages.getString("convertTradeOption")
+					messages.getString("convertTradeOption") };
 			makeChoice(
 					choices,
 					new InitialHandler(),
@@ -666,6 +665,7 @@ public class Board extends JPanel {
 	}
 
 	private class BuildingHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -701,6 +701,7 @@ public class Board extends JPanel {
 	}
 
 	private class BuilderHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -713,6 +714,7 @@ public class Board extends JPanel {
 	}
 
 	private class InitialHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -739,6 +741,7 @@ public class Board extends JPanel {
 	}
 
 	private class UnitHandler implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// determine which menu item was selected
 			for (int i = 0; i < items.length; i++)
@@ -785,7 +788,7 @@ public class Board extends JPanel {
 		} else if (option.equals(messages.getString("units"))) {
 			ArrayList<String> Choiceitems = new ArrayList<String>();
 			Choiceitems.add(messages.getString("infantry"));
-			Choiceitems.add(messages.getString("artillary"));
+			Choiceitems.add(messages.getString("artillery"));
 			Choiceitems.add(messages.getString("cavalry"));
 			if (currentPlayer.techCards.contains(Board.techCards.get(messages
 					.getString("flight")))) {
@@ -822,7 +825,7 @@ public class Board extends JPanel {
 	}
 
 	public void collectCulture(Player p, City c) {
-		p.culture += c.calcCulture();
+		p.culture += c.calcCulture(this);
 		if (p.government.name.equals("Communism")) {
 			p.culture -= 1;
 		}
@@ -901,13 +904,14 @@ public class Board extends JPanel {
 										return;
 								}
 							} else {
+								finishCombat(tile);
 								calcBattleHandSize(tile, currentPlayer,
 										enemyPlayer);
 								p = new Combat(currentPlayer, enemyPlayer, 0, messages);
 								p.setLocation(10, 10);
 								this.setEnabled(false);
 							}
-							finishCombat(tile);
+							
 							return;
 
 						} else if (tile.getCity() != null) {
@@ -1617,13 +1621,32 @@ public class Board extends JPanel {
 		Player tempPlayer = new Player(messages);
 
 		switch (civ) {
-		case "Egypt": // TODO check if needs internationalized
+		case "Egypt":
+			tempPlayer.techCards.add(new Construction());
+			tempPlayer.tier1Cards += 1;
+			// free wonder at start of game
+			// one free building each turn as an action
+			break;
+		case "Egipto":
 			tempPlayer.techCards.add(new Construction());
 			tempPlayer.tier1Cards += 1;
 			// free wonder at start of game
 			// one free building each turn as an action
 			break;
 		case "Russia":
+			tempPlayer.techCards.add(new Communism());
+			tempPlayer.government = new Government(tempPlayer, "Communism");
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.stackSize = 3;
+			// one extra army
+			/*
+			 * once per turn the russians may move an army or scout into an
+			 * enemy city and sacrifice that figure to research a tech known by
+			 * that civilization for free. armies sacrificed this way cannot
+			 * also attack
+			 */
+			break;
+		case "Rusia":
 			tempPlayer.techCards.add(new Communism());
 			tempPlayer.government = new Government(tempPlayer, "Communism");
 			tempPlayer.tier1Cards += 1;
@@ -1646,6 +1669,16 @@ public class Board extends JPanel {
 			 * city or village
 			 */
 			break;
+		case "Roma":
+			tempPlayer.techCards.add(new CodeOfLaws());
+			tempPlayer.government = new Government(tempPlayer, "Republic");
+			tempPlayer.tier1Cards += 1;
+			/*
+			 * the romans advance one space on the culture track for free each
+			 * time they build a wonder or a city, and each time they conquer a
+			 * city or village
+			 */
+			break;
 		case "America":
 			tempPlayer.techCards.add(new Currency());
 			tempPlayer.tier1Cards += 1;
@@ -1655,7 +1688,28 @@ public class Board extends JPanel {
 			 * recieve 2 production instead of 1
 			 */
 			break;
+		case "América":
+			tempPlayer.techCards.add(new Currency());
+			tempPlayer.tier1Cards += 1;
+			// free great person at start of game
+			/*
+			 * each time the americans convert 3 trade into production, they
+			 * recieve 2 production instead of 1
+			 */
+			break;
 		case "Germany":
+			tempPlayer.techCards.add(new MetalWorking());
+			tempPlayer.tier1Cards += 1;
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			// tempPlayer.units.add(new Unit("Infantry", 1));
+			/*
+			 * after setup, each time the germans research a tech that upgrades
+			 * or unlocks a unit, they build one of that unit for free and gain
+			 * one resource of their choice from the market
+			 */
+
+			break;
+		case "Alemania":
 			tempPlayer.techCards.add(new MetalWorking());
 			tempPlayer.tier1Cards += 1;
 			// tempPlayer.units.add(new Unit("Infantry", 1));
@@ -1701,6 +1755,14 @@ public class Board extends JPanel {
 		}
 
 		return null;
+	}
+
+	public static void setMap(ArrayList<Panel> myMap) {
+		Board.map.clear();
+		for(Panel p: myMap){
+			Board.map.add(p);
+		}
+//		Board.map = myMap;
 	}
 
 	static Panel findPanel(int x, int y) {
@@ -1840,6 +1902,7 @@ public class Board extends JPanel {
 		}
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -2030,7 +2093,7 @@ public class Board extends JPanel {
 				this.changePlayerTurn();
 				this.currentPhase = TRADE;
 				for (City c : Board.currentPlayer.cities) {
-					Board.currentPlayer.trade += c.calcTrade();
+					Board.currentPlayer.trade += c.calcTrade(this);
 				}
 				if (Board.currentPlayer.government.name
 						.equals("Democracy")) {
@@ -2048,13 +2111,13 @@ public class Board extends JPanel {
 			if (Board.currentPlayer == Board.firstPlayer) {
 				this.changePlayerTurn();
 				for (City c : Board.currentPlayer.cities) {
-					Board.currentPlayer.trade += c.calcTrade();
+					Board.currentPlayer.trade += c.calcTrade(this);
 				}
 			} else {
 				this.changePlayerTurn();
 				this.currentPhase = CITY_MANAGEMENT;
 				for (City c : Board.currentPlayer.cities) {
-					c.calcProduction();
+					c.calcProduction(this);
 					if (Board.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
@@ -2068,7 +2131,7 @@ public class Board extends JPanel {
 				this.changePlayerTurn();
 				currentCity = null;
 				for (City c : Board.currentPlayer.cities) {
-					c.calcProduction();
+					c.calcProduction(this);
 					if (Board.currentPlayer.government.name.equals("Communism")) {
 						c.setProduction(c.getProduction() + 2);
 					}
@@ -2225,7 +2288,7 @@ public class Board extends JPanel {
 		JFrame winWindow = buildFrame(500, 200, messages.getString("gameOver"));
 		winWindow.setLayout(new GridLayout(2, 0));
 		JPanel textPanel = buildJPanel(500, 200, 0, 0);
-		JLabel text = new JLabel(messages.getString("gameOneWinner") + " Player has won due to " + Board.winners.get(0).winCondition);
+		JLabel text = new JLabel(messages.getString("gameOneWinner") + " Player has won due to " + Board.winners.get(0).winCondition + ".");
 		JButton close = new JButton(messages.getString("close"));
 		if(Board.winners.size() == 2){
 			text.setText("gameTie");

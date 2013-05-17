@@ -1,5 +1,6 @@
 package TechCards;
 
+import Civ.Government;
 import Civ.Player;
 import Civ.TechCard;
 
@@ -16,6 +17,7 @@ public class Chivalry extends TechCard {
 		if(player.cavalryLevel < 2){
 			player.cavalryLevel = 2;
 		}
+		player.government = new Government(player ,"Feudalism");
 	}
 
 }

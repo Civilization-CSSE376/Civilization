@@ -402,7 +402,8 @@ public class MainWindow extends JFrame {
 		buttonPanel.add(closeButton);
 		buttonPanel.add(techTree);
 
-		info.setLayout(new GridLayout(6, 1));
+		info.setLayout(new GridLayout(5, 1));
+		// info.setLayout(new GridLayout(6, 1));
 		String gov = "";
 		if(playerCivilizationField.equals("Rome")) gov = messages.getString("republic");
 		else if(playerCivilizationField.equals("Russia")) gov = messages.getString("communism");
@@ -410,7 +411,7 @@ public class MainWindow extends JFrame {
 		
 		JLabel government = new JLabel(messages.getString("government") + gov);
 		
-		JLabel governmentAbility = new JLabel(messages.getString("ability"));
+//		JLabel governmentAbility = new JLabel(messages.getString("ability"));
 		
 		JLabel trade = new JLabel(messages.getString("trade") + ": " + Board.getPlayer(playerNum).trade);
 		
@@ -422,7 +423,8 @@ public class MainWindow extends JFrame {
 		
 		JLabel resources = new JLabel(messages.getString("resources") + resourceString);
 
-		JLabel[] labelList = {government, governmentAbility, trade, gold, resources, culture};
+//		JLabel[] labelList = {government, governmentAbility, trade, gold, resources, culture};
+		JLabel[] labelList = {government, trade, gold, resources, culture};
 		for(JLabel label : labelList) {
 			label.setForeground(Color.WHITE);
 			info.add(label);

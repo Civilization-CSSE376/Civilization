@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class Combat extends JFrame {
@@ -74,14 +75,14 @@ public class Combat extends JFrame {
 		front.addActionListener(new frontButtonListener());
 
 		if (this.attacker == attacker) {
-			this.add(new JLabel(messages.getString("attackTurn"), JLabel.CENTER));
+			this.add(new JLabel(messages.getString("attackTurn"), SwingConstants.CENTER));
 		} else {
-			this.add(new JLabel(messages.getString("defendTurn"), JLabel.CENTER));
+			this.add(new JLabel(messages.getString("defendTurn"), SwingConstants.CENTER));
 		}
-		this.add(new JLabel(messages.getString("playerHand")), JLabel.CENTER);
+		this.add(new JLabel(messages.getString("playerHand")), SwingConstants.CENTER);
 		drawHand(this.currentPlayerHand);
 		this.add(this.playerHandManager);
-		this.add(new JLabel(messages.getString("enemyFront")), JLabel.CENTER);
+		this.add(new JLabel(messages.getString("enemyFront")), SwingConstants.CENTER);
 		drawFront(this.enemyFront);
 		this.add(this.enemyFrontManager);
 		this.add(front);
@@ -93,6 +94,7 @@ public class Combat extends JFrame {
 	}
 
 	public class attackButtonListener implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (enemy != null && ownUnit != null) {
 				Combat.this.attackFront(ownUnit, enemy);
@@ -111,6 +113,7 @@ public class Combat extends JFrame {
 	}
 
 	public class frontButtonListener implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (Combat.this.ownUnit != null) {
 				Combat.this.makeFront(Combat.this.ownUnit);
@@ -222,6 +225,14 @@ public class Combat extends JFrame {
 		this.currentPlayerFront.add(unit);
 		this.currentPlayerHand.remove(unit);
 		switchCurrentPlayer();
+		if(currentPlayerHand.size() == 0){
+			if(attackerHand.size() == 0 && defenderHand.size() == 0){
+				this.dispose();
+			}
+			else{
+				switchCurrentPlayer();
+			}
+		}
 	}
 
 	public void attackFront(Unit attacking, Unit defending) {
@@ -255,6 +266,15 @@ public class Combat extends JFrame {
 					switchCurrentPlayer();// attacker
 					this.currentPlayerFront.add(attacking);
 				}
+			}
+		}
+		
+		if(currentPlayerHand.size() == 0){
+			if(attackerHand.size() == 0 && defenderHand.size() == 0){
+				this.dispose();
+			}
+			else{
+				switchCurrentPlayer();
 			}
 		}
 	}

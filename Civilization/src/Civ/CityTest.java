@@ -22,6 +22,7 @@ public class CityTest {
 	private static Locale currentLocale = new Locale("en", "US");
 	private static ResourceBundle messages = ResourceBundle.getBundle(
 			"MessagesBundle", currentLocale);
+	
 	private Hashtable<String, Panel> map;
 	private Player player;
 	private Player enemyPlayer;
@@ -50,7 +51,9 @@ public class CityTest {
 	
 	@Before
 	public void setUp() throws Exception{
+		
 		board = new Board("America", "China", messages);
+//		System.out.println(board.players.size() + ": player count");
 		this.topLeft = new Panel();
 		this.topRight = new Panel();
 		this.bottomLeft = new Panel();
@@ -114,11 +117,21 @@ public class CityTest {
 		this.map.put("bottomLeft", bottomLeft);
 		this.map.put("bottomRight", bottomRight);
 		
+		ArrayList<Panel> translatedList = new ArrayList<Panel>();
+		translatedList.add(this.map.get("topLeft"));
+		translatedList.add(this.map.get("bottomLeft"));
+		translatedList.add(this.map.get("bottomRight"));
+		translatedList.add(this.map.get("topRight"));
+		
+		Board.setMap(translatedList);
+		
 		this.outskirtTiles = new ArrayList<Tile>();
 		this.emptyOutskirtTiles = new ArrayList<Tile>();
 		
-		this.startTile = topLeft.getTiles()[1][1];
-		this.enemyStartTile = bottomRight.getTiles()[2][2];
+//		this.startTile = topLeft.getTiles()[1][1];
+		this.startTile = translatedList.get(0).getTiles()[1][1];
+//		this.enemyStartTile = bottomRight.getTiles()[2][2];
+		this.enemyStartTile = translatedList.get(2).getTiles()[2][2];
 		
 		this.player = new Player(messages);
 		this.enemyPlayer = new Player(messages);
@@ -129,7 +142,7 @@ public class CityTest {
 		
 		this.city = new City(this.startTile);
 		this.player.cities.add(this.city);
-		
+
 		this.enemyCity = new City(this.enemyStartTile);
 		this.enemyPlayer.cities.add(this.enemyCity);
 		
@@ -147,6 +160,8 @@ public class CityTest {
 			this.emptyOutskirtTiles.add(new Tile(2, 2, "G", 0, 0, "N", 0, "N", 0));
 		}
 
+		Board.setMap(translatedList);
+		
 		this.city = new City(this.startTile, this.player);
 		this.enemyCity = new City(this.enemyStartTile, this.enemyPlayer);
 		
@@ -158,80 +173,80 @@ public class CityTest {
 		assertNotNull(this.city);
 	}
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testMulitpleCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
-//		
-//		this.city.setOutskirts(outskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcProduction");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(8, output);
-//		
-//	}
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testMulitpleCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
+		
+		this.city.setOutskirts(outskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcProduction");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(8, output);
+		
+	}
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testNoCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
-//		
-//		this.city.setOutskirts(emptyOutskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcProduction");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(0, output);
-//		
-//	}
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testNoCalcProduction() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException{
+		
+		this.city.setOutskirts(emptyOutskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcProduction");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(0, output);
+		
+	}
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-//		
-//		this.city.setOutskirts(outskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcCulture");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(8, output);
-//	}
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		
+		this.city.setOutskirts(outskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcCulture");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(8, output);
+	}
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testEmptyCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-//				
-//		this.city.setOutskirts(emptyOutskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcCulture");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(0, output);
-//	}
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testEmptyCalcCulture() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+				
+		this.city.setOutskirts(emptyOutskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcCulture");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(0, output);
+	}
 	
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testTrade() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-//	
-//		this.city.setOutskirts(outskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcTrade");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(8, output);
-//	}
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testTrade() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 	
-//	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
-//	public void testEmptyTradeCalc() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-//		
-//		this.city.setOutskirts(emptyOutskirtTiles);
-//		
-//		Method method = City.class.getDeclaredMethod("calcTrade");
-//		method.setAccessible(true);
-//		int output = (int) method.invoke(this.city);
-//		
-//		assertEquals(0, output);
-//	}
+		this.city.setOutskirts(outskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcTrade");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(8, output);
+	}
+	
+	@Test //this test no longer works with the current test scenario because we can no longer "inject" our own outskirts to test
+	public void testEmptyTradeCalc() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		
+		this.city.setOutskirts(emptyOutskirtTiles);
+		
+		Method method = City.class.getDeclaredMethod("calcTrade");
+		method.setAccessible(true);
+		int output = (int) method.invoke(this.city);
+		
+		assertEquals(0, output);
+	}
 
 	@Test //need to test "not explored" panels
 	public void testGetOutskirtsTopLeft() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
